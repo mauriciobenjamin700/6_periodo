@@ -1,0 +1,18 @@
+Video ensinando a criar https://www.youtube.com/watch?v=IE8HzEEFv9c
+
+Passo a passo a baixo:
+	0 - sudo apt install python3.10-venv
+	1 - Definir onde será salvo as venv's (geralmente salvo na pasta inicial dos diretorios)
+	2 - mkdir "Nome da pasta que ira salvar as venv's"
+	3 - cd "Nome da pasta que ira salvar as venv's"
+	3 - python3 -m venv "Nome da venv que será criada"
+	4 - source "nome da venv que foi criada"/bin/activate
+	5 - pip list  
+	6 - pip install wheel
+	
+Prontinho, só usar o Vs code e selecionar a venv
+
+para instalar tk inter -> sudo apt-get install python3-tk
+sklearn -> pip install -U scikit-learn
+
+excel -> pip3 install openpyxl

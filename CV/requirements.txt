@@ -1,0 +1,4 @@
+opencv-python>=2.0
+numpy>=1.0
+scikit-image>=1.0
+
