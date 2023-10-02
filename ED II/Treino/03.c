@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
-#define L 3
+#define L 4
 #define C 20
 
 /*
@@ -11,88 +13,95 @@ Faça uma função em C que leia um vetor de string não ordenado e depois faça
     com letra maiúscula.
 */
 
+int fA(char matriz[L][C], int maior, int idx)
+{
+    if (idx <= L)
+    {
+
+        if (strlen(matriz[idx]) > strlen(matriz[maior]))
+        {
+            maior = idx;
+        }
+
+        maior = fA(matriz, maior, idx + 1);
+    }
+
+    return maior;
+}
+
 int ehVogal(char c)
 {
-    char vogais[10] = 
+    c = toupper(c);
+    switch (c)
     {
-        'a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U'
-    };
+    case 'A':
+    case 'E':
+    case 'I':
+    case 'O':
+    case 'U':
 
-    int sinal = 0;
-    int i = 0;
+        return 1; // É uma vogal
 
-    for(;i<10;i++)
+    default:
+
+        return 0; // Não é uma vogal
+    }
+}
+
+void fB(char matriz[L][C], int idx, int *qtd)
+{
+    if (idx < L)
     {
-        if(vogais[i]==c)
+        if (ehVogal(matriz[idx][0]))
         {
-            sinal = 1;
+            (*qtd)++;
         }
+        fB(matriz, idx + 1, qtd);
     }
-
-    return sinal;
-    
 }
 
-int tamanho(char vetor[])
+void fC(char matriz[L][C], char vetor[L][C], int idx, int *idx_vetor)
 {
-    int cont=0;
-    while (vetor[cont]!= '\0')
+    if (idx < L)
     {
-        cont++;
-    }
-    return cont;
-}
-
-int vogal(char matriz[][])
-{
-    int cont = 0;
-    int i=0;
-    if (matriz[i][0] != '\0')
-    {
-        cont++;
-    }
-    return cont;
-}
-/*
-int tamanho(char vetor[])
-{
-    int cont=0;
-    while (vetor[cont]!= '\0')
-    {
-        cont++;
-    }
-    return cont;
-}
-*/
-void maior(char matriz[L][C])
-{
-    int i=0;
-    char *maior;
-    maior = matriz[i];
-    for(i=1;i<L;i++)
-    {
-        if(tamanho(maior) < tamanho(matriz[i]))
+        if (strlen(matriz[idx]) >= 4 && isupper(matriz[idx][0]))
         {
-            maior = matriz[i];
+           
+            strcpy(vetor[idx], matriz[*idx_vetor]);
+            (*idx_vetor)++;
         }
+
+        fC(matriz, vetor, idx + 1, idx_vetor);
     }
-    printf("\nMaior = %s\n", maior);
 }
 
 int main(void)
 {
-    char matriz[L][C] = 
-    {
-        "Casa", "UFPI", "Trabalho"
-    };
 
-    int i;
-    for (i = 0; i < L; i++)
+    char matriz[L][C] =
+        {
+            "Casa", "Viajem", "Trabalho", "aaves"};
+
+    char validos[L][C];
+
+    int total_vogais = 0;
+
+    printf("\nA) Maior String %s", matriz[fA(matriz, 0, 0)]);
+
+    fB(matriz, 0, &total_vogais);
+    printf("\nB) Quantidade de strings que começam com vogais: %d", total_vogais);
+
+    int i = 0, idx_validos = 0;
+
+    fC(matriz, validos, 0, &idx_validos);
+    printf("\nC) strings com tamanho >= 4 e que iniciam com letra maiúscula: ");
+
+ 
+    while (i<idx_validos)
     {
-        printf("\nTamanho da string %s -> %d\n", matriz[i],tamanho(matriz[i]));
+        printf("\n\t%s",validos[i]);
+        i++;
     }
-
-    maior(matriz);
-
+ 
     return 0;
 }
