@@ -1,0 +1,42 @@
+Os principais fundamentos da visão computacional incluem os conceitos e técnicas essenciais que formam a base para o processamento de imagens e a compreensão de informações visuais por parte de sistemas computacionais. Aqui estão os principais fundamentos:
+
+1. **Aquisição de Imagens**:
+   - Compreender como as imagens são capturadas por dispositivos, como câmeras, e como a resolução, a cor e a qualidade das imagens podem afetar o processamento subsequente.
+
+2. **Processamento de Imagem**:
+   - Manipulação de imagens por meio de operações como filtragem, suavização, realce e detecção de bordas. Isso inclui o uso de máscaras de convolução.
+
+3. **Transformações Geométricas**:
+   - Realização de operações como rotação, escala, translação e distorção em imagens para alinhamento ou correção de perspectiva.
+
+4. **Histogramas e Equalização**:
+   - Entender o uso de histogramas de imagem para analisar e melhorar o contraste das imagens por meio de técnicas como equalização de histograma.
+
+5. **Segmentação de Imagem**:
+   - Identificar e separar objetos ou regiões de interesse em uma imagem. Isso pode ser feito usando métodos de limiarização, segmentação por crescimento de região, entre outros.
+
+6. **Extração de Características**:
+   - Identificação e extração de características específicas de uma imagem, como texturas, contornos e pontos de interesse, que são úteis para tarefas de reconhecimento e classificação.
+
+7. **Modelos de Cor**:
+   - Compreensão de espaços de cores, como RGB, HSV e LAB, e como eles são usados para representar informações de cores em imagens.
+
+8. **Aprendizado de Máquina e Deep Learning**:
+   - Familiarização com algoritmos de aprendizado de máquina e redes neurais convolucionais (CNNs) usadas em tarefas de visão computacional, como classificação, detecção de objetos e segmentação.
+
+9. **Detecção e Rastreamento de Objetos**:
+   - Métodos para localizar e acompanhar objetos em imagens e vídeos, incluindo técnicas baseadas em características ou redes neurais.
+
+10. **Reconhecimento de Padrões**:
+    - Identificação de padrões e objetos em imagens, como reconhecimento facial, detecção de objetos em geral e OCR (Reconhecimento Óptico de Caracteres).
+
+11. **Aplicações Práticas**:
+    - Compreensão das diversas aplicações da visão computacional em áreas como medicina, veículos autônomos, segurança, automação industrial e muito mais.
+
+12. **Ética e Privacidade**:
+    - Consideração das implicações éticas e questões de privacidade relacionadas ao uso de visão computacional em diversas aplicações.
+
+13. **Ferramentas e Bibliotecas**:
+    - Conhecimento das bibliotecas e frameworks populares, como OpenCV, TensorFlow e PyTorch, que facilitam o desenvolvimento de aplicações de visão computacional.
+
+Esses fundamentos são essenciais para quem deseja trabalhar ou estudar visão computacional e formam a base para a compreensão e aplicação de técnicas mais avançadas nesta área.

@@ -1,0 +1,27 @@
+Claro, os fundamentos de amostragem são um conceito importante em visão computacional e processamento de imagem. A amostragem se refere ao processo de capturar informações de uma imagem em pontos discretos, chamados de pixels, em uma grade regular. Aqui estão os fundamentos da amostragem:
+
+1. **Pixelização**:
+   - Uma imagem digital é composta por pixels, que são os elementos básicos de representação. Cada pixel armazena informações de cor (em imagens coloridas) ou intensidade (em imagens em tons de cinza) para uma posição específica na imagem.
+
+2. **Resolução**:
+   - A resolução de uma imagem refere-se à quantidade de detalhes que ela contém. Imagens com alta resolução têm mais pixels e, portanto, representam mais detalhes, enquanto imagens de baixa resolução contêm menos pixels e representam menos detalhes.
+
+3. **Taxa de Amostragem**:
+   - A taxa de amostragem é a frequência com que os pixels são colocados em uma imagem. Em outras palavras, é a densidade de pixels em uma imagem. A taxa de amostragem afeta a qualidade da representação da imagem, com uma taxa mais alta capturando mais detalhes.
+
+4. **Teorema de Nyquist-Shannon**:
+   - O Teorema de Nyquist-Shannon, também conhecido como Teorema de Amostragem, estabelece que, para reconstruir uma imagem sem perda de informações, a taxa de amostragem deve ser pelo menos duas vezes maior do que a frequência máxima presente na imagem. Isso é crucial para evitar artefatos de aliasing.
+
+5. **Aliasing**:
+   - Aliasing ocorre quando a taxa de amostragem é muito baixa em relação à frequência da imagem, resultando em informações sendo "dobradas" ou mal representadas na imagem. Isso leva a artefatos visuais indesejados, como o efeito de escada (jaggies) em linhas diagonais.
+
+6. **Amostragem Espacial vs. Amostragem de Cor**:
+   - A amostragem espacial refere-se à disposição de pixels na grade da imagem. A amostragem de cor envolve a captura da intensidade ou das informações de cor em cada pixel, usando diferentes esquemas de cores, como RGB (Red, Green, Blue).
+
+7. **Quantização**:
+   - A quantização envolve a representação numérica das informações de cor ou intensidade em um pixel. Por exemplo, em imagens em tons de cinza, cada pixel pode ser representado por um valor entre 0 e 255 (em uma escala de 8 bits).
+
+8. **Tamanho do Arquivo e Armazenamento**:
+   - A resolução e a profundidade de bits de uma imagem afetam o tamanho do arquivo. Imagens de alta resolução com maior profundidade de bits resultam em arquivos maiores, o que é importante para o armazenamento e transmissão de imagens.
+
+Entender esses fundamentos é fundamental para trabalhar eficazmente com imagens digitais, pois afeta a qualidade, o tamanho e a capacidade de processamento das imagens em várias aplicações de visão computacional e processamento de imagem.
