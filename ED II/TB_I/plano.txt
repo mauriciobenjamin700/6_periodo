@@ -1,0 +1,37 @@
+Contro - Shift - P -> toogle word wrap
+
+Objetivo: 
+Planeja-se desenvolver uma aplicação de biblioteca de filmes.
+
+Para isso o sistema da biblioteca deve ser capaz de:
+
+Manter Series;
+Manter Temporadas;
+Manter Participante.
+
+
+onde cada serie é composta por:
+    código,
+    titulo,
+    número de Temporadas,
+    -> Informações de cada Temporadas (acessa qualquer campo de uma temporada, ex: titulo, ano, etc.).
+
+Cada Temporada é composta por:
+    numero da Temporada,
+    titulo,
+    quantidade de episódios,
+    ano,
+    -> Participantes.
+
+Cada Participante é composto por:
+    nome artista,
+    nome personagem,
+    descrição personagem.
+
+
+Detalhes:
+    A árvore de series deve ser organizada pelo código da série.
+
+    A árvore de Temporadas deve ser organizada pelo número da temporada.
+
+    A lista simples de participantes deve está em ordem alfabética do nome do artista

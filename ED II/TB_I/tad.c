@@ -2,15 +2,15 @@
 #include "tad.h"
 
 # define NAME 50
-
+# define TEXT 200
+# define TITTEL 30
 struct Participante
 {
     char nomeArtista[NAME];
     char nomePersonagem[NAME];
-    char descPersonagem[200];
+    char descPersonagem[TEXT];
 
 };
-
 
 struct Temporada
 {
@@ -21,12 +21,10 @@ struct Temporada
     struct Participante *lista;
 };
 
-
 struct Serie
 {
     int cod;
-    char titulo[NAME];
+    char titulo[TITTEL];
     int numTemp;
     struct Temporada *t;
-
 };
