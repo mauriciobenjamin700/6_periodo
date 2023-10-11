@@ -4,9 +4,22 @@
 int main()
 {
     struct Serie *s;
+    int sinal;
 
-    if (iniciarS(s)==1) 
-        printf("\ndeu certo");
+    iniciarS(s);
+
+    sinal = cadastrarS(&s);
+    
+    if(sinal)
+    {
+        printf("\nCadastrei a serie!");
+    }
+    else
+    {
+        printf("\nNao cadastrei a serie");
+    }
+
+    mostarS()
 
     free(s); 
     printf("\nliberei\n");

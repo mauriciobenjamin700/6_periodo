@@ -5,38 +5,44 @@
 # define NAME 50
 # define TEXT 200
 # define TITTEL 30
-struct Participante
+
+typedef struct participante
 {
     char nomeArtista[NAME];
     char nomePersonagem[NAME];
     char descPersonagem[TEXT];
 
-};
+}Participante;
 
-struct Temporada
+typedef struct 
 {
     int num;
     char titulo[NAME];
     int qtd_episodios;
     int ano;
     struct Participante *lista;
-};
 
-struct Serie
+}Temporada;
+
+typedef struct 
 {
     int cod;
     char titulo[TITTEL];
     int numTemp;
     struct Temporada *t;
-//<<<<<<< HEAD
 
-};
+    //ponteiros para os elementos da esquerda e direita ao montar a arvore
 
-int iniciarS(struct Serie* s)
+    struct Serie* esquerda;
+    struct Serie* direita;
+
+}Serie;
+
+int iniciarS(Serie* s)
 {
     int sinal = 0;
 
-    s = (struct Serie*) malloc(sizeof(struct Serie));
+    s = (Serie*) malloc(sizeof(Serie));
 
     if (s)
     {
@@ -44,40 +50,63 @@ int iniciarS(struct Serie* s)
         s = NULL;
     } 
 
-    
-
     return sinal;
 
 }
 
-void preencherS(struct Serie *s)
+void preencherS(Serie **s)
 {
     printf("\nPrencha as inforamções da Serie a baixo.");
 
+    *s = (Serie *)malloc(sizeof(Serie)); // Aloca memória para a nova série
+
     printf("\nCodigo: ");
-    scanf("%d", s->cod);
+    setbuf(stdin,NULL);
+    scanf("%d", &((*s)->cod));
 
     printf("\nTitulo da Serie: ");
-    scanf("%[^\n]", s->titulo);
+    setbuf(stdin,NULL);
+    scanf("%[^\n]", (*s)->titulo);
     
     printf("\nNumero de Temporadas: ");
-    scanf("%d", s->numTemp);
+    setbuf(stdin,NULL);
+    scanf("%d", &((*s)->numTemp));
     
-    s->t = NULL;
+    (*s)->t = NULL;
+
+    (*s)->direita = NULL;
+    (*s)->esquerda = NULL;
 }
 
-int cadastrarS(struct Serie* s)
+int cadastrarS(Serie** s)
 {
     int sinal = 0;
-    struct Serie* new;
+    Serie* new;
 
-    if(s == NULL)
+    preencherS(&new);
+
+    if(*s == NULL)
     {
-        s = new;
+        *s = new;
+        sinal = 1;
+    }
+    //ordenação por código, se o código do novo for maior que o da raiz, vamos para a esquerda
+    else if (new->cod < (*s)->cod)
+    {
+        sinal = cadastrarS((*s)->esquerda);
+    }
+    // se o código do novo não é menor que o codigo da raiz, então vamos para a direita
+    else
+    {
+        sinal = cadastrarS((*s)->direita);
     }
 
     return sinal;
 }
-//=======
-//};
-//>>>>>>> 500bfe7be0e0a939d085e077998693c64e9e22b1
+
+void mostarS (Serie s)
+{
+    printf("\nSerie: %s", s.titulo);
+    printf("\nCodigo: %d", s.cod);
+    printf("\nNumero de Temporadas: %d", s.numTemp);
+}

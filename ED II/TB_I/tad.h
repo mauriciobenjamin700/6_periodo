@@ -2,12 +2,20 @@ typedef struct Participante;
 typedef struct Temporada;
 typedef struct Serie;
 
+//Inicia a arvore de Series
+int iniciarS(Serie* s);
+
+//preenche um nó serie com suas inforamções
+void preencherS(Serie  **s);
+
+void mostarS(Serie s);
+
 //Cadastra um participante
 void cadastrarP();
 //Cadastra uma temporada
 void cadastrarT();
 //Cadastra uma serie
-void cadastrarS();
+int cadastrarS();
 
 /*
 (a)Imprimir em ordem pelo código da série: o título, o número de temporadas
