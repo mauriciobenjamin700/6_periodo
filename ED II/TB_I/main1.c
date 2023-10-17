@@ -1,25 +1,19 @@
 #include <stdio.h>
 #include "tad.c"
 
-int main()
+int main(void)
 {
     struct Serie *s;
     int sinal;
 
-    iniciarS(s);
+    iniciarS(&s);
 
     sinal = cadastrarS(&s);
-    
-    if(sinal)
-    {
-        printf("\nCadastrei a serie!");
-    }
-    else
-    {
-        printf("\nNao cadastrei a serie");
-    }
+    sinal = cadastrarS(&s);
 
-    mostarS()
+    printf("\nSinal: %d", sinal);
+
+    mostrar_all_S(&s);
 
     free(s); 
     printf("\nliberei\n");

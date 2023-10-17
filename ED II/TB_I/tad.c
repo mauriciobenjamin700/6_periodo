@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tad.h"
 
 # define NAME 50
 # define TEXT 200
 # define TITTEL 30
 
-typedef struct participante
+typedef struct Participante
 {
     char nomeArtista[NAME];
     char nomePersonagem[NAME];
@@ -14,7 +13,7 @@ typedef struct participante
 
 }Participante;
 
-typedef struct 
+typedef struct Temporada
 {
     int num;
     char titulo[NAME];
@@ -22,9 +21,9 @@ typedef struct
     int ano;
     struct Participante *lista;
 
-}Temporada;
+} Temporada;
 
-typedef struct 
+typedef struct Serie
 {
     int cod;
     char titulo[TITTEL];
@@ -36,18 +35,18 @@ typedef struct
     struct Serie* esquerda;
     struct Serie* direita;
 
-}Serie;
+} Serie;
 
-int iniciarS(Serie* s)
+int iniciarS(Serie** s)
 {
     int sinal = 0;
 
-    s = (Serie*) malloc(sizeof(Serie));
+    *s = (Serie*) malloc(sizeof(Serie));
 
     if (s)
     {
         sinal = 1;
-        s = NULL;
+        *s = NULL;
     } 
 
     return sinal;
@@ -62,7 +61,7 @@ void preencherS(Serie **s)
 
     printf("\nCodigo: ");
     setbuf(stdin,NULL);
-    scanf("%d", &((*s)->cod));
+    scanf("%d", &(*s)->cod);
 
     printf("\nTitulo da Serie: ");
     setbuf(stdin,NULL);
@@ -70,7 +69,7 @@ void preencherS(Serie **s)
     
     printf("\nNumero de Temporadas: ");
     setbuf(stdin,NULL);
-    scanf("%d", &((*s)->numTemp));
+    scanf("%d", &(*s)->numTemp);
     
     (*s)->t = NULL;
 
@@ -83,30 +82,41 @@ int cadastrarS(Serie** s)
     int sinal = 0;
     Serie* new;
 
-    preencherS(&new);
-
     if(*s == NULL)
     {
+        preencherS(&new);
         *s = new;
         sinal = 1;
     }
-    //ordenação por código, se o código do novo for maior que o da raiz, vamos para a esquerda
-    else if (new->cod < (*s)->cod)
+    // vamos salvar as series com id par a direita e os impares a esquerda
+    else if ((*s)->cod % 2 == 0)
     {
-        sinal = cadastrarS((*s)->esquerda);
+        cadastrarS(&(*s)->direita);
     }
-    // se o código do novo não é menor que o codigo da raiz, então vamos para a direita
+
     else
     {
-        sinal = cadastrarS((*s)->direita);
+        cadastrarS(&(*s)->esquerda);
     }
+    
 
     return sinal;
 }
 
-void mostarS (Serie s)
+void mostarS (Serie *s)
 {
-    printf("\nSerie: %s", s.titulo);
-    printf("\nCodigo: %d", s.cod);
-    printf("\nNumero de Temporadas: %d", s.numTemp);
+    printf("\nSerie: %s", s->titulo);
+    printf("\nCodigo: %d", s->cod);
+    printf("\nNumero de Temporadas: %d\n", s->numTemp);
+}
+
+void mostrar_all_S(Serie **s)
+{
+    if (*s != NULL)
+    {
+        mostarS(*s);
+        mostrar_all_S(&(*s)->esquerda);
+        mostrar_all_S(&(*s)->direita);
+    }
+    
 }
