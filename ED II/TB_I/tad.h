@@ -13,7 +13,7 @@ void mostarS(Serie *s);
 // Cadastra um participante
 // void cadastrarP();
 // Cadastra uma temporada
-// void cadastrarT();
+void cadastrarT();
 // Cadastra uma serie
 // int cadastrarS();
 

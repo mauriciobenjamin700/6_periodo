@@ -21,6 +21,9 @@ typedef struct Temporada
     int ano;
     struct Participante *lista;
 
+    struct Temporada* direita;
+    struct Temporada* esquerda;
+
 } Temporada;
 
 typedef struct Serie
@@ -36,21 +39,17 @@ typedef struct Serie
     struct Serie* direita;
 
 } Serie;
+/////////////////// Serie//////////////////
 
-int iniciarS(Serie** s)
+void iniciarS(Serie** s)
 {
-    int sinal = 0;
-
     *s = (Serie*) malloc(sizeof(Serie));
 
     if (s)
     {
-        sinal = 1;
+        
         *s = NULL;
     } 
-
-    return sinal;
-
 }
 
 void preencherS(Serie **s)
@@ -80,10 +79,11 @@ void preencherS(Serie **s)
 int cadastrarS(Serie** s)
 {
     int sinal = 0;
-    Serie* new;
+    
 
     if(*s == NULL)
     {
+        Serie* new;
         preencherS(&new);
         *s = new;
         sinal = 1;
@@ -91,14 +91,13 @@ int cadastrarS(Serie** s)
     // vamos salvar as series com id par a direita e os impares a esquerda
     else if ((*s)->cod % 2 == 0)
     {
-        cadastrarS(&(*s)->direita);
+        sinal = cadastrarS(&(*s)->direita);
     }
 
     else
     {
-        cadastrarS(&(*s)->esquerda);
+        sinal = cadastrarS(&(*s)->esquerda);
     }
-    
 
     return sinal;
 }
@@ -119,4 +118,81 @@ void mostrar_all_S(Serie **s)
         mostrar_all_S(&(*s)->direita);
     }
     
+}
+
+void liberar_all_S(Serie **s)
+{
+    if (*s != NULL)
+    {
+        liberar_all_S(&(*s)->esquerda);
+        liberar_all_S(&(*s)->direita);
+        free(*s);
+        printf("\nremovi\n");
+    }
+    
+}
+
+///////////Temporada ///////////////
+
+void iniciarT(Temporada** t)
+{
+    *t = (Temporada*) malloc(sizeof(Temporada));
+
+    if (t)
+    {
+        *t = NULL;
+    } 
+}
+
+void preencherT(Temporada **t)
+{
+    printf("\nPrencha as inforamções da Temporada a baixo.");
+
+    *t = (Temporada *)malloc(sizeof(Temporada)); // Aloca memória para a nova série
+
+    printf("\nNumero: ");
+    setbuf(stdin,NULL);
+    scanf("%d", &(*t)->num);
+
+    printf("\nTitulo da Temporada: ");
+    setbuf(stdin,NULL);
+    scanf("%[^\n]", (*t)->titulo);
+    
+    printf("\nNumero de Temporadas: ");
+    setbuf(stdin,NULL);
+    scanf("%d", &(*t)->qtd_episodios);
+
+    printf("\nAno: ");
+    setbuf(stdin,NULL);
+    scanf("%d", &(*t)->ano);
+
+    (*t)->lista = NULL;
+
+    (*t)->direita = NULL;
+    (*t)->esquerda = NULL;
+}
+
+int cadastrarT(Temporada** t)
+{
+    int sinal = 0;
+    Temporada* new;
+
+    if(*t == NULL)
+    {
+        preencherT(&new);
+        *t = new;
+        sinal = 1;
+    }
+    // vamos salvar as Tempordas com id par a direita e os impares a esquerda
+    else if ((*t)->num % 2 == 0)
+    {
+        sinal = cadastrarT(&(*t)->direita);
+    }
+
+    else
+    {
+        sinal = cadastrarT(&(*t)->esquerda);
+    }
+
+    return sinal;
 }
