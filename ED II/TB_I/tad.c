@@ -52,15 +52,14 @@ void iniciarS(Serie** s)
     } 
 }
 
-void preencherS(Serie **s)
+void preencherS(Serie **s, int *id)
 {
     printf("\nPrencha as inforamções da Serie a baixo.");
 
     *s = (Serie *)malloc(sizeof(Serie)); // Aloca memória para a nova série
 
-    printf("\nCodigo: ");
-    setbuf(stdin,NULL);
-    scanf("%d", &(*s)->cod);
+    (*s)->cod = *id;
+    (*id) ++;
 
     printf("\nTitulo da Serie: ");
     setbuf(stdin,NULL);
@@ -76,7 +75,7 @@ void preencherS(Serie **s)
     (*s)->esquerda = NULL;
 }
 
-int cadastrarS(Serie** s)
+int cadastrarS(Serie **s, int *id)
 {
     int sinal = 0;
     
@@ -84,19 +83,43 @@ int cadastrarS(Serie** s)
     if(*s == NULL)
     {
         Serie* new;
-        preencherS(&new);
+        preencherS(&new, id);
         *s = new;
         sinal = 1;
     }
     // vamos salvar as series com id par a direita e os impares a esquerda
     else if ((*s)->cod % 2 == 0)
     {
-        sinal = cadastrarS(&(*s)->direita);
+        sinal = cadastrarS(&(*s)->direita, id);
     }
 
     else
     {
-        sinal = cadastrarS(&(*s)->esquerda);
+        sinal = cadastrarS(&(*s)->esquerda, id);
+    }
+
+    return sinal;
+}
+
+int buscarS(Serie *s, int id)
+{
+    int sinal = 0;
+    if(s != NULL)
+    {
+        if (s->cod == id)
+        {
+            sinal = 1;
+        }
+        // todos os ID pares ficam a direita
+        else if(id % 2 == 0)
+        {
+            sinal = buscarS(s->direita, id);
+        }
+        //se o ID não for par, então é impar, logo vamos pra esquerda
+        else
+        {
+            sinal = buscarS(s->esquerda, id);
+        }
     }
 
     return sinal;
@@ -126,7 +149,7 @@ void liberar_all_S(Serie **s)
     {
         liberar_all_S(&(*s)->esquerda);
         liberar_all_S(&(*s)->direita);
-        free(*s);
+        free(&(*s));
         printf("\nremovi\n");
     }
     
@@ -134,25 +157,16 @@ void liberar_all_S(Serie **s)
 
 ///////////Temporada ///////////////
 
-void iniciarT(Temporada** t)
-{
-    *t = (Temporada*) malloc(sizeof(Temporada));
 
-    if (t)
-    {
-        *t = NULL;
-    } 
-}
 
-void preencherT(Temporada **t)
+
+void preencherT(Temporada **t, int num)
 {
     printf("\nPrencha as inforamções da Temporada a baixo.");
 
     *t = (Temporada *)malloc(sizeof(Temporada)); // Aloca memória para a nova série
 
-    printf("\nNumero: ");
-    setbuf(stdin,NULL);
-    scanf("%d", &(*t)->num);
+    (*t)->num = num;
 
     printf("\nTitulo da Temporada: ");
     setbuf(stdin,NULL);
@@ -172,19 +186,28 @@ void preencherT(Temporada **t)
     (*t)->esquerda = NULL;
 }
 
-int cadastrarT(Temporada** t)
+/*
+int cadastrarT(Serie** s)
 {
+    
+    Para cadastrar um temporada, deve existir uma serie
+    buscar se a serie existe
+    se existir, verificar quantas temporadas tem
+    cada temporada par fica a direita da arvore
+    cada temporada impar fica a esquerda da arvore
+    
     int sinal = 0;
-    Temporada* new;
+    
 
-    if(*t == NULL)
+    if((*s)->t == NULL)
     {
+        Temporada* new;
         preencherT(&new);
-        *t = new;
+        (*s)->t = new;
         sinal = 1;
     }
     // vamos salvar as Tempordas com id par a direita e os impares a esquerda
-    else if ((*t)->num % 2 == 0)
+    else if ((*s)->numTemp % 2 == 0)
     {
         sinal = cadastrarT(&(*t)->direita);
     }
@@ -196,3 +219,4 @@ int cadastrarT(Temporada** t)
 
     return sinal;
 }
+*/

@@ -15,17 +15,22 @@ int main(void)
     struct Serie *s;
     int opc = 0;
     iniciarS(&s);
+    int id_busca;
+
+    int valid_id = 0;
 
     while (opc!=4)
     {
         opc = menu();
         if(opc==1)
         {
-            cadastrarS(&s);
+            cadastrarS(&s, &valid_id);
         }       
         else if(opc == 2)
         {
-            printf("\nFarei a função de busca ainda");
+            printf("\nQual serie deseja buscar?: ");
+            scanf("%d", &id_busca);
+            printf("\n Resultado da busca: %d", buscarS(s,id_busca));
         }
         else if(opc == 3)
         {
@@ -34,8 +39,9 @@ int main(void)
         else if(opc == 2)
         {
             liberar_all_S(&s);
-            printf("\nSistema encerrado!");
+            
         }
     }
+    printf("\nSistema encerrado!\n");
     return 0;
 }

@@ -1,0 +1,4 @@
+python -m pip install -U scikit-image
+python -m pip install -U scikit-learn
+python -m pip install -U scipy
+
