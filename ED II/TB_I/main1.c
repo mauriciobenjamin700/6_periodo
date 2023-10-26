@@ -17,14 +17,14 @@ int main(void)
     iniciarS(&s);
     int id_busca;
 
-    int valid_id = 0;
-
     while (opc!=4)
     {
         opc = menu();
         if(opc==1)
         {
-            cadastrarS(&s, &valid_id);
+            int id;
+            id = geraId(&s);
+            cadastrarS(&s, id);
         }       
         else if(opc == 2)
         {

@@ -52,14 +52,13 @@ void iniciarS(Serie** s)
     } 
 }
 
-void preencherS(Serie **s, int *id)
+void preencherS(Serie **s, int id)
 {
     printf("\nPrencha as inforamções da Serie a baixo.");
 
     *s = (Serie *)malloc(sizeof(Serie)); // Aloca memória para a nova série
 
-    (*s)->cod = *id;
-    (*id) ++;
+    (*s)->cod = id;
 
     printf("\nTitulo da Serie: ");
     setbuf(stdin,NULL);
@@ -75,10 +74,11 @@ void preencherS(Serie **s, int *id)
     (*s)->esquerda = NULL;
 }
 
-int cadastrarS(Serie **s, int *id)
+int cadastrarS(Serie **s, int id)
 {
     int sinal = 0;
-    
+
+
 
     if(*s == NULL)
     {
@@ -87,8 +87,8 @@ int cadastrarS(Serie **s, int *id)
         *s = new;
         sinal = 1;
     }
-    // vamos salvar as series com id par a direita e os impares a esquerda
-    else if ((*s)->cod % 2 == 0)
+    // vamos salvar as series com o maior para a direita e o menor para esquerda
+    else if (id > (*s)->cod)
     {
         sinal = cadastrarS(&(*s)->direita, id);
     }
@@ -111,7 +111,7 @@ int buscarS(Serie *s, int id)
             sinal = 1;
         }
         // todos os ID pares ficam a direita
-        else if(id % 2 == 0)
+        else if(id > s->cod)
         {
             sinal = buscarS(s->direita, id);
         }
@@ -123,6 +123,17 @@ int buscarS(Serie *s, int id)
     }
 
     return sinal;
+}
+
+int geraId(Serie **s){
+    srand(1);
+    int n;
+    do{
+        n = rand()%100+1;
+
+    }while(buscarS((*s),n));
+    
+    return n;
 }
 
 void mostarS (Serie *s)

@@ -10,6 +10,7 @@ void preencherS(Serie **s);
 
 void mostarS(Serie *s);
 
+int geraId(Serie *s);
 // Cadastra um participante
 // void cadastrarP();
 // Cadastra uma temporada
