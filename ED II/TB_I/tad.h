@@ -14,7 +14,10 @@ int geraId(Serie *s);
 // Cadastra um participante
 // void cadastrarP();
 // Cadastra uma temporada
-void cadastrarT();
+int cadastrarT(Serie** s,int id);
+void preencherT(Temporada **t, int num);
+
+void cadastraAtores(Participante *l);
 // Cadastra uma serie
 // int cadastrarS();
 

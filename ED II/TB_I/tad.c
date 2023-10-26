@@ -10,6 +10,7 @@ typedef struct Participante
     char nomeArtista[NAME];
     char nomePersonagem[NAME];
     char descPersonagem[TEXT];
+    struct Participante *prox;
 
 }Participante;
 
@@ -172,18 +173,19 @@ void liberar_all_S(Serie **s)
 
 
 void preencherT(Temporada **t, int num)
-{
+{   int atores;
     printf("\nPrencha as inforamções da Temporada a baixo.");
 
     *t = (Temporada *)malloc(sizeof(Temporada)); // Aloca memória para a nova série
 
-    (*t)->num = num;
+    printf("Codigo da temporada:");
+    scanf("%d",&(*t)->num);
 
     printf("\nTitulo da Temporada: ");
     setbuf(stdin,NULL);
     scanf("%[^\n]", (*t)->titulo);
     
-    printf("\nNumero de Temporadas: ");
+    printf("\nNumero de Episodios: ");
     setbuf(stdin,NULL);
     scanf("%d", &(*t)->qtd_episodios);
 
@@ -191,43 +193,57 @@ void preencherT(Temporada **t, int num)
     setbuf(stdin,NULL);
     scanf("%d", &(*t)->ano);
 
-    (*t)->lista = NULL;
+    printf("\nQuantidade de Atores");
+    scanf("%d", &atores);
+
+    (*t)->lista = (Participante *)malloc(sizeof(Participante) * atores);
+    cadastrarAtores((*t)->lista,atores);
 
     (*t)->direita = NULL;
     (*t)->esquerda = NULL;
 }
 
-/*
-int cadastrarT(Serie** s)
-{
-    
-    Para cadastrar um temporada, deve existir uma serie
-    buscar se a serie existe
-    se existir, verificar quantas temporadas tem
-    cada temporada par fica a direita da arvore
-    cada temporada impar fica a esquerda da arvore
-    
+
+int cadastrarT(Serie** s,int id)
+{  
     int sinal = 0;
     
 
     if((*s)->t == NULL)
     {
         Temporada* new;
-        preencherT(&new);
+        preencherT(&new,id);
         (*s)->t = new;
         sinal = 1;
     }
     // vamos salvar as Tempordas com id par a direita e os impares a esquerda
-    else if ((*s)->numTemp % 2 == 0)
+    else if ((*s)->t->num > 0)
     {
-        sinal = cadastrarT(&(*t)->direita);
+        sinal = cadastrarT(&(*s)->t->direita,id);
     }
 
     else
     {
-        sinal = cadastrarT(&(*t)->esquerda);
+        sinal = cadastrarT(&(*s)->t->esquerda,id);
     }
 
     return sinal;
 }
-*/
+
+
+void cadastraAtores(Participante *l, int atores){
+    if(atores > 0){
+        printf("Nome do Artista:");
+        setbuf(stdin, NULL);
+        scanf("%[^\n]",&l->nomeArtista);
+        setbuf(stdin, NULL);
+        printf("Nome do Personagem:");
+        scanf("%[^\n]",&l->nomePersonagem);
+        printf("Descrição do Personagem:");
+        setbuf(stdin, NULL);
+        scanf("%[^\n]",&l->descPersonagem);
+        l->prox = NULL;
+        cadastraAtores(l->prox,atores-1);
+    }
+
+}
