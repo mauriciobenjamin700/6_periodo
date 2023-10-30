@@ -137,7 +137,7 @@ int geraId(Serie **s){
     return n;
 }
 
-void mostarS (Serie *s)
+void mostrarS (Serie *s)
 {
     printf("\nSerie: %s", s->titulo);
     printf("\nCodigo: %d", s->cod);
@@ -148,7 +148,7 @@ void mostrar_all_S(Serie **s)
 {
     if (*s != NULL)
     {
-        mostarS(*s);
+        mostrarS(*s);
         mostrar_all_S(&(*s)->esquerda);
         mostrar_all_S(&(*s)->direita);
     }
@@ -169,7 +169,22 @@ void liberar_all_S(Serie **s)
 
 ///////////Temporada ///////////////
 
+void cadastraAtores(Participante *l, int atores){
+    if(atores > 0){
+        printf("Nome do Artista:");
+        setbuf(stdin, NULL);
+        scanf("%[^\n]",l->nomeArtista);
+        setbuf(stdin, NULL);
+        printf("Nome do Personagem:");
+        scanf("%[^\n]",l->nomePersonagem);
+        printf("Descrição do Personagem:");
+        setbuf(stdin, NULL);
+        scanf("%[^\n]",l->descPersonagem);
+        l->prox = NULL;
+        cadastraAtores(l->prox,atores-1);
+    }
 
+}
 
 
 void preencherT(Temporada **t, int num)
@@ -197,53 +212,53 @@ void preencherT(Temporada **t, int num)
     scanf("%d", &atores);
 
     (*t)->lista = (Participante *)malloc(sizeof(Participante) * atores);
-    cadastrarAtores((*t)->lista,atores);
+    cadastraAtores((*t)->lista,atores);
 
     (*t)->direita = NULL;
     (*t)->esquerda = NULL;
 }
 
 
-int cadastrarT(Serie** s,int id)
+int cadastrarT(Temporada** s,int id)
 {  
     int sinal = 0;
     
 
-    if((*s)->t == NULL)
+    if( *s == NULL)
     {
         Temporada* new;
         preencherT(&new,id);
-        (*s)->t = new;
+        (*s) = new;
         sinal = 1;
     }
     // vamos salvar as Tempordas com id par a direita e os impares a esquerda
-    else if ((*s)->t->num > 0)
+    else if ((*s)->num > 0)
     {
-        sinal = cadastrarT(&(*s)->t->direita,id);
+        sinal = cadastrarT(&((*s)->direita),id);
     }
 
     else
     {
-        sinal = cadastrarT(&(*s)->t->esquerda,id);
+        sinal = cadastrarT( &((*s)->esquerda),id);
     }
 
     return sinal;
 }
 
-
-void cadastraAtores(Participante *l, int atores){
-    if(atores > 0){
-        printf("Nome do Artista:");
-        setbuf(stdin, NULL);
-        scanf("%[^\n]",&l->nomeArtista);
-        setbuf(stdin, NULL);
-        printf("Nome do Personagem:");
-        scanf("%[^\n]",&l->nomePersonagem);
-        printf("Descrição do Personagem:");
-        setbuf(stdin, NULL);
-        scanf("%[^\n]",&l->descPersonagem);
-        l->prox = NULL;
-        cadastraAtores(l->prox,atores-1);
+void mostrar_all_T(Temporada **s)
+{
+    if (*s != NULL)
+    {
+        mostrarT(*s);
+        mostrar_all_T(&(*s)->esquerda);
+        mostrar_all_T(&(*s)->direita);
     }
+    
+}
 
+void mostrarT (Temporada *s)
+{
+    printf("\nSerie: %s", s->titulo);
+    printf("\nQuantidade de eps: %d", s->qtd_episodios);
+    printf("\nAno: %d\n", s->ano);
 }

@@ -17,7 +17,7 @@ int geraId(Serie *s);
 int cadastrarT(Serie** s,int id);
 void preencherT(Temporada **t, int num);
 
-void cadastraAtores(Participante *l);
+void cadastraAtores(Participante *l, int Atores);
 // Cadastra uma serie
 // int cadastrarS();
 
