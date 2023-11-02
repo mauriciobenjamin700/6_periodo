@@ -1,47 +1,95 @@
 #include <stdio.h>
 #include "tad.c"
+#include "menu.c"
 
-int menu()
-{
-    int opc;
-    printf("\nBEM VINDO A BIBLIOTECA DE SERIES!\n\t1 - Cadastrar Serie\n\t2 - Buscar Serie\n\t3 - Mostrar todas as Series\n\t4 - Encerrar o sistema!\nSua resposta: ");
-    scanf("%d", &opc);
 
-    return opc;
-}
 
 int main(void)
 {
     struct Serie *s;
-    int opc = 0;
+    int opc = 1;
     iniciarS(&s);
     int id_busca;
+    int id;
+    int sinal = 0;
+    Serie * serie;
 
     while (opc!=4)
     {
         opc = menu();
-        if(opc==1)
-        {
-            int id;
+        if(opc==11)
+        { 
             id = geraId(&s);
-            cadastrarS(&s, id);
+            Serie* new;
+            preencherS(&new, id);
+            sinal = cadastrarS(&s, new);
+
+            if(sinal) printf("\nCadastro realizado com sucesso!");
+            else printf("\nFalha no Cadastro");
         }       
-        else if(opc == 2)
+        else if(opc == 12)
         {
-            printf("\nQual serie deseja buscar?: ");
+            printf("\nInforme o código da serie que deseja buscar: ");
             scanf("%d", &id_busca);
-            printf("\n Resultado da busca: %d", buscarS(s,id_busca));
+            serie =  buscarS(s,id_busca);
+            if (serie != NULL)
+            {
+                printf("\nSerie Encontrada!\n");
+                mostrarS(serie);
+                printf("\n----------------------------");
+            }
+            else printf("\nSerie nao encontrada\n");
         }
-        else if(opc == 3)
+        else if(opc == 13)  printf("\nFuncinalidade ainda em desenvolvimento");
+    
+        else if(opc == 21)
         {
-            mostrar_all_S(&s);
-        }
-        else if(opc == 2)
-        {
-            liberar_all_S(&s);
+            printf("\nID da serie: ");
+            setbuf(stdin,NULL);
+            scanf("%d", &id);
+
+            serie = buscarS(s,id);
+            if (serie != NULL)
+            {
+                if (cadastrarT(&(s->t))) printf("\nTemporada Adicionada com sucesso!");
+                else printf("\nFalha ao adicionar temporada");
+            }
+            else printf ("\nSerie nao encontrada!");
             
         }
+        else if (opc == 22)
+        {
+            printf("\nID da serie: ");
+            setbuf(stdin,NULL);
+            scanf("%d", &id);
+
+            serie = buscarS(s,id);
+            if (serie != NULL)
+            {
+                mostrar_all_T(serie->t);
+            }
+            else printf("\nSerie nao encontrada!");
+        }
+
+        else if (opc == 41) mostrar_all_S(&s);
+        else if (opc == 42)
+        {
+            printf("\nID da serie: ");
+            setbuf(stdin,NULL);
+            scanf("%d", &id);
+
+            serie = buscarS(s,id);
+            if (serie != NULL)
+            {
+                mostrar_all_T(serie->t);
+            }
+            else printf("\nSerie nao encontrada!");
+        }
+ 
+            
+        
     }
     printf("\nSistema encerrado!\n");
+    liberar_all_S(&s);
     return 0;
 }

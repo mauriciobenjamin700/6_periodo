@@ -75,34 +75,42 @@ void preencherS(Serie **s, int id)
     (*s)->esquerda = NULL;
 }
 
-int cadastrarS(Serie **s, int id)
+void mostrarS (Serie *s)
+{
+    printf("\n\n----------------------------");
+    printf("\nCodigo: %d", s->cod);
+    printf("\nSerie: %s", s->titulo);
+    printf("\nNumero de Temporadas: %d\n", s->numTemp);
+    printf("----------------------------");
+}
+
+int cadastrarS(Serie **s, Serie *new)
 {
     int sinal = 0;
 
 
-
     if(*s == NULL)
     {
-        Serie* new;
-        preencherS(&new, id);
         *s = new;
+
         sinal = 1;
+        mostrarS(new);
     }
     // vamos salvar as series com o maior para a direita e o menor para esquerda
-    else if (id > (*s)->cod)
+    else if (new->cod > (*s)->cod)
     {
-        sinal = cadastrarS(&(*s)->direita, id);
+        sinal = cadastrarS(&(*s)->direita, new);
     }
 
     else
     {
-        sinal = cadastrarS(&(*s)->esquerda, id);
+        sinal = cadastrarS(&(*s)->esquerda, new);
     }
 
     return sinal;
 }
 
-int buscarS(Serie *s, int id)
+int validarS(Serie *s, int id)
 {
     int sinal = 0;
     if(s != NULL)
@@ -111,12 +119,37 @@ int buscarS(Serie *s, int id)
         {
             sinal = 1;
         }
-        // todos os ID pares ficam a direita
+        
+        else if(id > s->cod)
+        {
+            sinal = validarS(s->direita, id);
+        }
+        
+        else
+        {
+            sinal = validarS(s->esquerda, id);
+        }
+    }
+
+    return sinal;
+}
+
+Serie* buscarS(Serie *s, int id)
+{
+    Serie *sinal = NULL;
+
+    if(s != NULL)
+    {
+        if (s->cod == id)
+        {
+            sinal = s;
+        }
+        
         else if(id > s->cod)
         {
             sinal = buscarS(s->direita, id);
         }
-        //se o ID não for par, então é impar, logo vamos pra esquerda
+        
         else
         {
             sinal = buscarS(s->esquerda, id);
@@ -132,17 +165,12 @@ int geraId(Serie **s){
     do{
         n = rand()%100+1;
 
-    }while(buscarS((*s),n));
+    }while(validarS((*s),n));
     
     return n;
 }
 
-void mostrarS (Serie *s)
-{
-    printf("\nSerie: %s", s->titulo);
-    printf("\nCodigo: %d", s->cod);
-    printf("\nNumero de Temporadas: %d\n", s->numTemp);
-}
+
 
 void mostrar_all_S(Serie **s)
 {
@@ -187,13 +215,13 @@ void cadastraAtores(Participante *l, int atores){
 }
 
 
-void preencherT(Temporada **t, int num)
+void preencherT(Temporada **t)
 {   int atores;
-    printf("\nPrencha as inforamções da Temporada a baixo.");
+    printf("\nPrencha as inforamções da Temporada a baixo:\n");
 
     *t = (Temporada *)malloc(sizeof(Temporada)); // Aloca memória para a nova série
 
-    printf("Codigo da temporada:");
+    printf("\nCodigo da temporada:");
     scanf("%d",&(*t)->num);
 
     printf("\nTitulo da Temporada: ");
@@ -208,7 +236,7 @@ void preencherT(Temporada **t, int num)
     setbuf(stdin,NULL);
     scanf("%d", &(*t)->ano);
 
-    printf("\nQuantidade de Atores");
+    printf("\nQuantidade de Atores: ");
     scanf("%d", &atores);
 
     (*t)->lista = (Participante *)malloc(sizeof(Participante) * atores);
@@ -219,7 +247,7 @@ void preencherT(Temporada **t, int num)
 }
 
 
-int cadastrarT(Temporada** s,int id)
+int cadastrarT(Temporada **s)
 {  
     int sinal = 0;
     
@@ -227,38 +255,44 @@ int cadastrarT(Temporada** s,int id)
     if( *s == NULL)
     {
         Temporada* new;
-        preencherT(&new,id);
+        preencherT(&new);
         (*s) = new;
         sinal = 1;
     }
     // vamos salvar as Tempordas com id par a direita e os impares a esquerda
     else if ((*s)->num > 0)
     {
-        sinal = cadastrarT(&((*s)->direita),id);
+        sinal = cadastrarT(&((*s)->direita));
     }
 
     else
     {
-        sinal = cadastrarT( &((*s)->esquerda),id);
+        sinal = cadastrarT( &((*s)->esquerda));
     }
 
     return sinal;
 }
 
-void mostrar_all_T(Temporada **s)
+void mostrarT (Temporada *s)
 {
-    if (*s != NULL)
+    printf("\n-----------------------------------------------");
+    printf("\nSerie: %s", s->titulo);
+    printf("\nQuantidade de eps: %d", s->qtd_episodios);
+    printf("\nAno: %d\n", s->ano);
+     printf("-----------------------------------------------");
+}
+
+
+void mostrar_all_T(Temporada *s)
+{
+    if (s != NULL)
     {
-        mostrarT(*s);
-        mostrar_all_T(&(*s)->esquerda);
-        mostrar_all_T(&(*s)->direita);
+        
+        mostrar_all_T(s->esquerda);
+        mostrar_all_T(s->direita);
+        mostrarT(s);
     }
     
 }
 
-void mostrarT (Temporada *s)
-{
-    printf("\nSerie: %s", s->titulo);
-    printf("\nQuantidade de eps: %d", s->qtd_episodios);
-    printf("\nAno: %d\n", s->ano);
-}
+
