@@ -85,8 +85,33 @@ int main(void)
             }
             else printf("\nSerie nao encontrada!");
         }
- 
+
+        else if (opc == 43)
+        {
+            printf("\nID da serie: ");
+            setbuf(stdin,NULL);
+            scanf("%d", &id);
+
+            serie = buscarS(s,id);
+            if (serie != NULL)
+            {
+                mostrar_all_T(serie->t);
+
+                printf("\nDeseja ver os personagens de qual temporada: ");
+                setbuf(stdin,NULL);
+                scanf("%d", &id);
+
+                Temporada *t  = buscarT(serie->t,id);
+
+                if(t != NULL)
+                {
+                    mostrar_all_P(t->lista);
+                }
+                else printf("\nTemporada Invalida");
+            }
+            else printf("\nSerie nao encontrada!");
             
+        }
         
     }
     printf("\nSistema encerrado!\n");

@@ -197,20 +197,41 @@ void liberar_all_S(Serie **s)
 
 ///////////Temporada ///////////////
 
-void cadastraAtores(Participante *l, int atores){
-    if(atores > 0){
-        printf("Nome do Artista:");
+void cadastraAtores(Participante **l, int atores)
+{
+    if (atores == 1)
+    {
+        printf("\nNome do Artista: ");
         setbuf(stdin, NULL);
-        scanf("%[^\n]",l->nomeArtista);
+        scanf("%[^\n]",(*l)->nomeArtista);
         setbuf(stdin, NULL);
-        printf("Nome do Personagem:");
-        scanf("%[^\n]",l->nomePersonagem);
-        printf("Descrição do Personagem:");
+        printf("\nNome do Personagem:");
+        scanf("%[^\n]",(*l)->nomePersonagem);
+        printf("\nDescrição do Personagem:");
         setbuf(stdin, NULL);
-        scanf("%[^\n]",l->descPersonagem);
-        l->prox = NULL;
-        cadastraAtores(l->prox,atores-1);
+        scanf("%[^\n]",(*l)->descPersonagem);
+        (*l)->prox = NULL;
     }
+    else if(atores > 1){
+        printf("\nNome do Artista: ");
+        setbuf(stdin, NULL);
+        scanf("%[^\n]",(*l)->nomeArtista);
+        setbuf(stdin, NULL);
+        printf("\nNome do Personagem:");
+        scanf("%[^\n]",(*l)->nomePersonagem);
+        printf("\nDescrição do Personagem:");
+        setbuf(stdin, NULL);
+        scanf("%[^\n]",(*l)->descPersonagem);
+
+        Participante *p;
+        p = (Participante*) malloc(sizeof(Participante));
+
+        (*l)->prox = p;
+        cadastraAtores(&((*l)->prox),atores-1);
+
+
+    }
+
 
 }
 
@@ -237,10 +258,11 @@ void preencherT(Temporada **t)
     scanf("%d", &(*t)->ano);
 
     printf("\nQuantidade de Atores: ");
+    setbuf(stdin,NULL);
     scanf("%d", &atores);
 
     (*t)->lista = (Participante *)malloc(sizeof(Participante) * atores);
-    cadastraAtores((*t)->lista,atores);
+    cadastraAtores(&((*t)->lista),atores);
 
     (*t)->direita = NULL;
     (*t)->esquerda = NULL;
@@ -273,26 +295,71 @@ int cadastrarT(Temporada **s)
     return sinal;
 }
 
-void mostrarT (Temporada *s)
+
+void mostrarT (Temporada *t)
 {
     printf("\n-----------------------------------------------");
-    printf("\nSerie: %s", s->titulo);
-    printf("\nQuantidade de eps: %d", s->qtd_episodios);
-    printf("\nAno: %d\n", s->ano);
-     printf("-----------------------------------------------");
+    printf("\nIdentificacao: %d", t->num);
+    printf("\nSerie: %s", t->titulo);
+    printf("\nQuantidade de eps: %d", t->qtd_episodios);
+    printf("\nAno: %d\n", t->ano);
+    printf("-----------------------------------------------");
 }
 
 
-void mostrar_all_T(Temporada *s)
+Temporada* buscarT(Temporada *t, int id)
 {
-    if (s != NULL)
+    Temporada *sinal = NULL;
+
+    if(t != NULL)
+    {
+        if (t->num == id)
+        {
+            sinal = t;
+        }
+        
+        else if(id > t->num)
+        {
+            sinal = buscarT(t->direita, id);
+        }
+        
+        else
+        {
+            sinal = buscarT(t->esquerda, id);
+        }
+    }
+
+    return sinal;
+}
+
+void mostrar_all_T(Temporada *t)
+{
+    if (t != NULL)
     {
         
-        mostrar_all_T(s->esquerda);
-        mostrar_all_T(s->direita);
-        mostrarT(s);
+        mostrar_all_T(t->esquerda);
+        mostrar_all_T(t->direita);
+        mostrarT(t);
     }
     
 }
 
+
+void mostrarP(Participante *p)
+{
+    printf("\n-----------------------------------------------");
+    printf("\nNome do Artista: %s", p->nomeArtista);
+    printf("\nPersonagem: %s", p->nomePersonagem);
+    printf("\nDescricao do Personagem: %s", p->descPersonagem);
+    printf("\n-----------------------------------------------");
+}
+
+void mostrar_all_P(Participante * p)
+{
+    if (p != NULL)
+    {
+        mostrarP(p);
+        mostrar_all_P(p->prox);
+    }
+}
 
