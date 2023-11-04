@@ -32,6 +32,7 @@ int menu_temporada()
     return opc;
 }
 
+/*
 int menu_participante()
 {
     int opc;
@@ -47,7 +48,7 @@ int menu_participante()
 
     return opc;
 }
-
+*/
 int questoes()
 {
     int opc;
@@ -70,7 +71,7 @@ int menu()
     int opc;
 
     printf("\n----------MENU GERAL---------\n");
-    printf("| 1 - Series \n| 2 - Temporadas \n| 3 - Participantes\n| 4 - Impressões\n| 0 - Sair\n");
+    printf("| 1 - Series \n| 2 - Temporadas \n| 3 - Impressões\n| 0 - Sair\n");
     printf("-----------------------------\n");
     printf("\nSua resposta: ");
     
@@ -81,7 +82,7 @@ int menu()
 
     if      (opc == 1) opc = 10 + menu_serie();
     else if (opc == 2) opc = 20 + menu_temporada();
-    else if (opc == 3) opc = 30 + menu_participante();
+    //else if (opc == 3) opc = 30 + menu_participante();
     else if (opc == 4) opc = 40 + questoes();
     else opc = 4;
 
