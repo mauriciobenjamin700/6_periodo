@@ -96,7 +96,7 @@ int cadastrarS(Serie **s, Serie *novo)
         *s = novo;
 
         sinal = 1;
-        mostrarS(novo);
+        
     }
     // vamos salvar as series com o maior para a direita e o menor para esquerda
     else if (novo->cod > (*s)->cod)
@@ -180,8 +180,9 @@ void mostrar_all_S(Serie **s)
     {
 
         mostrar_all_S(&(*s)->esquerda);
-        mostrar_all_S(&(*s)->direita);
         mostrarS(*s);
+        mostrar_all_S(&(*s)->direita);
+        
     }
 }
 

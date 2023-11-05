@@ -5,7 +5,7 @@
 
 int main(void)
 {
-    struct Serie *s;
+    Serie *s;
     int opc = 1;
     
     int id;
@@ -28,7 +28,11 @@ int main(void)
 
             preencherS(&new, id,titulo);
             sinal = cadastrarS(&s, new);
-            if(sinal) printf("\nCadastro realizado com sucesso!");
+            if(sinal) 
+            {
+                printf("\nCadastro realizado com sucesso!\n");
+                mostrarS(new);
+            }
             else printf("\nFalha no Cadastro");
         }       
         else if(opc == 12)
