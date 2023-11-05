@@ -1,24 +1,32 @@
 #include <stdio.h>
 #include "tad1.c"
 #include "menu.c"
+#define TITTEL 30
 
 int main(void)
 {
     struct Serie *s;
     int opc = 1;
-    iniciarS(&s);
+    
     int id;
     int sinal = 0;
     Serie * serie;
+    char titulo[TITTEL];
 
-    while (opc!=4)
+    if(iniciarS(&s))
+    {
+        while (opc!=4)
     {
         opc = menu();
         if(opc==11)
         { 
             id = geraId(&s);
             Serie* new;
-            preencherS(&new, id);
+            printf("\nTitulo da Serie: ");
+            setbuf(stdin, NULL);
+            scanf("%[^\n]",titulo);
+
+            preencherS(&new, id,titulo);
             sinal = cadastrarS(&s, new);
             if(sinal) printf("\nCadastro realizado com sucesso!");
             else printf("\nFalha no Cadastro");
@@ -136,5 +144,11 @@ int main(void)
     printf("\nSistema encerrado!\n");
 
     liberar_all_S(&s);
+    }
+
+    else
+    printf("Falha ao alocar memoria!");
+
+    
     return 0;
 }

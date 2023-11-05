@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define NAME 50
 #define TEXT 200
 #define TITTEL 30
+
 
 typedef struct Participante
 {
@@ -41,21 +43,21 @@ typedef struct Serie
 } Serie;
 /////////////////// Serie//////////////////
 
-void iniciarS(Serie **s)
+int iniciarS(Serie **s)
 {
     *s = (Serie *)malloc(sizeof(Serie));
-
+    int sinal = 0;
     if (s)
     {
 
         *s = NULL;
-        printf("\nSeries Iniciadas com sucesso!");
+        sinal = 1;
     }
-    else
-        printf("\nFalha ao iniciar as series!");
+    
+    return sinal;
 }
 
-void preencherS(Serie **s, int id)
+void preencherS(Serie **s, int id, char titulo[])
 {
     // printf("\nPrencha as inforamções da Serie a baixo.");
 
@@ -63,9 +65,7 @@ void preencherS(Serie **s, int id)
 
     (*s)->cod = id;
 
-    printf("\nTitulo da Serie: ");
-    setbuf(stdin, NULL);
-    scanf("%[^\n]", (*s)->titulo);
+    strcpy(((*s)->titulo),titulo);
 
     /*
     printf("\nNumero de Temporadas: ");
