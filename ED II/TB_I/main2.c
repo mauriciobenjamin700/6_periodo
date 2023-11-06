@@ -2,7 +2,7 @@
 #include <time.h>
 #include "tad1.c"
 
-#define DATA_SIZE 30
+#define DATA_SIZE 10000
 #define TEST_SIZE 1
 int main(void)
 {
@@ -22,7 +22,7 @@ int main(void)
         {
             id = geraId(&s);
             Serie* new;
-            titulo[0] = (char) i;
+            snprintf(titulo, sizeof(titulo), "%d", i);
             preencherS(&new, id,titulo);
             sinal = cadastrarS(&s, new);
 

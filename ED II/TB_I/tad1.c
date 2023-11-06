@@ -167,7 +167,7 @@ int geraId(Serie **s)
     int n;
     do
     {
-        n = rand() % 100 + 1;
+        n = rand() % 10000 + 1;
 
     } while (validarS((*s), n));
 
