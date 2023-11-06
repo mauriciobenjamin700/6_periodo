@@ -5,7 +5,6 @@
 #define TEXT 200
 #define TITTEL 30
 
-
 typedef struct Participante
 {
     char nomeArtista[NAME];
@@ -53,7 +52,7 @@ int iniciarS(Serie **s)
         *s = NULL;
         sinal = 1;
     }
-    
+
     return sinal;
 }
 
@@ -65,7 +64,7 @@ void preencherS(Serie **s, int id, char titulo[])
 
     (*s)->cod = id;
 
-    strcpy(((*s)->titulo),titulo);
+    strcpy(((*s)->titulo), titulo);
 
     /*
     printf("\nNumero de Temporadas: ");
@@ -96,7 +95,6 @@ int cadastrarS(Serie **s, Serie *novo)
         *s = novo;
 
         sinal = 1;
-        
     }
     // vamos salvar as series com o maior para a direita e o menor para esquerda
     else if (novo->cod > (*s)->cod)
@@ -182,7 +180,6 @@ void mostrar_all_S(Serie **s)
         mostrar_all_S(&(*s)->esquerda);
         mostrarS(*s);
         mostrar_all_S(&(*s)->direita);
-        
     }
 }
 
@@ -219,38 +216,50 @@ void liberar_all_S(Serie **s)
 }
 
 ///////////Temporada ///////////////
-void troca(Participante *a, Participante *b) {
-    Participante temp = *a;
+
+void troca(Participante **a, Participante **b)
+{
+    Participante *temp = *a;
     *a = *b;
     *b = temp;
 }
-
-int comparaNomes(const char *name1, const char *name2) {
-    for (int i = 0; name1[i] && name2[i]; i++) {
-        if (name1[i] < name2[i]) {
+/*
+int comparaNomes(char name1[], char name2[])
+{
+    for (int i = 0; name1[i] && name2[i]; i++)
+    {
+        if (name1[i] < name2[i])
+        {
             return -1;
-        } else if (name1[i] > name2[i]) {
+        }
+        else if (name1[i] > name2[i])
+        {
             return 1;
         }
     }
 
     return 0; // Os nomes são iguais até onde foram comparados
 }
-
-void OrdenaAtores(Participante *head) {
+*/
+void OrdenaAtores(Participante **head)
+{
     Participante *i, *j;
     Participante *min;
 
-    for (i = head; i != NULL; i = i->prox) {
+    for (i = *head; i != NULL; i = i->prox)
+    {
         min = i;
-        for (j = i->prox; j != NULL; j = j->prox) {
-            if (comparaNomes(j->nomeArtista, min->nomeArtista) < 0) {
+        for (j = i->prox; j != NULL; j = j->prox)
+        {
+            // compara o primeiro com o segundo, retorna -1,0 e 1 caso primeiro seja menor, igual, maior
+            if(strcmp(j->nomeArtista,min->nomeArtista)== -1)
+            //if (comparaNomes(j->nomeArtista, min->nomeArtista) < 0)
+            {
                 min = j;
+                troca(&i, &min);
             }
         }
-        if (min != i) {
-            troca(i, min);
-        }
+
     }
 }
 
@@ -289,15 +298,15 @@ void cadastran_atores(Participante **l, int n_atores)
     }
 }
 
-void preencherT(Temporada **t)
+void preencherT(Temporada **t, int id)
 {
     int n_atores;
     printf("\nPrencha as inforamções da Temporada a baixo:\n");
 
     *t = (Temporada *)malloc(sizeof(Temporada)); // Aloca memória para a nova série
 
-    printf("\nCodigo da temporada:");
-    scanf("%d", &(*t)->num);
+    
+    (*t)->num = id;
 
     printf("\nTitulo da Temporada: ");
     setbuf(stdin, NULL);
@@ -311,7 +320,7 @@ void preencherT(Temporada **t)
     setbuf(stdin, NULL);
     scanf("%d", &(*t)->ano);
 
-    printf("\nQuantidade de n_atores: ");
+    printf("\nQuantidade de Atores: ");
     setbuf(stdin, NULL);
     scanf("%d", &n_atores);
 
@@ -322,26 +331,26 @@ void preencherT(Temporada **t)
     (*t)->esquerda = NULL;
 }
 
-int cadastrarT(Temporada **t)
+int cadastrarT(Temporada **t, int id)
 {
     int sinal = 0;
 
     if (*t == NULL)
     {
         Temporada *novo;
-        preencherT(&novo);
+        preencherT(&novo, id);
         (*t) = novo;
         sinal = 1;
     }
     // vamos salvar as Tempordas com id maior a direita e os menores a esquerda
-    else if ((*t)->num > 0)
+    else if ((*t)->num > id)
     {
-        sinal = cadastrarT(&((*t)->direita));
+        sinal = cadastrarT(&((*t)->direita),id);
     }
 
     else
     {
-        sinal = cadastrarT(&((*t)->esquerda));
+        sinal = cadastrarT(&((*t)->esquerda),id);
     }
 
     return sinal;
@@ -350,8 +359,8 @@ int cadastrarT(Temporada **t)
 void mostrarT(Temporada *t)
 {
     printf("\n-----------------------------------------------");
-    printf("\nIdentificacao: %d", t->num);
-    printf("\nSerie: %s", t->titulo);
+    printf("\nTemporada: %d", t->num);
+    printf("\nTitulo: %s", t->titulo);
     printf("\nQuantidade de eps: %d", t->qtd_episodios);
     printf("\nAno: %d\n", t->ano);
     printf("-----------------------------------------------");
@@ -387,8 +396,9 @@ void mostrar_all_T(Temporada *t)
     if (t != NULL)
     {
         mostrar_all_T(t->esquerda);
-        mostrar_all_T(t->direita);
         mostrarT(t);
+        mostrar_all_T(t->direita);
+        
     }
 }
 

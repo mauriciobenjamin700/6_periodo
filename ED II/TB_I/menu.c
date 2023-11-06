@@ -83,7 +83,7 @@ int menu()
     if      (opc == 1) opc = 10 + menu_serie();
     else if (opc == 2) opc = 20 + menu_temporada();
     //else if (opc == 3) opc = 30 + menu_participante();
-    else if (opc == 4) opc = 40 + questoes();
+    else if (opc == 3) opc = 30 + questoes();
     else opc = 4;
 
     return opc;
