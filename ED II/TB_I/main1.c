@@ -12,6 +12,7 @@ int main(void)
     int sinal = 0;
     Serie * serie;
     char titulo[TITTEL];
+    int id_temporada;
 
     if(iniciarS(&s))
     {
@@ -59,7 +60,10 @@ int main(void)
             serie = buscarS(s,id);
             if (serie != NULL)
             {
-                if (cadastrarT(&(s->t))) 
+                printf("\nNumero da Temporada: ");
+                setbuf(stdin,NULL);
+                scanf("%d", &id_temporada);
+                if (cadastrarT(&(s->t), id_temporada)) 
                 {
                     printf("\nTemporada Adicionada com sucesso!");
                     serie->numTemp+=1;
@@ -79,6 +83,7 @@ int main(void)
             serie = buscarS(s,id);
             if (serie != NULL)
             {
+                printf("\nLinha 82");
                 mostrar_all_T(serie->t);
             }
             else printf("\nSerie nao encontrada!");
@@ -86,8 +91,8 @@ int main(void)
 
         else if (opc == 23) printf("\nFuncionalidade em Desenvolvimento ainda!");
 
-        else if (opc == 41) mostrar_all_S(&s);
-        else if (opc == 42)
+        else if (opc == 31) mostrar_all_S(&s);
+        else if (opc == 32)
         {
             printf("\nID da serie: ");
             setbuf(stdin,NULL);
@@ -101,7 +106,7 @@ int main(void)
             else printf("\nSerie nao encontrada!");
         }
 
-        else if (opc == 43)
+        else if (opc == 33)
         {
             printf("\nID da serie: ");
             setbuf(stdin,NULL);

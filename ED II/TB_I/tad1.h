@@ -26,4 +26,6 @@ void mostrar_all_T(Temporada *t);
 void mostrarP(Participante *p);
 void mostrar_all_P(Participante *p);
 void letra_D(Temporada *t);
-
+void OrdenaAtores(Participante *head);
+int comparaNomes(const char *name1, const char *name2);
+void troca(Participante *a, Participante *b);
