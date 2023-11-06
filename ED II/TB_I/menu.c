@@ -71,7 +71,7 @@ int menu()
     int opc;
 
     printf("\n----------MENU GERAL---------\n");
-    printf("| 1 - Series \n| 2 - Temporadas \n| 3 - Impressões\n| 0 - Sair\n");
+    printf("| 1 - Series \n| 2 - Temporadas \n| 3 - Impressoes\n| 0 - Sair\n");
     printf("-----------------------------\n");
     printf("\nSua resposta: ");
     
