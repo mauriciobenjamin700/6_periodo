@@ -219,6 +219,40 @@ void liberar_all_S(Serie **s)
 }
 
 ///////////Temporada ///////////////
+void troca(Participante *a, Participante *b) {
+    Participante temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int comparaNomes(const char *name1, const char *name2) {
+    for (int i = 0; name1[i] && name2[i]; i++) {
+        if (name1[i] < name2[i]) {
+            return -1;
+        } else if (name1[i] > name2[i]) {
+            return 1;
+        }
+    }
+
+    return 0; // Os nomes são iguais até onde foram comparados
+}
+
+void OrdenaAtores(Participante *head) {
+    Participante *i, *j;
+    Participante *min;
+
+    for (i = head; i != NULL; i = i->prox) {
+        min = i;
+        for (j = i->prox; j != NULL; j = j->prox) {
+            if (comparaNomes(j->nomeArtista, min->nomeArtista) < 0) {
+                min = j;
+            }
+        }
+        if (min != i) {
+            troca(i, min);
+        }
+    }
+}
 
 void cadastran_atores(Participante **l, int n_atores)
 {
@@ -283,7 +317,7 @@ void preencherT(Temporada **t)
 
     (*t)->lista = (Participante *)malloc(sizeof(Participante) * n_atores);
     cadastran_atores(&((*t)->lista), n_atores);
-
+    OrdenaAtores(&((*t)->lista));
     (*t)->direita = NULL;
     (*t)->esquerda = NULL;
 }
