@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "tad1.c"
+#include "tad.c"
 #include "menu.c"
 #define TITTEL 30
 

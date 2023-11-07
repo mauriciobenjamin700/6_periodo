@@ -274,10 +274,10 @@ int calcularFB_Temporada(Temporada *s) {
     return altura_Temporada(s->esquerda) - altura_Temporada(s->direita);
 }
 
-void atualizarAltura_Temporada(Temporada *s) {
+void atualizarAltura_Temporada(Temporada *t) {
 
-    if (s != NULL) {
-        s->altura = 1 + MAX(altura_Temporada(s->esquerda), altura_Temporada(s->direita));
+    if (t != NULL) {
+        t->altura = 1 + MAX(altura_Temporada(t->esquerda), altura_Temporada(t->direita));
 
     }
 }
@@ -298,7 +298,7 @@ Temporada *rotacaoDireita_Temporada(Temporada *y) {
 Temporada *rotacaoEsquerda_Temporada(Temporada **x) {
     Temporada *y = (*x)->direita;
     if(*x == NULL){ 
-
+        printf("\n301");
     }
     (*x)->direita = y->esquerda;
 
@@ -437,7 +437,7 @@ int cadastrarT(Temporada **t, int id) {
         preencherT(&novo, id);
         (*t) = novo;
         sinal = 1;
-    } else if ((*t)->num > id) {
+    } else if (id > (*t)->num ) {
         sinal = cadastrarT(&((*t)->direita), id);
     } else {
         sinal = cadastrarT(&((*t)->esquerda), id);
@@ -447,11 +447,11 @@ int cadastrarT(Temporada **t, int id) {
     int fb = calcularFB_Temporada(*t);
 
     // Rebalanceamento da árvore
-    if (fb > 1 && id < (*t)->esquerda->num) {
+    if (fb == 2 && id < (*t)->esquerda->num) {
         *t = rotacaoDireita_Temporada(*t);
-    } else if (fb < -1 && id > (*t)->direita->num) {
+    } else if (fb == -2 && id > (*t)->direita->num) {
         *t = rotacaoEsquerda_Temporada(&(*t));
-    } else if (fb > 1 && id > (*t)->esquerda->num) {
+    } else if (fb == 2 && id > (*t)->esquerda->num) {
         printf("\n450");
         (*t)->esquerda = rotacaoEsquerda_Temporada(&((*t)->esquerda));
         printf("452");

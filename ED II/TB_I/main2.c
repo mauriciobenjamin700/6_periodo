@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-#include "tad1.c"
+#include "tad.c"
 
 #define DATA_SIZE 10000
 #define TEST_SIZE 1
@@ -43,9 +43,6 @@ int main(void)
     }
     
 
-
-
-    
     for(i=0;i<TEST_SIZE;i++)
     {
         printf("\n%f", results[i]);

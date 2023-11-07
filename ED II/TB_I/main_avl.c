@@ -19,6 +19,7 @@ int main(void)
         while (opc!=4)
     {
         opc = menu();
+
         if(opc==11)
         { 
             id = geraId(&s);
@@ -83,7 +84,7 @@ int main(void)
             serie = buscarS(s,id);
             if (serie != NULL)
             {
-                //bolei uma gambi pra resolver, erro era no serie->t
+                
                 mostrar_all_T(((*serie).t));
             }
             else printf("\nSerie nao encontrada!");
