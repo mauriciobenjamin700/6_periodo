@@ -92,7 +92,6 @@ int iniciarS(Serie **s)
     int sinal = 0;
     if (s)
     {
-
         *s = NULL;
         sinal = 1;
     }
@@ -276,10 +275,10 @@ int calcularFB_Temporada(Temporada *s) {
 }
 
 void atualizarAltura_Temporada(Temporada *s) {
-    printf("\n279");
+
     if (s != NULL) {
         s->altura = 1 + MAX(altura_Temporada(s->esquerda), altura_Temporada(s->direita));
-        printf("\n282");
+
     }
 }
 
@@ -299,7 +298,7 @@ Temporada *rotacaoDireita_Temporada(Temporada *y) {
 Temporada *rotacaoEsquerda_Temporada(Temporada **x) {
     Temporada *y = (*x)->direita;
     if(*x == NULL){ 
-        printf("\nÉ o X");
+
     }
     (*x)->direita = y->esquerda;
 
@@ -451,7 +450,7 @@ int cadastrarT(Temporada **t, int id) {
     if (fb > 1 && id < (*t)->esquerda->num) {
         *t = rotacaoDireita_Temporada(*t);
     } else if (fb < -1 && id > (*t)->direita->num) {
-        *t = rotacaoEsquerda_Temporada(*t);
+        *t = rotacaoEsquerda_Temporada(&(*t));
     } else if (fb > 1 && id > (*t)->esquerda->num) {
         printf("\n450");
         (*t)->esquerda = rotacaoEsquerda_Temporada(&((*t)->esquerda));
@@ -460,7 +459,7 @@ int cadastrarT(Temporada **t, int id) {
         printf("454");
     } else if (fb < -1 && id < (*t)->direita->num) {
         (*t)->direita = rotacaoDireita_Temporada((*t)->direita);
-        *t = rotacaoEsquerda_Temporada(*t);
+        *t = rotacaoEsquerda_Temporada(&(*t));
     }
 
     return sinal;
