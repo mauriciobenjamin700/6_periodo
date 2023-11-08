@@ -403,7 +403,7 @@ void mostrar_all_T(Temporada *t)
 }
 
 void mostrarP(Participante *p)
-{
+{                           
     printf("\n-----------------------------------------------");
     printf("\nNome do Artista: %s", p->nomeArtista);
     printf("\nPersonagem: %s", p->nomePersonagem);

@@ -63,32 +63,32 @@ void atualizarAltura_Serie(Serie *s)
     }
 }
 
-Serie *rotacaoDireita_Serie(Serie *y)
+Serie *rotacaoDireita_Serie(Serie *s)
 {
-    Serie *x = y->esquerda;
-    Serie *T2 = x->direita;
+    Serie *aux = s->esquerda;
+    Serie *aux2 = aux->direita;
 
-    x->direita = y;
-    y->esquerda = T2;
+    aux->direita = s;
+    s->esquerda = aux2;
 
-    atualizarAltura_Serie(y);
-    atualizarAltura_Serie(x);
+    atualizarAltura_Serie(s);
+    atualizarAltura_Serie(aux);
 
-    return x;
+    return aux;
 }
 
-Serie *rotacaoEsquerda_Serie(Serie *x)
+Serie *rotacaoEsquerda_Serie(Serie *s)
 {
-    Serie *y = x->direita;
-    Serie *T2 = y->esquerda;
+    Serie *aux = s->direita;
+    Serie *aux2 = aux->esquerda;
 
-    y->esquerda = x;
-    x->direita = T2;
+    aux->esquerda = s;
+    s->direita = aux2;
 
-    atualizarAltura_Serie(x);
-    atualizarAltura_Serie(y);
+    atualizarAltura_Serie(s);
+    atualizarAltura_Serie(aux);
 
-    return y;
+    return aux;
 }
 
 int iniciarS(Serie **s)
@@ -284,14 +284,14 @@ void liberar_all_S(Serie **s)
 }
 
 ///////////Temporada ///////////////
-int altura_Temporada(Temporada *s)
+int altura_Temporada(Temporada *t)
 {
-    return (s == NULL) ? 0 : s->altura;
+    return (t == NULL) ? 0 : t->altura;
 }
 
-int calcularFB_Temporada(Temporada *s)
+int calcularFB_Temporada(Temporada *t)
 {
-    return altura_Temporada(s->esquerda) - altura_Temporada(s->direita);
+    return altura_Temporada(t->esquerda) - altura_Temporada(t->direita);
 }
 
 void atualizarAltura_Temporada(Temporada *t)
@@ -303,36 +303,29 @@ void atualizarAltura_Temporada(Temporada *t)
     }
 }
 
-Temporada *rotacaoDireita_Temporada(Temporada *y)
+Temporada *rotacaoDireita_Temporada(Temporada *t)
 {
-    Temporada *x = y->esquerda;
-    Temporada *T2 = x->direita;
+    Temporada *aux = t->esquerda;
+    Temporada *aux2 = aux->direita;
 
-    x->direita = y;
-    y->esquerda = T2;
+    aux->direita = t;
+    t->esquerda = aux2;
 
-    atualizarAltura_Temporada(y);
-    atualizarAltura_Temporada(x);
+    atualizarAltura_Temporada(t);
+    atualizarAltura_Temporada(aux);
 
-    return x;
+    return aux;
 }
 
-Temporada *rotacaoEsquerda_Temporada(Temporada **x)
+Temporada *rotacaoEsquerda_Temporada(Temporada **t)
 {
-    Temporada *y = (*x)->direita;
-    if (*x == NULL)
-    {
-        printf("\n301");
-    }
-    (*x)->direita = y->esquerda;
+    Temporada *aux = (*t)->direita;
+    (*t)->direita = aux->esquerda;
+    aux->esquerda = *t;
+    atualizarAltura_Temporada(*t);
+    atualizarAltura_Temporada(aux);
 
-    y->esquerda = *x;
-
-    atualizarAltura_Temporada(*x);
-    printf("\n%d", (*x)->altura);
-    atualizarAltura_Temporada(y);
-
-    return y;
+    return aux;
 }
 
 void troca(Participante **a, Participante **b)
