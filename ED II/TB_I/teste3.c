@@ -1,20 +1,22 @@
 #include <stdio.h>
 #include <time.h>
-#include "tad.c"
+#include "tad_avl.c"
 
-#define DATA_SIZE 1
+#define DATA_SIZE 10000
 #define TEST_SIZE 1
+
+//Tempos de busca na arvore AVL
+
 int main(void)
 {
     clock_t start, end;
     float time;
     //float results[TEST_SIZE];
-    float total = 0;
     int i;
     int id;
     char titulo[30];
     int sinal;
-    //float media = 0;
+    float media = 0;
 
     Serie *s;
 
@@ -40,7 +42,7 @@ int main(void)
 
         time = (float)(end - start) / CLOCKS_PER_SEC * 1000.0; // tempo decorrido em milissegundos
         //media += time;
-        total+=time;
+        media+=time;
 
         //results[i] = time;
     }
@@ -54,7 +56,8 @@ int main(void)
 */
     //media = media / DATA_SIZE;
 
-    printf("\n\nMedia: %.2f",total);    
+    printf("\nTotal: %.2f", media);
+    printf("\n\nMedia: %.2f", media / DATA_SIZE);   
 
     printf("\n\n%d",sinal);
     return 0;

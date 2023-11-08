@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <time.h>
-#include "tad_avl.c"
-
-#define DATA_SIZE 10000
+#include "tad.c"
+//Tempos de inserção na arvore binária de busca
+#define DATA_SIZE 10
 #define TEST_SIZE 1
 int main(void)
 {
     clock_t start, end;
     float time;
     // float results[TEST_SIZE];
-
+    //float total = 0;
     int i;
     int id;
     char titulo[30];
@@ -33,7 +33,8 @@ int main(void)
             end = clock();
 
             time = (float)(end - start) / CLOCKS_PER_SEC * 1000.0; // tempo decorrido em milissegundos
-            media += time;
+             media += time;
+            //total += time;
         }
     }
     /*
@@ -42,9 +43,9 @@ int main(void)
             printf("\n%f", results[i]);
         }
     */
+    media = media / DATA_SIZE;
 
-    printf("\nTotal: %.2f", media);
-    printf("\n\nMedia: %.2f", media / DATA_SIZE);
+    printf("\n\nResultado: %.2f", media);
 
     printf("\n\n%d", sinal);
     return 0;
