@@ -6,7 +6,6 @@
 #define TITTEL 30
 #define MAX(a, b) ((a > b) ? a : b)
 
-
 typedef struct Participante
 {
     char nomeArtista[NAME];
@@ -46,21 +45,26 @@ typedef struct Serie
 } Serie;
 /////////////////// Serie//////////////////
 
-int altura_Serie(Serie *s) {
+int altura_Serie(Serie *s)
+{
     return (s == NULL) ? 0 : s->altura;
 }
 
-int calcularFB_Serie(Serie *s) {
+int calcularFB_Serie(Serie *s)
+{
     return altura_Serie(s->esquerda) - altura_Serie(s->direita);
 }
 
-void atualizarAltura_Serie(Serie *s) {
-    if (s != NULL) {
+void atualizarAltura_Serie(Serie *s)
+{
+    if (s != NULL)
+    {
         s->altura = 1 + MAX(altura_Serie(s->esquerda), altura_Serie(s->direita));
     }
 }
 
-Serie *rotacaoDireita_Serie(Serie *y) {
+Serie *rotacaoDireita_Serie(Serie *y)
+{
     Serie *x = y->esquerda;
     Serie *T2 = x->direita;
 
@@ -73,7 +77,8 @@ Serie *rotacaoDireita_Serie(Serie *y) {
     return x;
 }
 
-Serie *rotacaoEsquerda_Serie(Serie *x) {
+Serie *rotacaoEsquerda_Serie(Serie *x)
+{
     Serie *y = x->direita;
     Serie *T2 = y->esquerda;
 
@@ -129,15 +134,21 @@ void mostrarS(Serie *s)
     printf("----------------------------");
 }
 
-int cadastrarS(Serie **s, Serie *novo) {
+int cadastrarS(Serie **s, Serie *novo)
+{
     int sinal = 0;
 
-    if (*s == NULL) {
+    if (*s == NULL)
+    {
         *s = novo;
         sinal = 1;
-    } else if (novo->cod > (*s)->cod) {
+    }
+    else if (novo->cod > (*s)->cod)
+    {
         sinal = cadastrarS(&(*s)->direita, novo);
-    } else {
+    }
+    else if (novo->cod < (*s)->cod)
+    {
         sinal = cadastrarS(&(*s)->esquerda, novo);
     }
 
@@ -145,14 +156,21 @@ int cadastrarS(Serie **s, Serie *novo) {
     int fb = calcularFB_Serie(*s);
 
     // Rebalanceamento da árvore
-    if (fb > 1 && novo->cod < (*s)->esquerda->cod) {
+    if (fb == 2 && novo->cod < (*s)->esquerda->cod)
+    {
         *s = rotacaoDireita_Serie(*s);
-    } else if (fb < -1 && novo->cod > (*s)->direita->cod) {
+    }
+    else if (fb == -2 && novo->cod > (*s)->direita->cod)
+    {
         *s = rotacaoEsquerda_Serie(*s);
-    } else if (fb > 1 && novo->cod > (*s)->esquerda->cod) {
+    }
+    else if (fb == 2 && novo->cod > (*s)->esquerda->cod)
+    {
         (*s)->esquerda = rotacaoEsquerda_Serie((*s)->esquerda);
         *s = rotacaoDireita_Serie(*s);
-    } else if (fb < -1 && novo->cod < (*s)->direita->cod) {
+    }
+    else if (fb == -2 && novo->cod < (*s)->direita->cod)
+    {
         (*s)->direita = rotacaoDireita_Serie((*s)->direita);
         *s = rotacaoEsquerda_Serie(*s);
     }
@@ -266,23 +284,27 @@ void liberar_all_S(Serie **s)
 }
 
 ///////////Temporada ///////////////
-int altura_Temporada(Temporada *s) {
+int altura_Temporada(Temporada *s)
+{
     return (s == NULL) ? 0 : s->altura;
 }
 
-int calcularFB_Temporada(Temporada *s) {
+int calcularFB_Temporada(Temporada *s)
+{
     return altura_Temporada(s->esquerda) - altura_Temporada(s->direita);
 }
 
-void atualizarAltura_Temporada(Temporada *t) {
+void atualizarAltura_Temporada(Temporada *t)
+{
 
-    if (t != NULL) {
+    if (t != NULL)
+    {
         t->altura = 1 + MAX(altura_Temporada(t->esquerda), altura_Temporada(t->direita));
-
     }
 }
 
-Temporada *rotacaoDireita_Temporada(Temporada *y) {
+Temporada *rotacaoDireita_Temporada(Temporada *y)
+{
     Temporada *x = y->esquerda;
     Temporada *T2 = x->direita;
 
@@ -295,9 +317,11 @@ Temporada *rotacaoDireita_Temporada(Temporada *y) {
     return x;
 }
 
-Temporada *rotacaoEsquerda_Temporada(Temporada **x) {
+Temporada *rotacaoEsquerda_Temporada(Temporada **x)
+{
     Temporada *y = (*x)->direita;
-    if(*x == NULL){ 
+    if (*x == NULL)
+    {
         printf("\n301");
     }
     (*x)->direita = y->esquerda;
@@ -305,15 +329,11 @@ Temporada *rotacaoEsquerda_Temporada(Temporada **x) {
     y->esquerda = *x;
 
     atualizarAltura_Temporada(*x);
-    printf("\n%d",(*x)->altura);
+    printf("\n%d", (*x)->altura);
     atualizarAltura_Temporada(y);
 
     return y;
-
-    
-
 }
-
 
 void troca(Participante **a, Participante **b)
 {
@@ -350,14 +370,13 @@ void OrdenaAtores(Participante **head)
         for (j = i->prox; j != NULL; j = j->prox)
         {
             // compara o primeiro com o segundo, retorna -1,0 e 1 caso primeiro seja menor, igual, maior
-            if(strcmp(j->nomeArtista,min->nomeArtista)== -1)
-            //if (comparaNomes(j->nomeArtista, min->nomeArtista) < 0)
+            if (strcmp(j->nomeArtista, min->nomeArtista) == -1)
+            // if (comparaNomes(j->nomeArtista, min->nomeArtista) < 0)
             {
                 min = j;
                 troca(&i, &min);
             }
         }
-
     }
 }
 
@@ -403,7 +422,6 @@ void preencherT(Temporada **t, int id)
 
     *t = (Temporada *)malloc(sizeof(Temporada)); // Aloca memória para a nova série
 
-    
     (*t)->num = id;
 
     printf("\nTitulo da Temporada: ");
@@ -429,17 +447,23 @@ void preencherT(Temporada **t, int id)
     (*t)->esquerda = NULL;
 }
 
-int cadastrarT(Temporada **t, int id) {
+int cadastrarT(Temporada **t, int id)
+{
     int sinal = 0;
 
-    if (*t == NULL) {
+    if (*t == NULL)
+    {
         Temporada *novo;
         preencherT(&novo, id);
         (*t) = novo;
         sinal = 1;
-    } else if (id > (*t)->num ) {
+    }
+    else if (id > (*t)->num)
+    {
         sinal = cadastrarT(&((*t)->direita), id);
-    } else {
+    }
+    else if (id < (*t)->num)
+    {
         sinal = cadastrarT(&((*t)->esquerda), id);
     }
 
@@ -447,17 +471,24 @@ int cadastrarT(Temporada **t, int id) {
     int fb = calcularFB_Temporada(*t);
 
     // Rebalanceamento da árvore
-    if (fb == 2 && id < (*t)->esquerda->num) {
+    if (fb == 2 && id < (*t)->esquerda->num)
+    {
         *t = rotacaoDireita_Temporada(*t);
-    } else if (fb == -2 && id > (*t)->direita->num) {
+    }
+    else if (fb == -2 && id > (*t)->direita->num)
+    {
         *t = rotacaoEsquerda_Temporada(&(*t));
-    } else if (fb == 2 && id > (*t)->esquerda->num) {
+    }
+    else if (fb == 2 && id > (*t)->esquerda->num)
+    {
         printf("\n450");
         (*t)->esquerda = rotacaoEsquerda_Temporada(&((*t)->esquerda));
         printf("452");
         *t = rotacaoDireita_Temporada(*t);
         printf("454");
-    } else if (fb < -1 && id < (*t)->direita->num) {
+    }
+    else if (fb < -1 && id < (*t)->direita->num)
+    {
         (*t)->direita = rotacaoDireita_Temporada((*t)->direita);
         *t = rotacaoEsquerda_Temporada(&(*t));
     }
@@ -507,7 +538,6 @@ void mostrar_all_T(Temporada *t)
         mostrar_all_T(t->esquerda);
         mostrarT(t);
         mostrar_all_T(t->direita);
-        
     }
 }
 

@@ -40,11 +40,12 @@ int main(void)
         else if(opc == 12)
         {
             printf("\nInforme o código da serie que deseja buscar: ");
+            setbuf(stdin,NULL);
             scanf("%d", &id);
             serie =  buscarS(s,id);
             if (serie != NULL)
             {
-                printf("\nSerie Encontrada!\n");
+                printf("\nSerie Encontrada!");
                 mostrarS(serie);
                 printf("\n----------------------------");
             }
@@ -66,13 +67,13 @@ int main(void)
                 scanf("%d", &id_temporada);
                 if (cadastrarT(&(s->t), id_temporada)) 
                 {
-                    printf("\nTemporada Adicionada com sucesso!");
+                    printf("\nTemporada Adicionada com sucesso!\n");
                     serie->numTemp+=1;
                 }
                 
-                else printf("\nFalha ao adicionar temporada");
+                else printf("\nFalha ao adicionar temporada\n");
             }
-            else printf ("\nSerie nao encontrada!");
+            else printf ("\nSerie nao encontrada!\n");
             
         }
         else if (opc == 22)
