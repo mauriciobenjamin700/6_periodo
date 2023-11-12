@@ -19,6 +19,7 @@ int main(void)
         while (opc!=4)
     {
         opc = menu();
+
         if(opc==11)
         { 
             id = geraId(&s);
@@ -39,11 +40,12 @@ int main(void)
         else if(opc == 12)
         {
             printf("\nInforme o código da serie que deseja buscar: ");
+            setbuf(stdin,NULL);
             scanf("%d", &id);
             serie =  buscarS(s,id);
             if (serie != NULL)
             {
-                printf("\nSerie Encontrada!\n");
+                printf("\nSerie Encontrada!");
                 mostrarS(serie);
                 printf("\n----------------------------");
             }
@@ -65,13 +67,13 @@ int main(void)
                 scanf("%d", &id_temporada);
                 if (cadastrarT(&(s->t), id_temporada)) 
                 {
-                    printf("\nTemporada Adicionada com sucesso!");
+                    printf("\nTemporada Adicionada com sucesso!\n");
                     serie->numTemp+=1;
                 }
                 
-                else printf("\nFalha ao adicionar temporada");
+                else printf("\nFalha ao adicionar temporada\n");
             }
-            else printf ("\nSerie nao encontrada!");
+            else printf ("\nSerie nao encontrada!\n");
             
         }
         else if (opc == 22)
@@ -83,8 +85,8 @@ int main(void)
             serie = buscarS(s,id);
             if (serie != NULL)
             {
-                printf("\nLinha 82");
-                mostrar_all_T(serie->t);
+                
+                mostrar_all_T(((*serie).t));
             }
             else printf("\nSerie nao encontrada!");
         }
@@ -101,7 +103,7 @@ int main(void)
             serie = buscarS(s,id);
             if (serie != NULL)
             {
-                mostrar_all_T(serie->t);
+                mostrar_all_T((*serie).t);
             }
             else printf("\nSerie nao encontrada!");
         }
@@ -132,7 +134,7 @@ int main(void)
             else printf("\nSerie nao encontrada!");
             
         }
-        else if (opc == 44)
+        else if (opc == 34)
         {
             printf("\nID da serie: ");
             setbuf(stdin,NULL);
