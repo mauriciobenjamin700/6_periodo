@@ -1,0 +1,17 @@
+Crie um algoritmo que implemente filtros de convolução. O algoritmo deverá receber comoparâmetro a imagem a ser processada, o filtro e o tratamento a ser feito na borda.
+
+A imagem poderá ser colorida ou em tons de cinza. No caso de imagens coloridas, o processamento deverá ser feito em cada banda de cor o resultado será retornado em uma única imagem;
+
+O filtro será uma matrix MxN, onde M e N são: 
+    Ímpares;
+    Maiores ou iguais a 3;
+    Menores que o tamanho da imagem (em cada dimensão).
+
+O parâmetro borda deverá ter 4 valores possíveis:
+
+    ‘ignore’: nesse caso a borda não será processada;
+    ‘espelho’: no tratamento da borda os pixels serão espelhados;
+    ‘zero’: o tratamento da borda será adicionando pixels de valor zero;
+    ‘replicar’: nesse caso, no tratamento da borda somente os pixels das linhas extremas serão replicados.
+    Teste a função de convolução com pelo menos 5 filtros diferentes. 
+    Explique os resultados.
