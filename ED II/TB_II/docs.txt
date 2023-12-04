@@ -1,2 +1,6 @@
 Classes:
 https://docs.google.com/document/d/10DlKO_Ozjzqu9MoObpsmxKG1tFd4qqGgcBpX_6VQCOY/edit
+
+Seguestões para a lista de música:
+    Pode ser duplamente encadeada para o usuário poder ir e voltar ou Ciruclar
+    para que quando chegue ao final, vá para o inicio e quando estiver no inicio va pro fim
