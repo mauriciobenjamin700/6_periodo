@@ -5,6 +5,7 @@
 
 int main(void)
 {
+    char busca[] = {'b'};
     Lista_musicas *lista = iniciar_no_lista();
     Musica *musica;
     char titulo[30];
@@ -37,6 +38,14 @@ int main(void)
     }
     
     mostar_todas_musicas(lista);
+
+    if (buscar_musica(lista,busca))
+    {
+        printf("\nAchei");
+    }
+    else
+        printf("\nFalhei");
+    
 
     return 0;
 }

@@ -6,8 +6,7 @@ typedef struct Musica
 {
     char titulo[50];
     float minutos;
-}Musica;
-
+} Musica;
 
 typedef struct Lista_musicas
 {
@@ -15,7 +14,7 @@ typedef struct Lista_musicas
     struct Lista_musicas *proximo_no;
     struct Lista_musicas *anterior_no;
 
-}Lista_musicas;
+} Lista_musicas;
 
 Musica *criar_musica()
 {
@@ -31,13 +30,12 @@ Musica *criar_musica()
 void preencher_musica(Musica *musica, char titulo[], float minutos)
 {
     musica->minutos = minutos;
-    strcpy(musica->titulo,titulo);    
+    strcpy(musica->titulo, titulo);
 }
 
 Lista_musicas *iniciar_no_lista()
 {
     Lista_musicas *lista = (Lista_musicas *)malloc(sizeof(Lista_musicas));
-
 
     if (lista)
     {
@@ -45,116 +43,134 @@ Lista_musicas *iniciar_no_lista()
         lista->anterior_no = NULL;
         lista->proximo_no = NULL;
     }
-    else 
+    else
         lista = NULL;
-        
 
     return lista;
 }
 // Adiciona no final
-int adicionar_musica_final(Lista_musicas **raiz, Musica *musica)
-{
-    int sinal = 0;
-    Lista_musicas *aux = *raiz;
 
-    if((aux)->musica == NULL)
-    {
-        (aux)->musica = musica;
 
-        sinal = 1;
-    }
-    else
-    {
-        while (aux->proximo_no != NULL)
-        {
-            aux = aux->proximo_no;
-        }
-
-        aux->proximo_no->musica = musica;
-        aux->proximo_no->anterior_no = aux; 
-        aux->proximo_no->proximo_no = NULL;
-        
-    }
-
-    return sinal;
-    
-}
-
-// b, a
 int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
 {
-    int sinal = 0;
+    int insere = 0;
     Lista_musicas *aux = *raiz;
-    
-    if((aux)->musica == NULL)
+
+    if ((aux)->musica == NULL)
     {
         (aux)->musica = musica;
-
-        sinal = 1;
+        insere = 1;
     }
-    else
+
+    while (insere == 0)
     {
-        
-        Lista_musicas *new = iniciar_no_lista();
-        int resultado;
+        //compara a primeira com a segunda e retorna 0 caso sejam iguais, num < 0 caso a primeira seja menor ou n > 0 caso o primeiro seja maior que o segundo.
 
-        for(aux = *raiz;((aux != NULL) && (sinal==0));aux = aux->proximo_no)
+        int result = strcmp(musica->titulo, aux->musica->titulo);
+        if (result == 0)
         {
-            resultado = strcmp(musica->titulo,aux->musica->titulo);
-            //caso o primeiro venha antes do segundo (nesse caso, caso o novo nó seja inserido antes do nó atual)
-            if (resultado==-1)
-            {
-                //Criamos um novo nó para guardar a musica antiga
-                new->musica = aux->musica;
-                //o nó que guardava a musica antiga agora ira guardar a nova musica
-                aux->musica = musica;
-                //a musica antiga vai apontar para tras onde tem a nova musica
-                new->anterior_no = aux;
-                // o proximo nó da musica antiga continua sendo o proximo nó que ja existia antigamente
-                new->proximo_no = aux->proximo_no;
-                //o proximo no da nova musica sera a musica antiga
-                aux->proximo_no = new;
-
-                sinal = 1;
-            }
-            //caso não venha antes, vai sempre depois no nosso caso
-
-            aux = aux->proximo_no;
+            insere = 1;
         }
-        
-        if (sinal == 0)
+        else if (result < 0)
         {
-            new->musica = musica;
-            new->anterior_no = aux;
-            aux->proximo_no = new;     
-            sinal = 1;
+            if (aux->anterior_no == NULL)
+            {
+                Lista_musicas *new = iniciar_no_lista();
+                new->musica = musica;
+                aux->anterior_no = new;
+                new->proximo_no = aux;
+                *raiz = new;
+                insere = 1;
+            }
+            else
+            {
+                Lista_musicas *new = iniciar_no_lista();
+                new->musica = musica;
+                Lista_musicas *auxAnt = aux->anterior_no;
+                aux->anterior_no = new;
+                auxAnt->proximo_no = new;
+                new->proximo_no = aux;
+                new->anterior_no = auxAnt;
+                insere = 1;
+            }
+        }
+        else if (result > 0)
+        {
+            if (aux->proximo_no == NULL)
+            {
+                Lista_musicas *new = iniciar_no_lista();
+                new->musica = musica;
+                aux->proximo_no = new;
+                new->anterior_no = aux;
+                insere = 1;
+            }
+            else
+            {
+                if (aux->proximo_no != NULL)
+                {
+                    aux = aux->proximo_no;
+                }
+                else
+                {
+                    Lista_musicas *new = iniciar_no_lista();
+                    new->musica = musica;
+                    new->anterior_no = aux;
+                    aux->proximo_no = new;
+                    insere = 1;
+                }
+            }
         }
     }
-
-    return sinal;
-    
+    return insere;
 }
 
 void mostar_musica(Musica *musica)
 {
-    if(musica == NULL)
+    if (musica == NULL)
         printf("\nZero musicas cadastradas");
     else
-        printf("\n\nTitulo: %s\nTempo: %.2f",musica->titulo,musica->minutos);
+        printf("\n\nTitulo: %s\nTempo: %.2f", musica->titulo, musica->minutos);
 }
 
 void mostar_todas_musicas(Lista_musicas *no)
 {
     Lista_musicas *aux = no;
 
-    if(aux == NULL)
+    if (aux == NULL)
         printf("\nZero musicas cadastradas");
     else
     {
-        while(aux!=NULL)
+        while (aux != NULL)
         {
             mostar_musica(aux->musica);
             aux = aux->proximo_no;
         }
     }
+}
+
+Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
+{
+    Lista_musicas *aux = raiz;
+    Musica *musica_buscada = NULL;
+    int sinal = 0;
+    int result;
+    while (sinal == 0)
+    {
+        if (aux == NULL)
+            sinal = 1;
+        else if (aux != NULL)
+        {
+            result = strcmp(aux->musica->titulo,titulo);
+
+            if (result == 0)
+            {
+                musica_buscada = aux->musica;
+                sinal = 1;
+            }
+            else
+                aux = aux->proximo_no;
+        }
+    }
+    
+    return musica_buscada;
 }
