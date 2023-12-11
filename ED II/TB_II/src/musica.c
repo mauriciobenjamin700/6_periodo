@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+# define TAM_TITULO 50
 
 typedef struct Musica
 {
-    char titulo[50];
+    char titulo[TAM_TITULO];
     float minutos;
 } Musica;
 
@@ -174,3 +175,68 @@ Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
     
     return musica_buscada;
 }
+
+//Não faz sentido editar as musicas pois são poucos campos, é melhor apenas remover e recadastrar;
+
+
+int remover_musica(Lista_musicas **raiz, char titulo[])
+{
+
+    int sinal = 0;
+    Lista_musicas *aux = *raiz;
+    Musica *musica = buscar_musica(*raiz,titulo);
+
+    if(musica != NULL)
+    {
+        //Procura todas as musicas até achar a correta
+        while (strcmp(aux->musica->titulo,musica->titulo)!=0)
+        {
+            aux = aux->proximo_no;    
+        }
+        //caso seja o unico elemento da lista
+        if(aux->anterior_no == NULL && aux->proximo_no == NULL)
+        {
+           Musica *musica_removida = aux->musica;
+           aux->musica = NULL;
+           free(musica_removida);
+           sinal = 1;
+        }
+        // caso seja o primeiro elemento da lista
+        else if(aux->anterior_no == NULL && aux->proximo_no != NULL)
+        {
+            //Lista_musicas *no_removido = aux;
+            Musica *musica_removida = aux->musica;
+            aux->musica = NULL;
+            free(musica_removida);
+            *raiz = aux->proximo_no;
+            free(aux);
+            sinal = 1;
+        }
+        //caso esteja no meio da lista
+        else if(aux->anterior_no != NULL && aux->proximo_no != NULL)
+        {
+            //Lista_musicas *no_removido = aux;
+            Musica *musica_removida = aux->musica;
+            aux->musica = NULL;
+            free(musica_removida);
+            aux->anterior_no->proximo_no = aux->proximo_no;
+            aux->proximo_no->anterior_no = aux->anterior_no;
+            free(aux);
+            sinal = 1;
+        }
+        // caso seja o ultimo elemento da lista
+        else if(aux->anterior_no != NULL && aux->proximo_no == NULL)
+        {
+            //Lista_musicas *no_removido = aux;
+            Musica *musica_removida = aux->musica;
+            aux->musica = NULL;
+            free(musica_removida);
+            aux->anterior_no->proximo_no = NULL;
+            free(aux);
+            sinal = 1;
+        }
+    }
+
+    return sinal;
+}
+//void remover_todas_musicas();

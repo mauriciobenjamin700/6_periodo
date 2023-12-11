@@ -1,11 +1,12 @@
 #include "src/musica.c"
 //#include "src/album.c"
 //#include "src/artista.c"
+# define TAM_TITULO 50
 
 
 int main(void)
 {
-    char busca[] = {'b'};
+    char busca[TAM_TITULO];
     Lista_musicas *lista = iniciar_no_lista();
     Musica *musica;
     char titulo[30];
@@ -39,13 +40,18 @@ int main(void)
     
     mostar_todas_musicas(lista);
 
-    if (buscar_musica(lista,busca))
+    printf("\n\nDeseja remover qual musica: ");
+    setbuf(stdin,NULL);
+    scanf("%s", busca);
+
+    if (remover_musica(&lista,busca))
     {
-        printf("\nAchei");
+        printf("\nRemovi");
     }
     else
         printf("\nFalhei");
     
+    mostar_todas_musicas(lista);
 
     return 0;
 }
