@@ -1,19 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "musica.c"
+#include "album.c"
 #define VERMELHO 1
 #define PRETO 0 
-
-typedef struct RB_artista
-{
-    int id;
-    int cor;
-    Artista *artista;
-    Artista *esquerda;
-    Artista *direita;
-    
-}RB_artista;
-
 
 typedef struct Artista
 {
@@ -21,11 +11,21 @@ typedef struct Artista
     char tipo[20];
     char estilo[20];
     int num_albuns;
-    struct Album * Album;
+    Album * Album;
 
 }Artista;
 
 
+typedef struct RB_artista
+{
+    int id;
+    int cor;
+
+    Artista *artista;
+    struct RB_artista *esquerda;
+    struct RB_artista *direita;
+    
+}RB_artista;
 
 
 
