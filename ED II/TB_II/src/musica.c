@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-# define TAM_TITULO 50
+#define TAM_TITULO 50
 
 typedef struct Musica
 {
@@ -49,8 +49,6 @@ Lista_musicas *iniciar_no_lista()
 
     return lista;
 }
-// Adiciona no final
-
 
 int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
 {
@@ -149,12 +147,28 @@ void mostar_todas_musicas(Lista_musicas *no)
     }
 }
 
+int contar_musicas(Lista_musicas *raiz)
+{
+    int qtd = 0;
+
+    if (raiz != NULL)
+    {
+        Lista_musicas *aux = raiz;
+        while (aux != NULL)
+        {
+            qtd++;
+            aux = aux->proximo_no;
+        }
+    }
+    return qtd;
+}
 Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
 {
     Lista_musicas *aux = raiz;
     Musica *musica_buscada = NULL;
     int sinal = 0;
     int result;
+
     while (sinal == 0)
     {
         if (aux == NULL)
@@ -177,7 +191,6 @@ Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
 }
 
 //Não faz sentido editar as musicas pois são poucos campos, é melhor apenas remover e recadastrar;
-
 
 int remover_musica(Lista_musicas **raiz, char titulo[])
 {
@@ -215,7 +228,7 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
         //caso esteja no meio da lista
         else if(aux->anterior_no != NULL && aux->proximo_no != NULL)
         {
-            //Lista_musicas *no_removido = aux;
+
             Musica *musica_removida = aux->musica;
             aux->musica = NULL;
             free(musica_removida);
@@ -227,7 +240,6 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
         // caso seja o ultimo elemento da lista
         else if(aux->anterior_no != NULL && aux->proximo_no == NULL)
         {
-            //Lista_musicas *no_removido = aux;
             Musica *musica_removida = aux->musica;
             aux->musica = NULL;
             free(musica_removida);
@@ -239,4 +251,21 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
 
     return sinal;
 }
-//void remover_todas_musicas();
+void remover_todas_musicas(Lista_musicas **raiz)
+{   
+    if(*raiz != NULL)
+    {
+        Lista_musicas *aux = *raiz;
+        Lista_musicas *auxProx;
+
+        while (aux!=NULL)
+        {
+            auxProx = aux->proximo_no;
+            free(aux->musica);
+            free(aux);
+            aux = auxProx;
+        }
+        *raiz = NULL;
+        
+    }
+}

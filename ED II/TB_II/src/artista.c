@@ -5,16 +5,19 @@
 #define VERMELHO 1
 #define PRETO 0 
 
+#define NOME 50
+#define TIPO 20
+#define ESTILO 20
+
 typedef struct Artista
 {
-    char nome[50];
-    char tipo[20];
-    char estilo[20];
+    char nome[NOME];
+    char tipo[TIPO];
+    char estilo[ESTILO];
     int num_albuns;
     Album * Album;
 
 }Artista;
-
 
 typedef struct RB_artista
 {

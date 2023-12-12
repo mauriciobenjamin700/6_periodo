@@ -52,6 +52,13 @@ int main(void)
         printf("\nFalhei");
     
     mostar_todas_musicas(lista);
+    printf("\n\nTotal de musicas: %d", contar_musicas(lista));
+
+    remover_todas_musicas(&lista);
+
+    mostar_todas_musicas(lista);
+
+    printf("\n\nTotal de musicas: %d\n", contar_musicas(lista));
 
     return 0;
 }
