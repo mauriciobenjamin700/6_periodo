@@ -17,6 +17,17 @@ typedef struct Lista_musicas
 
 } Lista_musicas;
 
+/*
+Esta função tenta alocar um espaço de memoria para guardar uma música
+Caso consiga, retorna o endereço alocado
+Caso Falhe, retorna NULL;
+
+Parâmetros:
+    void;
+
+Return :
+    musica::(Musica || NULL) : Retorna uma musica em caso de sucesso e NULL caso falhe.
+*/
 Musica *criar_musica()
 {
     Musica *musica;
@@ -30,8 +41,12 @@ Musica *criar_musica()
 
 void preencher_musica(Musica *musica, char titulo[], float minutos)
 {
-    musica->minutos = minutos;
-    strcpy(musica->titulo, titulo);
+    if (musica!= NULL)
+    {
+        musica->minutos = minutos;
+        strcpy(musica->titulo, titulo);
+    }
+    
 }
 
 Lista_musicas *iniciar_no_lista()
@@ -53,73 +68,80 @@ Lista_musicas *iniciar_no_lista()
 int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
 {
     int insere = 0;
-    Lista_musicas *aux = *raiz;
+    
 
-    if ((aux)->musica == NULL)
+    if ((*raiz)->musica == NULL)
     {
-        (aux)->musica = musica;
+        (*raiz)->musica = musica;
         insere = 1;
     }
-
-    while (insere == 0)
+    else
     {
-        //compara a primeira com a segunda e retorna 0 caso sejam iguais, num < 0 caso a primeira seja menor ou n > 0 caso o primeiro seja maior que o segundo.
+        Lista_musicas *aux = *raiz;
+        int result;
+        while (insere == 0)
+        {
+            //compara a primeira com a segunda e retorna 0 caso sejam iguais, num < 0 caso a primeira seja menor ou n > 0 caso o primeiro seja maior que o segundo.
+            // -a-b-c-f
 
-        int result = strcmp(musica->titulo, aux->musica->titulo);
-        if (result == 0)
-        {
-            insere = 1;
-        }
-        else if (result < 0)
-        {
-            if (aux->anterior_no == NULL)
+            result = strcmp(musica->titulo, aux->musica->titulo);
+            if (result == 0)
             {
-                Lista_musicas *new = iniciar_no_lista();
-                new->musica = musica;
-                aux->anterior_no = new;
-                new->proximo_no = aux;
-                *raiz = new;
                 insere = 1;
             }
-            else
+            else if (result < 0)
             {
-                Lista_musicas *new = iniciar_no_lista();
-                new->musica = musica;
-                Lista_musicas *auxAnt = aux->anterior_no;
-                aux->anterior_no = new;
-                auxAnt->proximo_no = new;
-                new->proximo_no = aux;
-                new->anterior_no = auxAnt;
-                insere = 1;
-            }
-        }
-        else if (result > 0)
-        {
-            if (aux->proximo_no == NULL)
-            {
-                Lista_musicas *new = iniciar_no_lista();
-                new->musica = musica;
-                aux->proximo_no = new;
-                new->anterior_no = aux;
-                insere = 1;
-            }
-            else
-            {
-                if (aux->proximo_no != NULL)
+                if (aux->anterior_no == NULL)
                 {
-                    aux = aux->proximo_no;
+                    Lista_musicas *new = iniciar_no_lista();
+                    new->musica = musica;
+                    aux->anterior_no = new;
+                    new->proximo_no = aux;
+                    *raiz = new;
+                    insere = 1;
                 }
                 else
                 {
                     Lista_musicas *new = iniciar_no_lista();
                     new->musica = musica;
-                    new->anterior_no = aux;
-                    aux->proximo_no = new;
+                    Lista_musicas *auxAnt = aux->anterior_no;
+                    aux->anterior_no = new;
+                    auxAnt->proximo_no = new;
+                    new->proximo_no = aux;
+                    new->anterior_no = auxAnt;
                     insere = 1;
+                }
+            }
+            else if (result > 0)
+            {
+                if (aux->proximo_no == NULL)
+                {
+                    Lista_musicas *new = iniciar_no_lista();
+                    new->musica = musica;
+                    aux->proximo_no = new;
+                    new->anterior_no = aux;
+                    insere = 1;
+                }
+                else
+                {
+                    if (aux->proximo_no != NULL)
+                    {
+                        aux = aux->proximo_no;
+                    }
+                    else
+                    {
+                        Lista_musicas *new = iniciar_no_lista();
+                        new->musica = musica;
+                        new->anterior_no = aux;
+                        aux->proximo_no = new;
+                        insere = 1;
+                    }
                 }
             }
         }
     }
+
+
     return insere;
 }
 
