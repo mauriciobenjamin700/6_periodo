@@ -26,7 +26,7 @@ Parâmetros:
     void;
 
 Return :
-    musica::(Musica || NULL) : Retorna uma musica em caso de sucesso e NULL caso falhe.
+    musica::(Musica || NULL): Retorna uma musica em caso de sucesso e NULL caso falhe.
 */
 Musica *criar_musica()
 {
@@ -38,6 +38,7 @@ Musica *criar_musica()
 
     return musica;
 }
+
 
 void preencher_musica(Musica *musica, char titulo[], float minutos)
 {
