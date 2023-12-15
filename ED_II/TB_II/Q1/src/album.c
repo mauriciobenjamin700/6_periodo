@@ -17,9 +17,8 @@ typedef struct Album
 
 typedef struct RB_album
 {
-    int id;
     int cor;
-    Album *album;
+    Album album;
     struct RB_album *esquerda;
     struct RB_album *direita;
 
@@ -27,27 +26,13 @@ typedef struct RB_album
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-Album *criar_Album()
-{
-    Album *album;
-    album = (Album *)malloc(sizeof(Album));
-
-    if (!album)
-        album = NULL;
-
-    return album;
-}
 
 void preencher_album(Album *album, char titulo[TAM_TITULO], int ano)
 {
-    if (album != NULL)
-    {
-        strcpy(album->titulo, titulo);
-        ;
-        album->ano = ano;
-        album->qtd_musicas = 0;
-        album->musicas = iniciar_no_lista();
-    }
+    strcpy(album->titulo, titulo);
+    album->ano = ano;
+    album->qtd_musicas = 0;
+    album->musicas = iniciar_no_lista();
 }
 
 int adiciona_musica_album(Album *album, Musica *musica)
@@ -70,18 +55,26 @@ int remover_musica_album(Album *album, char titulo[TAM_TITULO])
     return removi;
 }
 
+void mostrar_album(Album *album)
+{
+    printf("\n\nTitulo: %s\nAno: %d\nQuantidade de Musicas: %d\nMusicas:\n",album->titulo,album->ano,album->qtd_musicas);
+    if (album == NULL)
+        printf("\n\nZero Musicas Cadatradas");
+    else
+        mostar_todas_musicas(album->musicas);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-RB_album *cria_no_album(int id, Album *album)
+RB_album *cria_no_album(Album *album)
 {
     RB_album *no;
     no = (RB_album *)malloc(sizeof(RB_album));
 
     if (no)
     {
-        no->id = id;
         no->cor = VERMELHO;
-        no->album = album;
+        no->album = *album;
         no->esquerda = NULL;
         no->direita = NULL;
     }
@@ -117,7 +110,7 @@ void troca_Cor_album(RB_album *raiz)
             raiz->esquerda->cor = !raiz->esquerda->cor;
     }
 }
-
+/*
 RB_album *balanceia_album(RB_album *raiz)
 {
     if (cor_album(raiz->direita) == VERMELHO && cor_album(raiz->esquerda) == PRETO)
@@ -139,20 +132,20 @@ int insere_NO_album(RB_album **raiz, char titulo[], int anoLancamento, int qtdMu
     if (*raiz == NULL)
         criou_no = cria_No_Album(raiz, titulo, anoLancamento, qtdMusicas);
     
-    if (strcmp((*raiz)->album->titulo, titulo) == 0)
+    if (strcmp((*raiz)->album.titulo, titulo) == 0)
         criou_no = 2; // Nó já existe
     
-    else if (strcmp((*raiz)->album->titulo, titulo) < 0)
+    else if (strcmp((*raiz)->album.titulo, titulo) < 0)
         criou_no = insere_NO_album(&((*raiz)->direita), titulo, anoLancamento, qtdMusicas);
     
-    else if (strcmp((*raiz)->album->titulo, titulo) > 0)
+    else if (strcmp((*raiz)->album.titulo, titulo) > 0)
         criou_no = insere_NO_album(&((*raiz)->esquerda), titulo, anoLancamento, qtdMusicas);
     
     balanceia_album(*raiz);
 
     return criou_no;
 }
-/*
+
 int insere_RB_album(Album **raiz, char titulo[], int anoLancamento, int qtdMusicas)
 {
     int resposta;

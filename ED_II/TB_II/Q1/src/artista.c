@@ -15,7 +15,7 @@ typedef struct Artista
     char tipo[TIPO];
     char estilo[ESTILO];
     int num_albuns;
-    Album * Album;
+    RB_album *Album;
 
 }Artista;
 
@@ -23,8 +23,7 @@ typedef struct RB_artista
 {
     int id;
     int cor;
-
-    Artista *artista;
+    Artista artista;
     struct RB_artista *esquerda;
     struct RB_artista *direita;
     

@@ -8,7 +8,7 @@ int main(void)
 {
     char busca[TAM_TITULO];
     Lista_musicas *lista = iniciar_no_lista();
-    Musica *musica;
+    Musica musica;
     char titulo[30];
     float duracao;
 
@@ -16,7 +16,6 @@ int main(void)
 
     while (sinal)
     {
-        musica = criar_musica();
         printf("\n\nCadastre uma musica");
         printf("\nNome da musica: ");
         setbuf(stdin,NULL);
@@ -24,9 +23,9 @@ int main(void)
         printf("\nDuracao: ");
         setbuf(stdin,NULL);
         scanf("%f",&duracao);
-        preencher_musica(musica,titulo,duracao);
+        preencher_musica(&musica,titulo,duracao);
         
-        if (adicionar_musica_ordenada(&lista,musica))
+        if (adicionar_musica_ordenada(&lista,&musica))
             printf("\n\nCadastrei com sucesso!");
         else
             printf("\nFalhei");
