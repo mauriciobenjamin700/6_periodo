@@ -4,11 +4,14 @@
 
 int main(void)
 {
-    Album album;
+    //Album album;
     char titulo[TAM_TITULO];
     int ano;
     int continuar = 1;
-    Musica musica;
+    int i=0;
+    //Musica musica;
+
+    RB_album *arvore;
 
     while (continuar)
     {
@@ -17,35 +20,22 @@ int main(void)
         setbuf(stdin,NULL);
         scanf("%s", titulo);
 
-        printf("Ano do Album: ");
+        printf("\nAno do Album: ");
         setbuf(stdin,NULL);
         scanf("%d", &ano);
 
-
-        preencher_album(&album,titulo,ano);
-
-        printf("Titulo da Musica: ");
+        printf("\nID: ");
         setbuf(stdin,NULL);
-        scanf("%s", titulo);
+        scanf("%d", &i);
+
         
-        preencher_musica(&musica,titulo,1);
-
-        adiciona_musica_album(&album,&musica);
-
-        printf("Titulo da Musica: ");
-        setbuf(stdin,NULL);
-        scanf("%s", titulo);
+        insere_no_RB_album(&arvore,i,titulo,ano);
         
-        preencher_musica(&musica,titulo,1);
-
-        adiciona_musica_album(&album,&musica);
-
-        mostrar_album(&album);
 
         printf("\nDeseja Continuar? [1][0]: ");
         setbuf(stdin,NULL);
         scanf("%d", &continuar);
 
     }
-    
+    mostrar_tudo_RB_album(arvore);    
 }

@@ -17,6 +17,7 @@ typedef struct Album
 
 typedef struct RB_album
 {
+    int id;
     int cor;
     Album album;
     struct RB_album *esquerda;
@@ -34,6 +35,7 @@ void preencher_album(Album *album, char titulo[TAM_TITULO], int ano)
     album->qtd_musicas = 0;
     album->musicas = iniciar_no_lista();
 }
+
 
 int adiciona_musica_album(Album *album, Musica *musica)
 {
@@ -64,17 +66,83 @@ void mostrar_album(Album *album)
         mostar_todas_musicas(album->musicas);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////// Funções nativas da RB
 
-RB_album *cria_no_album(Album *album)
+int get_cor_album(RB_album *raiz)
+{
+    int cor;
+
+    if (raiz == NULL)
+        cor = PRETO;
+    else
+        cor = raiz->cor;
+
+    return cor;
+}
+
+void swap_cor_album(RB_album *raiz)
+{
+    if (raiz != NULL)
+    {
+        raiz->cor = !raiz->cor;
+
+        if (raiz->direita != NULL)
+            raiz->direita->cor = !raiz->direita->cor;
+
+        if (raiz->esquerda != NULL)
+            raiz->esquerda->cor = !raiz->esquerda->cor;
+    }
+}
+
+RB_album* rotacao_direita_album(RB_album *raiz)
+{
+    RB_album *aux = raiz->esquerda;
+    raiz->esquerda = aux->direita;
+    aux->direita = raiz;
+    aux->cor = raiz->cor;
+    raiz->cor = VERMELHO;
+    return aux;
+}
+
+
+RB_album* rotacao_esquerda_album(RB_album *raiz)
+{
+    RB_album *aux = raiz->direita;
+    raiz->direita = aux->esquerda;
+    aux->esquerda = raiz;
+    aux->cor = raiz->cor;
+    raiz->cor = VERMELHO;
+    return aux;
+}
+
+RB_album *balancear_RB_album(RB_album *raiz)
+{
+    if (get_cor_album(raiz->direita) == VERMELHO)
+        raiz = rotacao_esquerda_album(raiz);
+
+    if (raiz->esquerda != NULL && get_cor_album(raiz->direita) == VERMELHO && get_cor_album(raiz->esquerda->esquerda) == VERMELHO) 
+        raiz = rotacao_direita_album(raiz);
+
+    if (get_cor_album(raiz->esquerda) == VERMELHO && get_cor_album(raiz->direita) == VERMELHO)
+        swap_cor_album(raiz);
+
+    return raiz;
+}
+
+////////////////////////////////  Funções do projeto
+
+
+RB_album *cria_no_album(int id,char titulo[TAM_TITULO],int ano)
 {
     RB_album *no;
     no = (RB_album *)malloc(sizeof(RB_album));
 
+
     if (no)
     {
+        no->id = id;
         no->cor = VERMELHO;
-        no->album = *album;
+        preencher_album(&(no->album),titulo,ano);
         no->esquerda = NULL;
         no->direita = NULL;
     }
@@ -84,76 +152,58 @@ RB_album *cria_no_album(Album *album)
     return no;
 }
 
-int cor_album(RB_album *raiz)
-{
-    int cor;
-
-    if (raiz == NULL)
-        cor = PRETO;
-
-    else
-        cor = raiz->cor;
-
-    return cor;
-}
-
-void troca_Cor_album(RB_album *raiz)
-{
-    if (raiz != NULL)
-    {
-        raiz->cor = !raiz->cor;
-
-        if (raiz->direita)
-            raiz->direita->cor = !raiz->direita->cor;
-
-        else if (raiz->esquerda)
-            raiz->esquerda->cor = !raiz->esquerda->cor;
-    }
-}
 /*
 RB_album *balanceia_album(RB_album *raiz)
 {
-    if (cor_album(raiz->direita) == VERMELHO && cor_album(raiz->esquerda) == PRETO)
+    if (get_cor_album(raiz->direita) == VERMELHO && get_cor_album(raiz->esquerda) == PRETO)
         raiz = rotacao_esquerda_album(&raiz);
 
-    if (cor_album(raiz->esquerda) == VERMELHO && cor_album(raiz->esquerda->esquerda) == VERMELHO)
+    if (get_cor_album(raiz->esquerda) == VERMELHO && get_cor_album(raiz->esquerda->esquerda) == VERMELHO)
         raiz = rotacao_direita_album(&raiz);
 
-    if (cor_album(raiz->esquerda) == VERMELHO && cor_album(raiz->direita) == VERMELHO)
-        troca_Cor_album(raiz);
+    if (get_cor_album(raiz->esquerda) == VERMELHO && get_cor_album(raiz->direita) == VERMELHO)
+        swap_cor_album(raiz);
 
     return raiz;
 }
+*/
 
-int insere_NO_album(RB_album **raiz, char titulo[], int anoLancamento, int qtdMusicas)
+int insere_no_RB_album(RB_album **raiz, int id,char titulo[], int anoLancamento)
 {
     int criou_no = 0;
 
     if (*raiz == NULL)
-        criou_no = cria_No_Album(raiz, titulo, anoLancamento, qtdMusicas);
+    {
+        *raiz = cria_no_album(id, titulo, anoLancamento);
+        criou_no = 1;
     
-    if (strcmp((*raiz)->album.titulo, titulo) == 0)
-        criou_no = 2; // Nó já existe
+    }
+    else if (id ==(*raiz)->id)
+        criou_no = -1; // Nó já existe
     
-    else if (strcmp((*raiz)->album.titulo, titulo) < 0)
-        criou_no = insere_NO_album(&((*raiz)->direita), titulo, anoLancamento, qtdMusicas);
+    else if (id > (*raiz)->id)
+        criou_no = insere_no_RB_album(&((*raiz)->direita), id,titulo, anoLancamento);
     
-    else if (strcmp((*raiz)->album.titulo, titulo) > 0)
-        criou_no = insere_NO_album(&((*raiz)->esquerda), titulo, anoLancamento, qtdMusicas);
+    else
+        criou_no = insere_no_RB_album(&((*raiz)->esquerda), id,titulo, anoLancamento);
     
-    balanceia_album(*raiz);
+    balancear_RB_album(*raiz);
 
     return criou_no;
 }
 
-int insere_RB_album(Album **raiz, char titulo[], int anoLancamento, int qtdMusicas)
+void mostrar_tudo_RB_album(RB_album *raiz)
 {
-    int resposta;
-    *raiz = insere_NO_album(*raiz, titulo, anoLancamento, qtdMusicas);
-    if ((*raiz) != NULL)
-        (*raiz)->cor = PRETO;
-    return resposta;
+    if(raiz != NULL)
+    {
+        mostrar_tudo_RB_album(raiz->esquerda);
+        printf("\n\nID: %d",raiz->id);
+        mostrar_album(&(raiz->album));
+        mostrar_tudo_RB_album(raiz->direita);
+    }
+    
 }
+/*
 
 Album *move_esq_red_album(Album *raiz)
 {
