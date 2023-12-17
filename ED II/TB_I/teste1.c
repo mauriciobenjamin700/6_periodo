@@ -4,8 +4,8 @@
 
 //Tempos de busca na arvore binária de busca
 
-#define DATA_SIZE 1
-#define TEST_SIZE 1
+#define DATA_SIZE 1000
+#define TEST_SIZE 1000
 int main(void)
 {
     clock_t start, end;

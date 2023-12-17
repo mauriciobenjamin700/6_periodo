@@ -2,8 +2,8 @@
 #include <time.h>
 #include "tad.c"
 //Tempos de inserção na arvore binária de busca
-#define DATA_SIZE 10
-#define TEST_SIZE 1
+#define DATA_SIZE 10000
+#define TEST_SIZE 10000
 int main(void)
 {
     clock_t start, end;
@@ -45,7 +45,7 @@ int main(void)
     */
     media = media / DATA_SIZE;
 
-    printf("\n\nResultado: %.2f", media);
+    printf("\n\nResultado: %.3f", media);
 
     printf("\n\n%d", sinal);
     return 0;
