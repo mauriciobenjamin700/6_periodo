@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "musica.h"
 #define TAM_TITULO 50
 
 typedef struct Musica
@@ -11,7 +12,7 @@ typedef struct Musica
 
 typedef struct Lista_musicas
 {
-    Musica *musica;
+    Musica musica;
     struct Lista_musicas *proximo_no;
     struct Lista_musicas *anterior_no;
 
@@ -26,27 +27,14 @@ Parâmetros:
     void;
 
 Return :
-    musica::(Musica || NULL) : Retorna uma musica em caso de sucesso e NULL caso falhe.
+    musica::(Musica || NULL): Retorna uma musica em caso de sucesso e NULL caso falhe.
 */
-Musica *criar_musica()
-{
-    Musica *musica;
-    musica = (Musica *)malloc(sizeof(Musica));
 
-    if (!musica)
-        musica = NULL;
-
-    return musica;
-}
 
 void preencher_musica(Musica *musica, char titulo[], float minutos)
 {
-    if (musica!= NULL)
-    {
-        musica->minutos = minutos;
-        strcpy(musica->titulo, titulo);
-    }
-    
+    musica->minutos = minutos;
+    strcpy(musica->titulo, titulo);    
 }
 
 Lista_musicas *iniciar_no_lista()
@@ -55,7 +43,8 @@ Lista_musicas *iniciar_no_lista()
 
     if (lista)
     {
-        lista->musica = NULL;
+        char t[1] = {""};
+        preencher_musica(&(lista->musica),t,0);
         lista->anterior_no = NULL;
         lista->proximo_no = NULL;
     }
@@ -70,9 +59,9 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
     int insere = 0;
     
 
-    if ((*raiz)->musica == NULL)
+    if ((*raiz)->musica.minutos == 0)
     {
-        (*raiz)->musica = musica;
+        (*raiz)->musica = *musica;
         insere = 1;
     }
     else
@@ -84,7 +73,7 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
             //compara a primeira com a segunda e retorna 0 caso sejam iguais, num < 0 caso a primeira seja menor ou n > 0 caso o primeiro seja maior que o segundo.
             // -a-b-c-f
 
-            result = strcmp(musica->titulo, aux->musica->titulo);
+            result = strcmp(musica->titulo, aux->musica.titulo);
             if (result == 0)
             {
                 insere = 1;
@@ -94,7 +83,7 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
                 if (aux->anterior_no == NULL)
                 {
                     Lista_musicas *new = iniciar_no_lista();
-                    new->musica = musica;
+                    new->musica = *musica;
                     aux->anterior_no = new;
                     new->proximo_no = aux;
                     *raiz = new;
@@ -103,7 +92,7 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
                 else
                 {
                     Lista_musicas *new = iniciar_no_lista();
-                    new->musica = musica;
+                    new->musica = *musica;
                     Lista_musicas *auxAnt = aux->anterior_no;
                     aux->anterior_no = new;
                     auxAnt->proximo_no = new;
@@ -117,7 +106,7 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
                 if (aux->proximo_no == NULL)
                 {
                     Lista_musicas *new = iniciar_no_lista();
-                    new->musica = musica;
+                    new->musica = *musica;
                     aux->proximo_no = new;
                     new->anterior_no = aux;
                     insere = 1;
@@ -131,7 +120,7 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
                     else
                     {
                         Lista_musicas *new = iniciar_no_lista();
-                        new->musica = musica;
+                        new->musica = *musica;
                         new->anterior_no = aux;
                         aux->proximo_no = new;
                         insere = 1;
@@ -147,23 +136,21 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
 
 void mostar_musica(Musica *musica)
 {
-    if (musica == NULL)
-        printf("\nZero musicas cadastradas");
-    else
-        printf("\n\nTitulo: %s\nTempo: %.2f", musica->titulo, musica->minutos);
+    if (musica->minutos != 0)
+        printf("\n\tTitulo: %s\n\tTempo: %.2f", musica->titulo, musica->minutos);
 }
 
 void mostar_todas_musicas(Lista_musicas *no)
 {
-    Lista_musicas *aux = no;
-
-    if (aux == NULL)
+    
+    if (no == NULL)
         printf("\nZero musicas cadastradas");
     else
     {
+        Lista_musicas *aux = no;
         while (aux != NULL)
         {
-            mostar_musica(aux->musica);
+            mostar_musica(&(aux->musica));
             aux = aux->proximo_no;
         }
     }
@@ -197,11 +184,11 @@ Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
             sinal = 1;
         else if (aux != NULL)
         {
-            result = strcmp(aux->musica->titulo,titulo);
+            result = strcmp(aux->musica.titulo,titulo);
 
             if (result == 0)
             {
-                musica_buscada = aux->musica;
+                musica_buscada = &(aux->musica);
                 sinal = 1;
             }
             else
@@ -224,26 +211,24 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
     if(musica != NULL)
     {
         //Procura todas as musicas até achar a correta
-        while (strcmp(aux->musica->titulo,musica->titulo)!=0)
+        while (strcmp(aux->musica.titulo,musica->titulo)!=0)
         {
             aux = aux->proximo_no;    
         }
         //caso seja o unico elemento da lista
         if(aux->anterior_no == NULL && aux->proximo_no == NULL)
         {
-           Musica *musica_removida = aux->musica;
-           aux->musica = NULL;
-           free(musica_removida);
+            char t[1] = {""};
+            preencher_musica(&(aux->musica),t,0);
            sinal = 1;
         }
         // caso seja o primeiro elemento da lista
         else if(aux->anterior_no == NULL && aux->proximo_no != NULL)
         {
             //Lista_musicas *no_removido = aux;
-            Musica *musica_removida = aux->musica;
-            aux->musica = NULL;
-            free(musica_removida);
-            *raiz = aux->proximo_no;
+            char t[1] = {""};
+            preencher_musica(&(aux->musica),t,0);
+           *raiz = aux->proximo_no;
             free(aux);
             sinal = 1;
         }
@@ -251,9 +236,8 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
         else if(aux->anterior_no != NULL && aux->proximo_no != NULL)
         {
 
-            Musica *musica_removida = aux->musica;
-            aux->musica = NULL;
-            free(musica_removida);
+            char t[1] = {""};
+            preencher_musica(&(aux->musica),t,0);
             aux->anterior_no->proximo_no = aux->proximo_no;
             aux->proximo_no->anterior_no = aux->anterior_no;
             free(aux);
@@ -262,9 +246,8 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
         // caso seja o ultimo elemento da lista
         else if(aux->anterior_no != NULL && aux->proximo_no == NULL)
         {
-            Musica *musica_removida = aux->musica;
-            aux->musica = NULL;
-            free(musica_removida);
+            char t[1] = {""};
+            preencher_musica(&(aux->musica),t,0);
             aux->anterior_no->proximo_no = NULL;
             free(aux);
             sinal = 1;
@@ -283,7 +266,6 @@ void remover_todas_musicas(Lista_musicas **raiz)
         while (aux!=NULL)
         {
             auxProx = aux->proximo_no;
-            free(aux->musica);
             free(aux);
             aux = auxProx;
         }
