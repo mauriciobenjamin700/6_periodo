@@ -89,3 +89,26 @@ int menu()
     return opc;
 
 }
+
+
+void retornos(int sinal)
+{
+    switch (sinal)
+    {
+    case -1:
+        printf("\nFalha na operacao");
+        break;
+    
+    case 0:
+        printf("\nNao foi possivel realizar o processo");
+        break;
+
+    case 1:
+        printf("\nProcesso realizado com sucesso");
+        break;
+    
+    default:
+        break;
+    }
+
+}

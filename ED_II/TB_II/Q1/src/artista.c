@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "musica.c"
 #include "album.c"
 #define VERMELHO 1
 #define PRETO 0 

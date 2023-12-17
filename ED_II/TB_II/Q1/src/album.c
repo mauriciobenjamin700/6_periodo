@@ -168,24 +168,24 @@ RB_album *balanceia_album(RB_album *raiz)
 }
 */
 
-int insere_no_RB_album(RB_album **raiz, int id,char titulo[], int anoLancamento)
+int insere_no_RB_album(RB_album **raiz, RB_album *novo)
 {
     int criou_no = 0;
 
     if (*raiz == NULL)
     {
-        *raiz = cria_no_album(id, titulo, anoLancamento);
+        *raiz = novo;
         criou_no = 1;
     
     }
-    else if (id ==(*raiz)->id)
-        criou_no = -1; // Nó já existe
+    else if (novo->id ==(*raiz)->id)
+        criou_no = -1; // Nó já cadastrado
     
-    else if (id > (*raiz)->id)
-        criou_no = insere_no_RB_album(&((*raiz)->direita), id,titulo, anoLancamento);
+    else if (novo->id > (*raiz)->id)
+        criou_no = insere_no_RB_album(&((*raiz)->direita), novo);
     
     else
-        criou_no = insere_no_RB_album(&((*raiz)->esquerda), id,titulo, anoLancamento);
+        criou_no = insere_no_RB_album(&((*raiz)->esquerda), novo);
     
     balancear_RB_album(*raiz);
 
