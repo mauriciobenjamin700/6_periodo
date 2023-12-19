@@ -29,7 +29,9 @@ int main(void)
         scanf("%d", &i);
 
         
-        insere_no_RB_album(&arvore,i,titulo,ano);
+        if (insere_no_RB_album(&arvore,cria_no_album(i,titulo,ano)) == -1)
+            printf("\nErro ao cadastrar!");
+        else printf("\nCadastrei");
         
 
         printf("\nDeseja Continuar? [1][0]: ");
@@ -37,5 +39,7 @@ int main(void)
         scanf("%d", &continuar);
 
     }
-    mostrar_tudo_RB_album(arvore);    
+    printf("\n--------------------------------------\n");
+    //mostrar_tudo_RB_album(arvore);
+    mostrar_album(&((buscar_no_RB_album(arvore,1))->album));
 }

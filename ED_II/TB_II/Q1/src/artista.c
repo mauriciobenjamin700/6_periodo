@@ -1,22 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "album.c"
+
 #define VERMELHO 1
-#define PRETO 0 
+#define PRETO 0
 
 #define NOME 50
 #define TIPO 20
 #define ESTILO 20
 
 typedef struct Artista
-{   
+{
     int id;
     char nome[NOME];
     char tipo[TIPO];
     char estilo[ESTILO];
     int num_albuns;
+    RB_album * albuns;
 
-}Artista;
+} Artista;
 
 typedef struct RB_artista
 {
@@ -25,34 +25,24 @@ typedef struct RB_artista
     Artista artista;
     struct RB_artista *esquerda;
     struct RB_artista *direita;
-    
-}RB_artista;
 
-Artista *criar_Artista()
+} RB_artista;
+
+void preencher_artista(Artista *artista, char nome[NOME], char tipo[TIPO], char estilo[ESTILO], int id)
 {
-    Artista *artista;
-    artista = (Artista *)malloc(sizeof(Artista));
-
-    if (!artista)
-        artista = NULL;
-
-    return artista;
-}
-
-void preencher_artista(Artista *artista,char nome[NOME], char tipo[TIPO], char estilo[ESTILO], int num_albuns, int id)
-{   
     artista->id = id;
-    strcpy(artista->nome,nome);
-    strcpy(artista->tipo,tipo);
-    strcpy(artista->estilo,estilo);
-    artista->num_albuns = num_albuns;
+    strcpy(artista->nome, nome);
+    strcpy(artista->tipo, tipo);
+    strcpy(artista->estilo, estilo);
+    artista->num_albuns = 0;
+    artista->albuns = NULL;
 }
 
-RB_artista * cria_no_artista(int cor,Artista artista)
+RB_artista *cria_no_artista(int cor, Artista artista)
 {
     RB_artista *no = (RB_artista *)malloc(sizeof(RB_artista));
 
-    if(no)
+    if (no)
     {
         no->cor = cor;
         no->artista = artista;
@@ -61,11 +51,12 @@ RB_artista * cria_no_artista(int cor,Artista artista)
     }
     else
         no = NULL;
-    
+
     return no;
 }
 
-void trocar_cor(RB_artista *no) {
+void trocar_cor(RB_artista *no)
+{
     if (no != NULL)
     {
         no->cor = !no->cor;
@@ -78,18 +69,20 @@ void trocar_cor(RB_artista *no) {
     }
 }
 
-void trocar_cor_raiz(RB_artista *no) {
+void trocar_cor_raiz(RB_artista *no)
+{
     if (no != NULL)
     {
         no->cor = PRETO;
     }
 }
 
-int cor(RB_artista *no) {
+int cor(RB_artista *no)
+{
     return (no != NULL) ? PRETO : no->cor;
 }
 
-RB_artista* rotacao_direita_artista(RB_artista *raiz)
+RB_artista *rotacao_direita_artista(RB_artista *raiz)
 {
     RB_artista *aux = raiz->esquerda;
     raiz->esquerda = aux->direita;
@@ -99,8 +92,7 @@ RB_artista* rotacao_direita_artista(RB_artista *raiz)
     return aux;
 }
 
-
-RB_artista* rotacao_esquerda_artista(RB_artista *raiz)
+RB_artista *rotacao_esquerda_artista(RB_artista *raiz)
 {
     RB_artista *aux = raiz->direita;
     raiz->direita = aux->esquerda;
@@ -110,9 +102,11 @@ RB_artista* rotacao_esquerda_artista(RB_artista *raiz)
     return aux;
 }
 
-RB_artista *move2EsqRED(RB_artista *no){
+RB_artista *move2EsqRED(RB_artista *no)
+{
     trocar_cor(no);
-    if(cor(no->direita->esquerda) == VERMELHO){
+    if (cor(no->direita->esquerda) == VERMELHO)
+    {
         no->direita = rotacao_direita_artista(no->direita);
         no = rotacao_esquerda_artista(no);
         trocar_cor(no);
@@ -120,51 +114,92 @@ RB_artista *move2EsqRED(RB_artista *no){
     return no;
 }
 
-RB_artista *move2DirRED(RB_artista *no){
+RB_artista *move2DirRED(RB_artista *no)
+{
     trocar_cor(no);
-    if(cor(no->esquerda->esquerda) == VERMELHO){
+    if (cor(no->esquerda->esquerda) == VERMELHO)
+    {
         no = rotacao_direita_artista(no);
         trocar_cor(no);
     }
     return no;
 }
 
-RB_artista *balancear_RB_artista(RB_artista *no){
-    if(cor(no->direita) == VERMELHO){
+RB_artista *balancear_RB_artista(RB_artista *no)
+{
+    if (cor(no->direita) == VERMELHO)
+    {
         no = rotacao_esquerda_artista(no);
     }
 
-    if(no->esquerda != NULL && cor(no->direita) == VERMELHO && cor(no->esquerda->esquerda) == VERMELHO){
+    if (no->esquerda != NULL && cor(no->direita) == VERMELHO && cor(no->esquerda->esquerda) == VERMELHO)
+    {
         no = rotacao_direita_artista(no);
     }
 
-    if(cor(no->esquerda) == VERMELHO && cor(no->direita) == VERMELHO){
+    if (cor(no->esquerda) == VERMELHO && cor(no->direita) == VERMELHO)
+    {
         trocar_cor(no);
     }
 
     return no;
 }
 
-
 RB_artista *insere_no_artista(RB_artista *raiz, RB_artista *novo_no)
 {
-    if(raiz == NULL){
-        return novo_no; 
+    if (raiz == NULL)
+    {
+        return novo_no;
     }
-    else{
-    /*
-        Nesse caso ele verifica se o id do artista é maior ou menor e 
-        segue até chegar na raiz nula, insere nela, o ultimo else é no caso de ser igual
-        nesse caso a arvore permanece igual.
-    */
-        if(novo_no->artista.id < raiz->artista.id){
+    else
+    {
+        /*
+            Nesse caso ele verifica se o id do artista é maior ou menor e
+            segue até chegar na raiz nula, insere nela, o ultimo else é no caso de ser igual
+            nesse caso a arvore permanece igual.
+        */
+        if (novo_no->artista.id < raiz->artista.id)
+        {
             raiz->esquerda = insere_no_artista(raiz->esquerda, novo_no);
-        }else if(novo_no->artista.id > raiz->artista.id){
+        }
+        else if (novo_no->artista.id > raiz->artista.id)
+        {
             raiz->direita = insere_no_artista(raiz->direita, novo_no);
-        }else return raiz;
+        }
+        else
+            return raiz;
     }
 
     raiz = balancear_RB_artista(raiz);
 
     return raiz;
 }
+
+RB_artista *busca_no_artista(RB_artista *raiz, int id)
+{
+    RB_artista *artista_buscado = NULL;
+
+    if (raiz != NULL)
+    {
+        if (id == raiz->artista.id)
+            artista_buscado = raiz;
+
+        else if (id < raiz->artista.id)
+            artista_buscado = busca_no_artista(raiz->esquerda,id);
+
+        else
+            artista_buscado = busca_no_artista(raiz->direita,id);
+    }
+ 
+    return artista_buscado;
+}
+
+void mostrar_artista(Artista artista)
+{
+    printf("\n---------------");
+    printf("\nID: %d\nNOME: %s\nTIPO: %s\nESTILO: %s\nTOTAL DE ALBUNS: %d\nALBUNS: ",artista.id,artista.nome,artista.tipo,artista.estilo,artista.num_albuns);
+    mostrar_no_album((artista.albuns));
+    printf("\n---------------");
+}
+
+

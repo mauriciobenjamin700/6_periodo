@@ -1,8 +1,6 @@
-#include <stdio.h>
 #include "src/menu.c"
 #include "src/artista.c"
 
-#define TAM_TITULO 50
 
 int main(void)
 {
@@ -14,9 +12,18 @@ int main(void)
     char titulo[TAM_TITULO];
     int ano;
 
-    RB_album *novo_album;
+    char nome_artista[NOME];
+    char tipo_artista[TIPO];
+    char estilo_artista[ESTILO];
 
-    RB_album *arvoreRB;
+
+
+    Artista novo_artista;
+    RB_artista *no_artista;
+    RB_artista *arvore_artista;
+
+    RB_album *novo_album;
+    RB_album *arvore_album;
 
     while (opc != 0)
     {
@@ -29,13 +36,56 @@ int main(void)
             break;
         
         case 0:
-            printf("\n\nSISTEMA ENCERRRANDO...");    
+            printf("\n\nSISTEMA ENCERRRANDO...\n\n");    
             break;
 
         case 11:
+    
+            printf("\n\nID DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%d",&id);
+
+            printf("\n\nNOME DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%[^\n]",nome_artista);
+
+            printf("\n\nTIPO DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%[^\n]",tipo_artista);
+
+            printf("\n\nESTILO DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%[^\n]",estilo_artista);
+
+            preencher_artista(&novo_artista,nome_artista,tipo_artista,estilo_artista,id);
+            no_artista =  cria_no_artista(VERMELHO,novo_artista);
+
+            if (no_artista != NULL)
+            {
+                arvore_artista =  insere_no_artista(arvore_artista,no_artista);
+                printf("\nCadastrado com sucesso");
+            }
+                else
+                printf("\n\nSem memoria para criar o novo Artista!!!");
+            
+
             break;
         
         case 12:
+            printf("\n\nID DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%d",&id);
+
+            no_artista = busca_no_artista(arvore_artista,id);
+
+            if(no_artista != NULL)
+            {
+                printf("\nArtista encontrado!");
+                mostrar_artista(no_artista->artista);
+            }
+            else
+                printf("\nFALHA AO ENCONTRAR O ARTISTA");
+
             break;
 
         case 13:
@@ -56,7 +106,7 @@ int main(void)
 
             novo_album = cria_no_album(id,titulo,ano);
 
-            retorno = insere_no_RB_album(&arvoreRB,novo_album);
+            retorno = insere_no_RB_album(&arvore_album,novo_album);
             
             retornos(retorno);
 

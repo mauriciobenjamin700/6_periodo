@@ -59,11 +59,26 @@ int remover_musica_album(Album *album, char titulo[TAM_TITULO])
 
 void mostrar_album(Album *album)
 {
-    printf("\n\nTitulo: %s\nAno: %d\nQuantidade de Musicas: %d\nMusicas:\n",album->titulo,album->ano,album->qtd_musicas);
-    if (album == NULL)
-        printf("\n\nZero Musicas Cadatradas");
-    else
+    if (album != NULL)
+    {
+        printf("\n\nTitulo: %s\nAno: %d\nQuantidade de Musicas: %d\nMusicas:\n",album->titulo,album->ano,album->qtd_musicas);
+        if (album == NULL)
+            printf("\n\nZero Musicas Cadatradas");
+        else
         mostar_todas_musicas(album->musicas);
+    }
+    else
+    {
+        printf("\nSem album cadastrado!");
+    }
+}
+
+void mostrar_todos_nos_album(RB_album * no)
+{
+    if (no != NULL)
+    {
+        mostrar_album(&(no->album));
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////// Funções nativas da RB
@@ -115,18 +130,18 @@ RB_album* rotacao_esquerda_album(RB_album *raiz)
     return aux;
 }
 
-RB_album *balancear_RB_album(RB_album *raiz)
+RB_album *balancear_RB_album(RB_album **raiz)
 {
-    if (get_cor_album(raiz->direita) == VERMELHO)
-        raiz = rotacao_esquerda_album(raiz);
+    if (get_cor_album((*raiz)->direita) == VERMELHO)
+        *raiz = rotacao_esquerda_album(*raiz);
 
-    if (raiz->esquerda != NULL && get_cor_album(raiz->direita) == VERMELHO && get_cor_album(raiz->esquerda->esquerda) == VERMELHO) 
-        raiz = rotacao_direita_album(raiz);
+    if ((*raiz)->esquerda != NULL && get_cor_album((*raiz)->direita) == VERMELHO && get_cor_album((*raiz)->esquerda->esquerda) == VERMELHO) 
+        *raiz = rotacao_direita_album(*raiz);
 
-    if (get_cor_album(raiz->esquerda) == VERMELHO && get_cor_album(raiz->direita) == VERMELHO)
-        swap_cor_album(raiz);
+    if (get_cor_album((*raiz)->esquerda) == VERMELHO && get_cor_album((*raiz)->direita) == VERMELHO)
+        swap_cor_album(*raiz);
 
-    return raiz;
+    return *raiz;
 }
 
 ////////////////////////////////  Funções do projeto
@@ -182,12 +197,19 @@ int insere_no_RB_album(RB_album **raiz, RB_album *novo)
         criou_no = -1; // Nó já cadastrado
     
     else if (novo->id > (*raiz)->id)
-        criou_no = insere_no_RB_album(&((*raiz)->direita), novo);
+    {
+        RB_album *aux = *raiz;
+        criou_no = insere_no_RB_album(&((aux)->direita), novo);
+    }
+        
     
     else
-        criou_no = insere_no_RB_album(&((*raiz)->esquerda), novo);
-    
-    balancear_RB_album(*raiz);
+    {
+        RB_album *aux = *raiz;
+        criou_no = insere_no_RB_album(&((aux)->esquerda), novo);
+    }
+        
+    balancear_RB_album(&(*raiz));
 
     return criou_no;
 }
@@ -200,9 +222,30 @@ void mostrar_tudo_RB_album(RB_album *raiz)
         printf("\n\nID: %d",raiz->id);
         mostrar_album(&(raiz->album));
         mostrar_tudo_RB_album(raiz->direita);
+
+        
     }
     
 }
+
+RB_album * buscar_no_RB_album(RB_album *raiz, int id)
+{
+    RB_album * no_buscado = NULL;
+
+    if (raiz != NULL)
+    {
+        if (raiz->id == id)
+            no_buscado = raiz;
+        
+        else if (raiz->id > id)
+            no_buscado = buscar_no_RB_album(raiz->esquerda, id);
+
+        else
+            no_buscado = buscar_no_RB_album(raiz->direita, id);
+    }
+    return no_buscado;
+}
+
 /*
 
 Album *move_esq_red_album(Album *raiz)
