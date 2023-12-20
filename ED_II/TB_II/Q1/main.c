@@ -8,7 +8,6 @@ int main(void)
 
     int retorno;
 
-    int id;
     char titulo[TAM_TITULO];
     int ano;
 
@@ -40,10 +39,6 @@ int main(void)
             break;
 
         case 11:
-    
-            printf("\n\nID DO ARTISTA: ");
-            setbuf(stdin,NULL);
-            scanf("%d",&id);
 
             printf("\n\nNOME DO ARTISTA: ");
             setbuf(stdin,NULL);
@@ -57,7 +52,7 @@ int main(void)
             setbuf(stdin,NULL);
             scanf("%[^\n]",estilo_artista);
 
-            preencher_artista(&novo_artista,nome_artista,tipo_artista,estilo_artista,id);
+            preencher_artista(&novo_artista,nome_artista,tipo_artista,estilo_artista);
             no_artista =  cria_no_artista(VERMELHO,novo_artista);
 
             if (no_artista != NULL)
@@ -72,11 +67,11 @@ int main(void)
             break;
         
         case 12:
-            printf("\n\nID DO ARTISTA: ");
+            printf("\n\nNOME DO ARTISTA: ");
             setbuf(stdin,NULL);
-            scanf("%d",&id);
+            scanf("%s",titulo);
 
-            no_artista = busca_no_artista(arvore_artista,id);
+            no_artista = busca_no_artista(arvore_artista,titulo);
 
             if(no_artista != NULL)
             {
@@ -92,9 +87,6 @@ int main(void)
             break;
 
         case 21:
-            printf("\n\nID DO ALBUM: ");
-            setbuf(stdin,NULL);
-            scanf("%d",&id);
 
             printf("\n\nTITULO DO ALBUM: ");
             setbuf(stdin,NULL);
@@ -104,7 +96,7 @@ int main(void)
             setbuf(stdin,NULL);
             scanf("%d",&ano);
 
-            novo_album = cria_no_album(id,titulo,ano);
+            novo_album = cria_no_album(titulo,ano);
 
             retorno = insere_no_RB_album(&arvore_album,novo_album);
             

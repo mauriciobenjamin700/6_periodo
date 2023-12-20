@@ -40,13 +40,13 @@
                 <mxCell id="29" value="Rubro_Negro_Album" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
                     <mxGeometry x="610" y="470" width="160" height="110" as="geometry"/>
                 </mxCell>
-                <mxCell id="30" value="id: int&#10;album: Album&#10;direita: *Artista&#10;esquerda: *Artista&#10;cor: int&#10;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="29" vertex="1">
+                <mxCell id="30" value="album: Album&#10;direita: *Artista&#10;esquerda: *Artista&#10;cor: int&#10;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="29" vertex="1">
                     <mxGeometry y="26" width="160" height="84" as="geometry"/>
                 </mxCell>
                 <mxCell id="34" value="Rubro_Negro_Artista" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
                     <mxGeometry x="235" y="311" width="205" height="110" as="geometry"/>
                 </mxCell>
-                <mxCell id="35" value="id: int&#10;artista: Artista&#10;direita: *Rubro_Negro_Artista&#10;esquerda: **Rubro_Negro_Artista&#10;cor: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="34" vertex="1">
+                <mxCell id="35" value="artista: Artista&#10;direita: *Rubro_Negro_Artista&#10;esquerda: **Rubro_Negro_Artista&#10;cor: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="34" vertex="1">
                     <mxGeometry y="26" width="205" height="84" as="geometry"/>
                 </mxCell>
                 <mxCell id="42" style="edgeStyle=none;html=1;startArrow=none;startFill=0;endArrow=none;endFill=0;" parent="1" source="9" target="30" edge="1">

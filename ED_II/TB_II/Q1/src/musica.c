@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "cmp.c"
 #include "musica.h"
+
 #define TAM_TITULO 50
 
 typedef struct Musica
@@ -73,7 +75,7 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
             //compara a primeira com a segunda e retorna 0 caso sejam iguais, num < 0 caso a primeira seja menor ou n > 0 caso o primeiro seja maior que o segundo.
             // -a-b-c-f
 
-            result = strcmp(musica->titulo, aux->musica.titulo);
+            result = compara_string(musica->titulo, aux->musica.titulo);
             if (result == 0)
             {
                 insere = 1;
@@ -184,7 +186,7 @@ Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
             sinal = 1;
         else if (aux != NULL)
         {
-            result = strcmp(aux->musica.titulo,titulo);
+            result = compara_string(aux->musica.titulo,titulo);
 
             if (result == 0)
             {
@@ -211,7 +213,7 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
     if(musica != NULL)
     {
         //Procura todas as musicas até achar a correta
-        while (strcmp(aux->musica.titulo,musica->titulo)!=0)
+        while (compara_string(aux->musica.titulo,musica->titulo)!=0)
         {
             aux = aux->proximo_no;    
         }

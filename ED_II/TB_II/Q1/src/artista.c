@@ -9,7 +9,6 @@
 
 typedef struct Artista
 {
-    int id;
     char nome[NOME];
     char tipo[TIPO];
     char estilo[ESTILO];
@@ -28,9 +27,8 @@ typedef struct RB_artista
 
 } RB_artista;
 
-void preencher_artista(Artista *artista, char nome[NOME], char tipo[TIPO], char estilo[ESTILO], int id)
+void preencher_artista(Artista *artista, char nome[NOME], char tipo[TIPO], char estilo[ESTILO])
 {
-    artista->id = id;
     strcpy(artista->nome, nome);
     strcpy(artista->tipo, tipo);
     strcpy(artista->estilo, estilo);
@@ -149,7 +147,7 @@ RB_artista *insere_no_artista(RB_artista *raiz, RB_artista *novo_no)
 {
     if (raiz == NULL)
     {
-        return novo_no;
+        raiz = novo_no;
     }
     else
     {
@@ -158,16 +156,14 @@ RB_artista *insere_no_artista(RB_artista *raiz, RB_artista *novo_no)
             segue até chegar na raiz nula, insere nela, o ultimo else é no caso de ser igual
             nesse caso a arvore permanece igual.
         */
-        if (novo_no->artista.id < raiz->artista.id)
+        if (compara_string(novo_no->artista.nome,raiz->artista.nome) < 0)
         {
             raiz->esquerda = insere_no_artista(raiz->esquerda, novo_no);
         }
-        else if (novo_no->artista.id > raiz->artista.id)
+        else if (compara_string(novo_no->artista.nome,raiz->artista.nome) > 0)
         {
             raiz->direita = insere_no_artista(raiz->direita, novo_no);
         }
-        else
-            return raiz;
     }
 
     raiz = balancear_RB_artista(raiz);
@@ -175,20 +171,20 @@ RB_artista *insere_no_artista(RB_artista *raiz, RB_artista *novo_no)
     return raiz;
 }
 
-RB_artista *busca_no_artista(RB_artista *raiz, int id)
+RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[NOME])
 {
     RB_artista *artista_buscado = NULL;
 
     if (raiz != NULL)
     {
-        if (id == raiz->artista.id)
+        if (compara_string(nome_artista,raiz->artista.nome) == 0)
             artista_buscado = raiz;
 
-        else if (id < raiz->artista.id)
-            artista_buscado = busca_no_artista(raiz->esquerda,id);
+        else if (compara_string(nome_artista,raiz->artista.nome) < 0)
+            artista_buscado = busca_no_artista(raiz->esquerda,nome_artista);
 
         else
-            artista_buscado = busca_no_artista(raiz->direita,id);
+            artista_buscado = busca_no_artista(raiz->direita,nome_artista);
     }
  
     return artista_buscado;
@@ -197,8 +193,8 @@ RB_artista *busca_no_artista(RB_artista *raiz, int id)
 void mostrar_artista(Artista artista)
 {
     printf("\n---------------");
-    printf("\nID: %d\nNOME: %s\nTIPO: %s\nESTILO: %s\nTOTAL DE ALBUNS: %d\nALBUNS: ",artista.id,artista.nome,artista.tipo,artista.estilo,artista.num_albuns);
-    mostrar_no_album((artista.albuns));
+    printf("\nNOME: %s\nTIPO: %s\nESTILO: %s\nTOTAL DE ALBUNS: %d\nALBUNS: ",artista.nome,artista.tipo,artista.estilo,artista.num_albuns);
+    mostrar_album((artista.albuns));
     printf("\n---------------");
 }
 

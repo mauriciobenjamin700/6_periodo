@@ -1,7 +1,15 @@
 #include <stdio.h>
 #include <ctype.h>
 
-int strcasecmp_custom(const char *s1, const char *s2)
+/*
+Recebe duas string como parâmetro e retorna a diferença de tamanho alfabetico entre elas
+
+retorna: 
+    valor negativo caso a primeira seja menor que a segunda
+    valor positivo casoa primeira seja maior que a segunda
+    0 caso sejam iguais
+*/
+int compara_string(const char *s1, const char *s2)
 {
     while (*s1 && *s2 && tolower(*s1) == tolower(*s2))
     {

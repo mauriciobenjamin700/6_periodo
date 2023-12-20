@@ -17,7 +17,6 @@ typedef struct Album
 
 typedef struct RB_album
 {
-    int id;
     int cor;
     Album album;
     struct RB_album *esquerda;
@@ -27,7 +26,6 @@ typedef struct RB_album
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 void preencher_album(Album *album, char titulo[TAM_TITULO], int ano)
 {
     strcpy(album->titulo, titulo);
@@ -35,7 +33,6 @@ void preencher_album(Album *album, char titulo[TAM_TITULO], int ano)
     album->qtd_musicas = 0;
     album->musicas = iniciar_no_lista();
 }
-
 
 int adiciona_musica_album(Album *album, Musica *musica)
 {
@@ -61,11 +58,11 @@ void mostrar_album(Album *album)
 {
     if (album != NULL)
     {
-        printf("\n\nTitulo: %s\nAno: %d\nQuantidade de Musicas: %d\nMusicas:\n",album->titulo,album->ano,album->qtd_musicas);
+        printf("\n\nTitulo: %s\nAno: %d\nQuantidade de Musicas: %d\nMusicas:\n", album->titulo, album->ano, album->qtd_musicas);
         if (album == NULL)
             printf("\n\nZero Musicas Cadatradas");
         else
-        mostar_todas_musicas(album->musicas);
+            mostar_todas_musicas(album->musicas);
     }
     else
     {
@@ -73,7 +70,7 @@ void mostrar_album(Album *album)
     }
 }
 
-void mostrar_todos_nos_album(RB_album * no)
+void mostrar_todos_nos_album(RB_album *no)
 {
     if (no != NULL)
     {
@@ -83,7 +80,12 @@ void mostrar_todos_nos_album(RB_album * no)
 
 /////////////////////////////////////////////////////////////////////////////////////////// Funções nativas da RB
 
-int get_cor_album(RB_album *raiz)
+/*
+Retorna a cor do nó passado
+    0: Caso seja preto
+    1: Caso seja vermelho
+*/
+int cor_album(RB_album *raiz)
 {
     int cor;
 
@@ -109,7 +111,7 @@ void swap_cor_album(RB_album *raiz)
     }
 }
 
-RB_album* rotacao_direita_album(RB_album *raiz)
+RB_album *rotacao_direita_album(RB_album *raiz)
 {
     RB_album *aux = raiz->esquerda;
     raiz->esquerda = aux->direita;
@@ -119,8 +121,7 @@ RB_album* rotacao_direita_album(RB_album *raiz)
     return aux;
 }
 
-
-RB_album* rotacao_esquerda_album(RB_album *raiz)
+RB_album *rotacao_esquerda_album(RB_album *raiz)
 {
     RB_album *aux = raiz->direita;
     raiz->direita = aux->esquerda;
@@ -132,13 +133,13 @@ RB_album* rotacao_esquerda_album(RB_album *raiz)
 
 RB_album *balancear_RB_album(RB_album **raiz)
 {
-    if (get_cor_album((*raiz)->direita) == VERMELHO)
+    if (cor_album((*raiz)->direita) == VERMELHO)
         *raiz = rotacao_esquerda_album(*raiz);
 
-    if ((*raiz)->esquerda != NULL && get_cor_album((*raiz)->direita) == VERMELHO && get_cor_album((*raiz)->esquerda->esquerda) == VERMELHO) 
+    if ((*raiz)->esquerda != NULL && cor_album((*raiz)->direita) == VERMELHO && cor_album((*raiz)->esquerda->esquerda) == VERMELHO)
         *raiz = rotacao_direita_album(*raiz);
 
-    if (get_cor_album((*raiz)->esquerda) == VERMELHO && get_cor_album((*raiz)->direita) == VERMELHO)
+    if (cor_album((*raiz)->esquerda) == VERMELHO && cor_album((*raiz)->direita) == VERMELHO)
         swap_cor_album(*raiz);
 
     return *raiz;
@@ -146,18 +147,16 @@ RB_album *balancear_RB_album(RB_album **raiz)
 
 ////////////////////////////////  Funções do projeto
 
-
-RB_album *cria_no_album(int id,char titulo[TAM_TITULO],int ano)
+RB_album *cria_no_album(char titulo[TAM_TITULO], int ano)
 {
     RB_album *no;
     no = (RB_album *)malloc(sizeof(RB_album));
 
-
     if (no)
     {
-        no->id = id;
+
         no->cor = VERMELHO;
-        preencher_album(&(no->album),titulo,ano);
+        preencher_album(&(no->album), titulo, ano);
         no->esquerda = NULL;
         no->direita = NULL;
     }
@@ -170,13 +169,13 @@ RB_album *cria_no_album(int id,char titulo[TAM_TITULO],int ano)
 /*
 RB_album *balanceia_album(RB_album *raiz)
 {
-    if (get_cor_album(raiz->direita) == VERMELHO && get_cor_album(raiz->esquerda) == PRETO)
+    if (cor_album(raiz->direita) == VERMELHO && cor_album(raiz->esquerda) == PRETO)
         raiz = rotacao_esquerda_album(&raiz);
 
-    if (get_cor_album(raiz->esquerda) == VERMELHO && get_cor_album(raiz->esquerda->esquerda) == VERMELHO)
+    if (cor_album(raiz->esquerda) == VERMELHO && cor_album(raiz->esquerda->esquerda) == VERMELHO)
         raiz = rotacao_direita_album(&raiz);
 
-    if (get_cor_album(raiz->esquerda) == VERMELHO && get_cor_album(raiz->direita) == VERMELHO)
+    if (cor_album(raiz->esquerda) == VERMELHO && cor_album(raiz->direita) == VERMELHO)
         swap_cor_album(raiz);
 
     return raiz;
@@ -191,24 +190,22 @@ int insere_no_RB_album(RB_album **raiz, RB_album *novo)
     {
         *raiz = novo;
         criou_no = 1;
-    
     }
-    else if (novo->id ==(*raiz)->id)
+    else if (compara_string(novo->album.titulo,(*raiz)->album.titulo) == 0)
         criou_no = -1; // Nó já cadastrado
-    
-    else if (novo->id > (*raiz)->id)
+
+    else if (compara_string(novo->album.titulo,(*raiz)->album.titulo) > 0)
     {
         RB_album *aux = *raiz;
         criou_no = insere_no_RB_album(&((aux)->direita), novo);
     }
-        
-    
+
     else
     {
         RB_album *aux = *raiz;
         criou_no = insere_no_RB_album(&((aux)->esquerda), novo);
     }
-        
+
     balancear_RB_album(&(*raiz));
 
     return criou_no;
@@ -216,32 +213,28 @@ int insere_no_RB_album(RB_album **raiz, RB_album *novo)
 
 void mostrar_tudo_RB_album(RB_album *raiz)
 {
-    if(raiz != NULL)
+    if (raiz != NULL)
     {
         mostrar_tudo_RB_album(raiz->esquerda);
-        printf("\n\nID: %d",raiz->id);
         mostrar_album(&(raiz->album));
         mostrar_tudo_RB_album(raiz->direita);
-
-        
     }
-    
 }
 
-RB_album * buscar_no_RB_album(RB_album *raiz, int id)
+RB_album *buscar_no_RB_album(RB_album *raiz,char titulo_buscado[TAM_TITULO])
 {
-    RB_album * no_buscado = NULL;
+    RB_album *no_buscado = NULL;
 
     if (raiz != NULL)
     {
-        if (raiz->id == id)
+        if (compara_string(titulo_buscado,raiz->album.titulo)==0)
             no_buscado = raiz;
-        
-        else if (raiz->id > id)
-            no_buscado = buscar_no_RB_album(raiz->esquerda, id);
+
+        else if (compara_string(titulo_buscado,raiz->album.titulo) < 0)
+            no_buscado = buscar_no_RB_album(raiz->esquerda, titulo_buscado);
 
         else
-            no_buscado = buscar_no_RB_album(raiz->direita, id);
+            no_buscado = buscar_no_RB_album(raiz->direita, titulo_buscado);
     }
     return no_buscado;
 }
