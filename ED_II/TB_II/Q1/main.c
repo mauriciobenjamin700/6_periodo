@@ -57,7 +57,7 @@ int main(void)
 
             if (no_artista != NULL)
             {
-                arvore_artista =  insere_no_artista(arvore_artista,no_artista);
+                insere_no_artista(&arvore_artista,no_artista);
                 printf("\nCadastrado com sucesso");
             }
                 else

@@ -77,7 +77,13 @@ void trocar_cor_raiz(RB_artista *no)
 
 int cor(RB_artista *no)
 {
-    return (no != NULL) ? PRETO : no->cor;
+    int color = 0;
+    if (no != NULL)
+    {
+        color = no->cor;
+    }
+
+    return color;
 }
 
 RB_artista *rotacao_direita_artista(RB_artista *raiz)
@@ -143,11 +149,11 @@ RB_artista *balancear_RB_artista(RB_artista *no)
     return no;
 }
 
-RB_artista *insere_no_artista(RB_artista *raiz, RB_artista *novo_no)
+void insere_no_artista(RB_artista **raiz, RB_artista *novo_no)
 {
-    if (raiz == NULL)
+    if (*raiz == NULL)
     {
-        raiz = novo_no;
+        *raiz = novo_no;
     }
     else
     {
@@ -156,19 +162,17 @@ RB_artista *insere_no_artista(RB_artista *raiz, RB_artista *novo_no)
             segue até chegar na raiz nula, insere nela, o ultimo else é no caso de ser igual
             nesse caso a arvore permanece igual.
         */
-        if (compara_string(novo_no->artista.nome,raiz->artista.nome) < 0)
+        if (compara_string(novo_no->artista.nome,(*raiz)->artista.nome) < 0)
         {
-            raiz->esquerda = insere_no_artista(raiz->esquerda, novo_no);
+            insere_no_artista(&(*raiz)->esquerda, novo_no);
         }
-        else if (compara_string(novo_no->artista.nome,raiz->artista.nome) > 0)
+        else if (compara_string(novo_no->artista.nome,(*raiz)->artista.nome) > 0)
         {
-            raiz->direita = insere_no_artista(raiz->direita, novo_no);
+            insere_no_artista(&(*raiz)->direita, novo_no);
         }
     }
+    (*raiz) = balancear_RB_artista((*raiz));
 
-    raiz = balancear_RB_artista(raiz);
-
-    return raiz;
 }
 
 RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[NOME])
@@ -194,7 +198,7 @@ void mostrar_artista(Artista artista)
 {
     printf("\n---------------");
     printf("\nNOME: %s\nTIPO: %s\nESTILO: %s\nTOTAL DE ALBUNS: %d\nALBUNS: ",artista.nome,artista.tipo,artista.estilo,artista.num_albuns);
-    mostrar_album((artista.albuns));
+    mostrar_tudo_RB_album((artista.albuns));
     printf("\n---------------");
 }
 

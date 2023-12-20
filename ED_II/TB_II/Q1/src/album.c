@@ -70,6 +70,16 @@ void mostrar_album(Album *album)
     }
 }
 
+
+void mostrar_no_RB_album(RB_album *no)
+{
+    if (no != NULL)
+    {
+        mostrar_album(&(no->album));
+    }
+}
+
+
 void mostrar_todos_nos_album(RB_album *no)
 {
     if (no != NULL)

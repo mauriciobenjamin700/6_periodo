@@ -207,11 +207,12 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
 {
 
     int sinal = 0;
-    Lista_musicas *aux = *raiz;
+    
     Musica *musica = buscar_musica(*raiz,titulo);
 
     if(musica != NULL)
     {
+        Lista_musicas *aux = *raiz;
         //Procura todas as musicas até achar a correta
         while (compara_string(aux->musica.titulo,musica->titulo)!=0)
         {
@@ -228,8 +229,7 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
         else if(aux->anterior_no == NULL && aux->proximo_no != NULL)
         {
             //Lista_musicas *no_removido = aux;
-            char t[1] = {""};
-            preencher_musica(&(aux->musica),t,0);
+
            *raiz = aux->proximo_no;
             free(aux);
             sinal = 1;
@@ -238,8 +238,6 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
         else if(aux->anterior_no != NULL && aux->proximo_no != NULL)
         {
 
-            char t[1] = {""};
-            preencher_musica(&(aux->musica),t,0);
             aux->anterior_no->proximo_no = aux->proximo_no;
             aux->proximo_no->anterior_no = aux->anterior_no;
             free(aux);
@@ -248,8 +246,6 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
         // caso seja o ultimo elemento da lista
         else if(aux->anterior_no != NULL && aux->proximo_no == NULL)
         {
-            char t[1] = {""};
-            preencher_musica(&(aux->musica),t,0);
             aux->anterior_no->proximo_no = NULL;
             free(aux);
             sinal = 1;
