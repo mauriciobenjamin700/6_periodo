@@ -58,7 +58,7 @@ void mostrar_album(Album *album)
 {
     if (album != NULL)
     {
-        printf("\n\nTitulo: %s\nAno: %d\nQuantidade de Musicas: %d\nMusicas:\n", album->titulo, album->ano, album->qtd_musicas);
+        printf("\nTitulo: %s\nAno: %d\nQuantidade de Musicas: %d\nMusicas:\n", album->titulo, album->ano, album->qtd_musicas);
         if (album == NULL)
             printf("\n\nZero Musicas Cadatradas");
         else
@@ -201,6 +201,7 @@ int insere_no_RB_album(RB_album **raiz, RB_album *novo)
         *raiz = novo;
         criou_no = 1;
     }
+
     else if (compara_string(novo->album.titulo,(*raiz)->album.titulo) == 0)
         criou_no = -1; // Nó já cadastrado
 

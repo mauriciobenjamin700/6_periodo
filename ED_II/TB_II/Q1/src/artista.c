@@ -197,9 +197,59 @@ RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[NOME])
 void mostrar_artista(Artista artista)
 {
     printf("\n---------------");
-    printf("\nNOME: %s\nTIPO: %s\nESTILO: %s\nTOTAL DE ALBUNS: %d\nALBUNS: ",artista.nome,artista.tipo,artista.estilo,artista.num_albuns);
+    printf("\nNOME: %s\nTIPO: %s\nESTILO: %s\nTOTAL DE ALBUNS: %d\n ",artista.nome,artista.tipo,artista.estilo,artista.num_albuns);
+    printf("\n***************");
+    printf("\nALBUNS: ");
+    printf("\n***************\n");
     mostrar_tudo_RB_album((artista.albuns));
     printf("\n---------------");
 }
 
 
+int cadastrar_album_artista(RB_artista *artista, RB_album *Album)
+{
+    int sinal = 0;
+
+    if (artista != NULL)
+    {
+        sinal = insere_no_RB_album(&(artista->artista.albuns),Album);
+
+        if (sinal==1)
+            artista->artista.num_albuns++;
+        
+    }
+
+    return sinal;
+
+}
+
+RB_album * buscar_album_artista(RB_artista *artista, char titulo_album[TAM_TITULO])
+{
+    RB_album *no_album_buscado = NULL;
+
+    if (artista != NULL)   
+        no_album_buscado = buscar_no_RB_album(artista->artista.albuns,titulo_album);
+
+
+    return no_album_buscado;
+
+}
+
+RB_album * buscar_album_arv_artista(RB_artista *artista, char titulo_album[TAM_TITULO])
+{
+    RB_album *no_album_buscado = NULL;
+
+    if (artista != NULL) 
+    {
+        no_album_buscado = buscar_album_artista(artista,titulo_album);
+        if (no_album_buscado==NULL)
+        {
+            no_album_buscado = buscar_album_arv_artista(artista->esquerda,titulo_album);
+            no_album_buscado = buscar_album_arv_artista(artista->direita,titulo_album);
+        }
+    }  
+        
+
+    return no_album_buscado;
+
+}
