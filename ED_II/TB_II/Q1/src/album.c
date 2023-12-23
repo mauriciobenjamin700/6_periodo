@@ -44,6 +44,17 @@ int adiciona_musica_album(Album *album, Musica *musica)
     return adicionei;
 }
 
+int adiciona_musica_no_album(RB_album *album, Musica *musica)
+{
+    return adiciona_musica_album(&album->album,musica);
+}
+
+Lista_musicas * buscar_musica_no_album(RB_album *album,char titulo[TAM_TITULO])
+{
+
+    return buscar_no_musica(album->album.musicas,titulo);
+}
+
 int remover_musica_album(Album *album, char titulo[TAM_TITULO])
 {
     int removi = remover_musica(&(album->musicas), titulo);
@@ -58,15 +69,9 @@ void mostrar_album(Album *album)
 {
     if (album != NULL)
     {
-        printf("\nTitulo: %s\nAno: %d\nQuantidade de Musicas: %d\nMusicas:\n", album->titulo, album->ano, album->qtd_musicas);
-        if (album == NULL)
-            printf("\n\nZero Musicas Cadatradas");
-        else
-            mostar_todas_musicas(album->musicas);
-    }
-    else
-    {
-        printf("\nSem album cadastrado!");
+        printf("\n\nALBUM:\n\tTITULO: %s\n\tANO: %d\n\tTOTAL DE MUSICAS: %d\n", album->titulo, album->ano, album->qtd_musicas);
+ 
+        mostar_todas_musicas(album->musicas);   
     }
 }
 
@@ -228,7 +233,7 @@ void mostrar_tudo_RB_album(RB_album *raiz)
     {
         mostrar_tudo_RB_album(raiz->esquerda);
         mostrar_album(&(raiz->album));
-        mostrar_tudo_RB_album(raiz->direita);
+        mostrar_tudo_RB_album(raiz->direita);  
     }
 }
 

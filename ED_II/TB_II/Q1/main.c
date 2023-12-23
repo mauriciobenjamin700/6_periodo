@@ -9,6 +9,7 @@ int main(void)
     int retorno;
     char titulo[TAM_TITULO];
     int ano;
+    float duracao;
 
     char nome_artista[NOME];
     char tipo_artista[TIPO];
@@ -20,7 +21,11 @@ int main(void)
     RB_artista *no_artista;
     RB_artista *arvore_artista;
 
-    RB_album *novo_album;
+    RB_album *album;
+
+    Musica musica;
+
+    Lista_musicas *no_musica;
 
 
     while (opc != 0)
@@ -68,15 +73,12 @@ int main(void)
         case 12:
             printf("\n\nNOME DO ARTISTA: ");
             setbuf(stdin,NULL);
-            scanf("%s",titulo);
+            scanf("%[^\n]",titulo);
 
             no_artista = busca_no_artista(arvore_artista,titulo);
 
             if(no_artista != NULL)
-            {
-                printf("\nArtista encontrado!");
                 mostrar_artista(no_artista->artista);
-            }
             else
                 printf("\nFALHA AO ENCONTRAR O ARTISTA");
 
@@ -89,7 +91,7 @@ int main(void)
 
             printf("\n\nNOME DO ARTISTA: ");
             setbuf(stdin,NULL);
-            scanf("%s",titulo);
+            scanf("%[^\n]",titulo);
 
             no_artista = busca_no_artista(arvore_artista,titulo);
 
@@ -97,15 +99,15 @@ int main(void)
             {
                 printf("\n\nTITULO DO ALBUM: ");
                 setbuf(stdin,NULL);
-                scanf("%s",titulo);
+                scanf("%[^\n]",titulo);
 
                 printf("\n\nANO DO ALBUM: ");
                 setbuf(stdin,NULL);
                 scanf("%d",&ano);
 
-                novo_album = cria_no_album(titulo,ano);
+                album = cria_no_album(titulo,ano);
 
-                retorno = (cadastrar_album_artista(no_artista, novo_album));
+                retorno = (cadastrar_album_artista(no_artista, album));
                 
                 if(retorno == 1)
                 {
@@ -122,7 +124,7 @@ int main(void)
 
             printf("\n\nNOME DO ARTISTA: ");
             setbuf(stdin,NULL);
-            scanf("%s",titulo);
+            scanf("%[^\n]",titulo);
 
             no_artista = busca_no_artista(arvore_artista,titulo);
 
@@ -130,15 +132,15 @@ int main(void)
             {
                 printf("\n\nTITULO DO ALBUM: ");
                 setbuf(stdin,NULL);
-                scanf("%s",titulo);
+                scanf("%[^\n]",titulo);
 
 
-                novo_album = buscar_album_artista(no_artista,titulo);
+                album = buscar_album_artista(no_artista,titulo);
 
                 
                 
-                if(novo_album != NULL)
-                    mostrar_no_RB_album(novo_album);
+                if(album != NULL)
+                    mostrar_no_RB_album(album);
                     
                 else
                     printf("\nALBUM NAO ENCONTRADO!");
@@ -152,9 +154,95 @@ int main(void)
             break;
 
         case 31:
+
+            printf("\n\nNOME DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%[^\n]",titulo);
+
+            no_artista = busca_no_artista(arvore_artista,titulo);
+
+            if(no_artista != NULL)
+            {
+                printf("\n\nTITULO DO ALBUM: ");
+                setbuf(stdin,NULL);
+                scanf("%[^\n]",titulo);
+
+
+                album = buscar_album_artista(no_artista,titulo);
+
+                
+                
+                if(album != NULL)
+                {
+                    printf("\n\nTITULO DA MUSICA: ");
+                    setbuf(stdin,NULL);
+                    scanf("%[^\n]",titulo);
+
+                    printf("\n\nDURACAO DA MUSICA: ");
+                    setbuf(stdin,NULL);
+                    scanf("%f",&duracao);
+
+                    preencher_musica(&musica,titulo,duracao);
+
+                    retorno = adiciona_musica_no_album(album,&musica);
+
+                    if (retorno==1)
+                        printf("\n\nMUSICA CADASTRADA COM SUCESSO!");
+                    
+                    else if (retorno == 0)
+                        printf("\n\nMUSICA JA ESTAVA CADASTRADA");
+
+                    else
+                        printf("\n\nFALHA NO CADASTRADO!");
+                        
+                }
+                    
+                else
+                    printf("\nALBUM NAO ENCONTRADO!");
+            }
+            else
+                printf("\nFALHA AO ENCONTRAR O ARTISTA");
+
             break;
         
         case 32:
+            printf("\n\nNOME DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%[^\n]",titulo);
+
+            no_artista = busca_no_artista(arvore_artista,titulo);
+
+            if(no_artista != NULL)
+            {
+                printf("\n\nTITULO DO ALBUM: ");
+                setbuf(stdin,NULL);
+                scanf("%s",titulo);
+
+
+                album = buscar_album_artista(no_artista,titulo);
+
+                
+                
+                if(album != NULL)
+                {
+                    printf("\n\nTITULO DA MUSICA: ");
+                    setbuf(stdin,NULL);
+                    scanf("%[^\n]",titulo);
+
+                    no_musica = buscar_musica_no_album(album,titulo);
+
+                    if (no_musica != NULL)
+                        mostrar_no_musica(no_musica);
+                    else
+                        printf("\n\nMUSICA NAO ENCONTRADA");
+
+                }
+                else
+                    printf("\n\nALBUM NAO ENCONTRADO");
+            }
+            else
+                printf("\n\nARTISTA NAO ENCONTRADO");
+
             break;
 
         case 33:

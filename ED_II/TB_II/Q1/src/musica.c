@@ -78,7 +78,7 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
             result = compara_string(musica->titulo, aux->musica.titulo);
             if (result == 0)
             {
-                insere = 1;
+                insere = -1;
             }
             else if (result < 0)
             {
@@ -136,23 +136,27 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
     return insere;
 }
 
-void mostar_musica(Musica *musica)
+void mostrar_musica(Musica *musica)
 {
     if (musica->minutos != 0)
-        printf("\n\tTitulo: %s\n\tTempo: %.2f", musica->titulo, musica->minutos);
+        printf("\n\n\tMUSICA:\n\n\t\tTITULO: %s\n\t\tDURACAO: %.2f", musica->titulo, musica->minutos);
+}
+
+void mostrar_no_musica(Lista_musicas * no)
+{
+    if (no!=NULL)
+        mostrar_musica(&no->musica);
 }
 
 void mostar_todas_musicas(Lista_musicas *no)
 {
     
-    if (no == NULL)
-        printf("\nZero musicas cadastradas");
-    else
+    if (no != NULL)
     {
         Lista_musicas *aux = no;
         while (aux != NULL)
         {
-            mostar_musica(&(aux->musica));
+            mostrar_musica(&(aux->musica));
             aux = aux->proximo_no;
         }
     }
@@ -173,6 +177,35 @@ int contar_musicas(Lista_musicas *raiz)
     }
     return qtd;
 }
+
+Lista_musicas* buscar_no_musica(Lista_musicas *raiz, char titulo[])
+{
+    Lista_musicas *aux = raiz;
+    int sinal = 0;
+    int result;
+
+    while (sinal == 0)
+    {
+        if (aux == NULL)
+            sinal = 1;
+        else if (aux != NULL)
+        {
+            result = compara_string(aux->musica.titulo,titulo);
+
+            if (result == 0)
+            {
+                
+                sinal = 1;
+            }
+            else
+                aux = aux->proximo_no;
+        }
+    }
+    
+    return aux;
+}
+
+
 Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
 {
     Lista_musicas *aux = raiz;

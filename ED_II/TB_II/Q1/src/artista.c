@@ -4,8 +4,8 @@
 #define PRETO 0
 
 #define NOME 50
-#define TIPO 20
-#define ESTILO 20
+#define TIPO 40
+#define ESTILO 40
 
 typedef struct Artista
 {
@@ -196,15 +196,15 @@ RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[NOME])
     return artista_buscado;
 }
 
+// ################################ Funções para que o usuário irá acessar#################################### 
+
 void mostrar_artista(Artista artista)
 {
-    printf("\n---------------");
+    printf("\n--------DADOS DO ARTISTA-------\n");
     printf("\nNOME: %s\nTIPO: %s\nESTILO: %s\nTOTAL DE ALBUNS: %d\n ",artista.nome,artista.tipo,artista.estilo,artista.num_albuns);
-    printf("\n***************");
-    printf("\nALBUNS: ");
-    printf("\n***************\n");
+
     mostrar_tudo_RB_album((artista.albuns));
-    printf("\n---------------");
+    printf("\n------------------------------");
 }
 
 
@@ -255,5 +255,12 @@ RB_album * buscar_album_arv_artista(RB_artista *arvore, char titulo_album[TAM_TI
 
 */      
 
-    
-
+//Esta função remove todas as musicas,albuns e artistas do sistema visando liberar toda a memória usada!
+void encerrar_sistema(RB_artista **arvore)
+{
+    if(*arvore != NULL)
+    {
+        encerrar_sistema(&((*arvore)->esquerda));
+        encerrar_sistema(&((*arvore)->direita));
+    }
+}
