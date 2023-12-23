@@ -136,9 +136,11 @@ RB_artista *balancear_RB_artista(RB_artista *no)
         no = rotacao_esquerda_artista(no);
     }
 
-    if (no->esquerda != NULL && cor(no->direita) == VERMELHO && cor(no->esquerda->esquerda) == VERMELHO)
+    if (no->esquerda != NULL)
     {
-        no = rotacao_direita_artista(no);
+        if (cor(no->direita) == VERMELHO && cor(no->esquerda->esquerda) == VERMELHO)
+            no = rotacao_direita_artista(no);
+               
     }
 
     if (cor(no->esquerda) == VERMELHO && cor(no->direita) == VERMELHO)
@@ -234,22 +236,24 @@ RB_album * buscar_album_artista(RB_artista *artista, char titulo_album[TAM_TITUL
     return no_album_buscado;
 
 }
-
-RB_album * buscar_album_arv_artista(RB_artista *artista, char titulo_album[TAM_TITULO])
+/* A ideia era buscar dentre todos os artistas qual tinha o album que eu quero, mas faltou ideias de como implementar
+RB_album * buscar_album_arv_artista(RB_artista *arvore, char titulo_album[TAM_TITULO])
 {
     RB_album *no_album_buscado = NULL;
 
-    if (artista != NULL) 
+    if (arvore != NULL) 
     {
-        no_album_buscado = buscar_album_artista(artista,titulo_album);
+        no_album_buscado = buscar_album_artista(arvore,titulo_album);
         if (no_album_buscado==NULL)
         {
-            no_album_buscado = buscar_album_arv_artista(artista->esquerda,titulo_album);
-            no_album_buscado = buscar_album_arv_artista(artista->direita,titulo_album);
+            no_album_buscado = buscar_album_arv_artista(arvore->esquerda,titulo_album);
+            no_album_buscado = buscar_album_arv_artista(arvore->direita,titulo_album);
         }
     }  
-        
-
     return no_album_buscado;
+    }
 
-}
+*/      
+
+    
+

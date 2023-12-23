@@ -59,7 +59,7 @@ int main(void)
                 insere_no_artista(&arvore_artista,no_artista);
                 printf("\nCadastrado com sucesso");
             }
-                else
+            else
                 printf("\n\nSem memoria para criar o novo Artista!!!");
             
 
@@ -119,16 +119,33 @@ int main(void)
             break;
         
         case 22:
+
+            printf("\n\nNOME DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%s",titulo);
+
+            no_artista = busca_no_artista(arvore_artista,titulo);
+
+            if(no_artista != NULL)
+            {
                 printf("\n\nTITULO DO ALBUM: ");
                 setbuf(stdin,NULL);
                 scanf("%s",titulo);
 
-                novo_album =  buscar_album_arv_artista(arvore_artista,titulo);
 
-                if (novo_album != NULL)
+                novo_album = buscar_album_artista(no_artista,titulo);
+
+                
+                
+                if(novo_album != NULL)
                     mostrar_no_RB_album(novo_album);
+                    
                 else
-                    printf("\nAlbum nao encontrado!");
+                    printf("\nALBUM NAO ENCONTRADO!");
+            }
+            else
+                printf("\nFALHA AO ENCONTRAR O ARTISTA");
+
             break;
 
         case 23:
