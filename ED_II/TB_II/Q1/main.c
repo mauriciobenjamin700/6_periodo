@@ -1,5 +1,5 @@
 #include "src/menu.c"
-#include "src/artista.c"
+#include "src/sistema.c"
 
 
 int main(void)
@@ -15,16 +15,11 @@ int main(void)
     char tipo_artista[TIPO];
     char estilo_artista[ESTILO];
 
-
-
     Artista novo_artista;
     RB_artista *no_artista;
     RB_artista *arvore_artista;
-
     RB_album *album;
-
     Musica musica;
-
     Lista_musicas *no_musica;
 
 

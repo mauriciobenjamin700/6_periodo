@@ -21,24 +21,33 @@ typedef struct Lista_musicas
 } Lista_musicas;
 
 /*
-Esta função tenta alocar um espaço de memoria para guardar uma música
-Caso consiga, retorna o endereço alocado
-Caso Falhe, retorna NULL;
+Preenche os campos de uma estrutura Musica com seus respectivos campos
 
-Parâmetros:
-    void;
+Args:
+    musica::Musica*: Ponteiro para uma variável do tipo Musica que será preenchido;
+    titulo::char: Titulo da musica;
+    float::minutos: Duração da musica em minutos.
 
-Return :
-    musica::(Musica || NULL): Retorna uma musica em caso de sucesso e NULL caso falhe.
+Return:
+    None
 */
-
-
 void preencher_musica(Musica *musica, char titulo[], float minutos)
 {
     musica->minutos = minutos;
-    strcpy(musica->titulo, titulo);    
+    strcpy(musica->titulo, titulo);
 }
 
+/*
+Aloca memória para um nó do tipo Lista_musicas;
+Caso a aloacão seja um sucesso, cria um nó do tipo Lista_musicas com titulo vazio e duração de 0.
+Caso contrario retorna NULL
+
+Args:
+    None
+
+Return:
+    Lista::Lista_musicas: Nó para uma lista de musicas.
+*/
 Lista_musicas *iniciar_no_lista()
 {
     Lista_musicas *lista = (Lista_musicas *)malloc(sizeof(Lista_musicas));
@@ -46,7 +55,7 @@ Lista_musicas *iniciar_no_lista()
     if (lista)
     {
         char t[1] = {""};
-        preencher_musica(&(lista->musica),t,0);
+        preencher_musica(&(lista->musica), t, 0);
         lista->anterior_no = NULL;
         lista->proximo_no = NULL;
     }
@@ -56,10 +65,23 @@ Lista_musicas *iniciar_no_lista()
     return lista;
 }
 
+/*
+Adiciona uma musica na lista de musicas passada por parâmetro e retorna uma sinalização de acordo com o resultado obtido.
+Tipos de sinalização:
+    1 - Sucesso ao adicionar;
+    0 - Falha ao adicionar;
+   -1 - Musica já estava cadastrada.
+
+Args:
+    raiz::Lista_musicas: Referência do ponteiro que guarda o início da lista de musicas;
+    musica::Musica*: Ponteiro para uma música que será copiada e guardada na lista de musicas.
+
+Retorno:
+    insere::int: Valor inteiro representando o resultado da operação de inserção
+*/
 int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
 {
     int insere = 0;
-    
 
     if ((*raiz)->musica.minutos == 0)
     {
@@ -72,14 +94,14 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
         int result;
         while (insere == 0)
         {
-            //compara a primeira com a segunda e retorna 0 caso sejam iguais, num < 0 caso a primeira seja menor ou n > 0 caso o primeiro seja maior que o segundo.
-            // -a-b-c-f
+            // compara a primeira com a segunda e retorna 0 caso sejam iguais, num < 0 caso a primeira seja menor ou n > 0 caso o primeiro seja maior que o segundo.
+            //  -a-b-c-f
 
             result = compara_string(musica->titulo, aux->musica.titulo);
+
             if (result == 0)
-            {
                 insere = -1;
-            }
+
             else if (result < 0)
             {
                 if (aux->anterior_no == NULL)
@@ -116,9 +138,7 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
                 else
                 {
                     if (aux->proximo_no != NULL)
-                    {
                         aux = aux->proximo_no;
-                    }
                     else
                     {
                         Lista_musicas *new = iniciar_no_lista();
@@ -132,25 +152,51 @@ int adicionar_musica_ordenada(Lista_musicas **raiz, Musica *musica)
         }
     }
 
-
     return insere;
 }
 
+/*
+Mostra todos os dados de uma música
+
+Args:
+    musica::Musica*: Ponteiro para uma música que será mostrada
+
+Return:
+    None
+*/
 void mostrar_musica(Musica *musica)
 {
     if (musica->minutos != 0)
         printf("\n\n\tMUSICA:\n\n\t\tTITULO: %s\n\t\tDURACAO: %.2f", musica->titulo, musica->minutos);
 }
 
-void mostrar_no_musica(Lista_musicas * no)
+/*
+Mostra todos os dados de uma música contida em um nó da Lista ordenada de músicas.
+
+Args:
+    no::Lista_musicas*: Ponteiro para um no da Lista de musicas
+
+Return:
+    None
+*/
+void mostrar_no_musica(Lista_musicas *no)
 {
-    if (no!=NULL)
+    if (no != NULL)
         mostrar_musica(&no->musica);
 }
 
+/*
+Mostra todos os dados de todas as musicas contida em uma Lista ordenada de músicas.
+
+Args:
+    no::Lista_musicas*: Ponteiro para um no da Lista de musicas
+
+Return:
+    None
+*/
 void mostar_todas_musicas(Lista_musicas *no)
 {
-    
+
     if (no != NULL)
     {
         Lista_musicas *aux = no;
@@ -162,6 +208,15 @@ void mostar_todas_musicas(Lista_musicas *no)
     }
 }
 
+/*
+Conta a quantidade de musicas que estão em uma lista de musicas;
+
+Args:
+    raiz::Lista_musicas*: Nó Raiz de uma lista de musicas 
+
+Return:
+    qtd::int: Quantidade de musicas encontradas na lista de musicas;
+*/
 int contar_musicas(Lista_musicas *raiz)
 {
     int qtd = 0;
@@ -178,7 +233,17 @@ int contar_musicas(Lista_musicas *raiz)
     return qtd;
 }
 
-Lista_musicas* buscar_no_musica(Lista_musicas *raiz, char titulo[])
+/*
+Busca um nó musica dentro de uma lista de músicas com base no título da musica
+
+Args:
+    raiz::Lista_musicas*: Raiz da lista de musicas que iremos percorrer visando encontrar a música buscada.
+    titulo::char: Título da Musica que estamos buscando.
+
+Return:
+    aux::Lista_musicas*: Apontamento para o nó da musica buscada em casa de sucesso na busca ou NULL caso a musica não seja encontrada
+*/
+Lista_musicas *buscar_no_musica(Lista_musicas *raiz, char titulo[])
 {
     Lista_musicas *aux = raiz;
     int sinal = 0;
@@ -190,23 +255,28 @@ Lista_musicas* buscar_no_musica(Lista_musicas *raiz, char titulo[])
             sinal = 1;
         else if (aux != NULL)
         {
-            result = compara_string(aux->musica.titulo,titulo);
+            result = compara_string(aux->musica.titulo, titulo);
 
             if (result == 0)
-            {
-                
                 sinal = 1;
-            }
             else
                 aux = aux->proximo_no;
         }
     }
-    
     return aux;
 }
 
+/*
+Busca uma musica dentro de uma lista de músicas com base no título da musica
 
-Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
+Args:
+    raiz::Lista_musicas*: Raiz da lista de musicas que iremos percorrer visando encontrar a música buscada.
+    titulo::char: Título da Musica que estamos buscando.
+
+Return:
+    musica_buscada::Musica*: Apontamento para a musica buscada em casa de sucesso na busca ou NULL caso a musica não seja encontrada
+*/
+Musica *buscar_musica(Lista_musicas *raiz, char titulo[])
 {
     Lista_musicas *aux = raiz;
     Musica *musica_buscada = NULL;
@@ -219,7 +289,7 @@ Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
             sinal = 1;
         else if (aux != NULL)
         {
-            result = compara_string(aux->musica.titulo,titulo);
+            result = compara_string(aux->musica.titulo, titulo);
 
             if (result == 0)
             {
@@ -230,45 +300,52 @@ Musica* buscar_musica(Lista_musicas *raiz, char titulo[])
                 aux = aux->proximo_no;
         }
     }
-    
+
     return musica_buscada;
 }
 
-//Não faz sentido editar as musicas pois são poucos campos, é melhor apenas remover e recadastrar;
+/*
+Remove uma música da lista de musicas e sinaliza o resultado da remoção:
+    0 - Fracasso
+    1 - Sucesso
 
+Args:
+    raiz::Lista_musicas**: Referência da raiz da lista de musicas
+    titulo::char: Titulo da musica que estamos querendo remover
+
+Return:
+    sinal::int: Sinalização referente ao resultado da operação 
+*/
 int remover_musica(Lista_musicas **raiz, char titulo[])
 {
-
     int sinal = 0;
-    
-    Musica *musica = buscar_musica(*raiz,titulo);
 
-    if(musica != NULL)
+    Musica *musica = buscar_musica(*raiz, titulo);
+
+    if (musica != NULL)
     {
         Lista_musicas *aux = *raiz;
-        //Procura todas as musicas até achar a correta
-        while (compara_string(aux->musica.titulo,musica->titulo)!=0)
+        // Procura todas as musicas até achar a correta
+        while (compara_string(aux->musica.titulo, musica->titulo) != 0)
         {
-            aux = aux->proximo_no;    
+            aux = aux->proximo_no;
         }
-        //caso seja o unico elemento da lista
-        if(aux->anterior_no == NULL && aux->proximo_no == NULL)
+        // caso seja o unico elemento da lista
+        if (aux->anterior_no == NULL && aux->proximo_no == NULL)
         {
             char t[1] = {""};
-            preencher_musica(&(aux->musica),t,0);
-           sinal = 1;
+            preencher_musica(&(aux->musica), t, 0);
+            sinal = 1;
         }
         // caso seja o primeiro elemento da lista
-        else if(aux->anterior_no == NULL && aux->proximo_no != NULL)
+        else if (aux->anterior_no == NULL && aux->proximo_no != NULL)
         {
-            //Lista_musicas *no_removido = aux;
-
-           *raiz = aux->proximo_no;
+            *raiz = aux->proximo_no;
             free(aux);
             sinal = 1;
         }
-        //caso esteja no meio da lista
-        else if(aux->anterior_no != NULL && aux->proximo_no != NULL)
+        // caso esteja no meio da lista
+        else if (aux->anterior_no != NULL && aux->proximo_no != NULL)
         {
 
             aux->anterior_no->proximo_no = aux->proximo_no;
@@ -277,7 +354,7 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
             sinal = 1;
         }
         // caso seja o ultimo elemento da lista
-        else if(aux->anterior_no != NULL && aux->proximo_no == NULL)
+        else if (aux->anterior_no != NULL && aux->proximo_no == NULL)
         {
             aux->anterior_no->proximo_no = NULL;
             free(aux);
@@ -287,20 +364,29 @@ int remover_musica(Lista_musicas **raiz, char titulo[])
 
     return sinal;
 }
+
+/*
+Remove todas as músicas de uma lista de musicas:
+    
+Args:
+    raiz::Lista_musicas**: Referência da raiz da lista de musicas
+    
+Return:
+    None
+*/
 void remover_todas_musicas(Lista_musicas **raiz)
-{   
-    if(*raiz != NULL)
+{
+    if (*raiz != NULL)
     {
         Lista_musicas *aux = *raiz;
         Lista_musicas *auxProx;
 
-        while (aux!=NULL)
+        while (aux != NULL)
         {
             auxProx = aux->proximo_no;
             free(aux);
             aux = auxProx;
         }
         *raiz = NULL;
-        
     }
 }

@@ -25,7 +25,17 @@ typedef struct RB_album
 } RB_album;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+Preenche um album com seus respectivos dados
 
+Args:
+    album::Album*: Ponteiro para o album que será preenchido
+    titulo::char: Titulo do album
+    ano::int: Ano de publicação do album.
+
+Return:
+    None
+*/
 void preencher_album(Album *album, char titulo[TAM_TITULO], int ano)
 {
     strcpy(album->titulo, titulo);
@@ -34,64 +44,103 @@ void preencher_album(Album *album, char titulo[TAM_TITULO], int ano)
     album->musicas = iniciar_no_lista();
 }
 
-int adiciona_musica_album(Album *album, Musica *musica)
+/*
+Adiciona uma música em um album e retorna uma sinalização de acordo com o resultado do processo.
+Retornos possíveis:
+     1 - Cadastrou
+     0 - Não Cadastrou
+    -1 - Já estava cadastrado
+
+Args:
+    album::Album*: Ponteiro para o album que armazenará a musica passada
+    musica::Musica: Ponteiro para uma musica onde iremos copiar seus dados para o nosso album.
+    
+Return:
+    adicionei::int: Sinalização de acordo com o resultado do processo. 
+
+*/
+int adiciona_musica_no_album(RB_album *album, Musica *musica)
 {
-    int adicionei = adicionar_musica_ordenada(&(album->musicas), musica);
+    int adicionei = adicionar_musica_ordenada(&(album->album.musicas), musica);
     if (adicionei)
-        album->qtd_musicas += 1;
-    // contar_musicas(album->musicas);
+        album->album.qtd_musicas += 1;
 
     return adicionei;
 }
 
-int adiciona_musica_no_album(RB_album *album, Musica *musica)
-{
-    return adiciona_musica_album(&album->album,musica);
-}
+/*
+Busca um nó Lista_musicas dentro de um nó RB_album.
 
+Args:
+    album::RB_album*: Ponteiro para um nó RB_album 
+    titulo::char: Título da musica que estamos buscando
+
+Return:
+    aux::Lista_musicas*: Apontamento para o nó da musica buscada em casa de sucesso na busca ou NULL caso a musica não seja encontrada
+
+*/
 Lista_musicas * buscar_musica_no_album(RB_album *album,char titulo[TAM_TITULO])
 {
 
     return buscar_no_musica(album->album.musicas,titulo);
 }
 
+/*
+Remove uma música da lista de musicas contida em um album e sinaliza o resultado da remoção:
+    0 - Fracasso
+    1 - Sucesso
+
+Em caso de sucesso, decrementa a quantidade de musicas do album.
+
+Args:
+    album::Album*: Ponteiro para o album que terá uma musica removida.
+    titulo::char: Titulo da musica que estamos querendo remover
+
+Return:
+    sinal::int: Sinalização referente ao resultado da operação 
+*/
 int remover_musica_album(Album *album, char titulo[TAM_TITULO])
 {
     int removi = remover_musica(&(album->musicas), titulo);
     if (removi)
         album->qtd_musicas -= 1;
-    // contar_musicas(album->musicas);
 
     return removi;
 }
 
+/*
+Printa na tela todos os dados de um Album
+
+Args:
+    album::Album*: Ponteiro para o album que será impresso na tela
+
+Return:
+    None
+*/
 void mostrar_album(Album *album)
 {
     if (album != NULL)
     {
-        printf("\n\nALBUM:\n\tTITULO: %s\n\tANO: %d\n\tTOTAL DE MUSICAS: %d\n", album->titulo, album->ano, album->qtd_musicas);
- 
+        printf("\n\nALBUM:\n\tTITULO: %s\n\tANO: %d\n\tTOTAL DE MUSICAS: %d\n", album->titulo, album->ano, album->qtd_musicas); 
         mostar_todas_musicas(album->musicas);   
     }
 }
 
+/*
+Printa na tela todos os dados de um Album contido em um nó
 
+Args:
+    no::RB_album*: Ponteiro para o album que será impresso na tela
+
+Return:
+    None
+*/
 void mostrar_no_RB_album(RB_album *no)
 {
     if (no != NULL)
-    {
         mostrar_album(&(no->album));
-    }
 }
 
-
-void mostrar_todos_nos_album(RB_album *no)
-{
-    if (no != NULL)
-    {
-        mostrar_album(&(no->album));
-    }
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////// Funções nativas da RB
 
@@ -99,6 +148,12 @@ void mostrar_todos_nos_album(RB_album *no)
 Retorna a cor do nó passado
     0: Caso seja preto
     1: Caso seja vermelho
+
+Args:
+    raiz::RB_album: Nó de uma arvore Rubro Negro de albuns
+
+Return:
+    cor::int: Valor que representa a cor do nó.
 */
 int cor_album(RB_album *raiz)
 {
@@ -111,8 +166,16 @@ int cor_album(RB_album *raiz)
 
     return cor;
 }
+/*
+Troca a cor do nó passado e de seus filhos
 
-void swap_cor_album(RB_album *raiz)
+Args:
+    raiz::RB_album: Nó de uma arvore Rubro Negro de albuns
+
+Return:
+    None
+*/
+void troca_cor_album(RB_album *raiz)
 {
     if (raiz != NULL)
     {
@@ -151,17 +214,31 @@ RB_album *balancear_RB_album(RB_album **raiz)
     if (cor_album((*raiz)->direita) == VERMELHO)
         *raiz = rotacao_esquerda_album(*raiz);
 
-    if ((*raiz)->esquerda != NULL && cor_album((*raiz)->direita) == VERMELHO && cor_album((*raiz)->esquerda->esquerda) == VERMELHO)
-        *raiz = rotacao_direita_album(*raiz);
+    if ((*raiz)->esquerda != NULL) 
+        if (cor_album((*raiz)->direita) == VERMELHO && cor_album((*raiz)->esquerda->esquerda) == VERMELHO)
+            *raiz = rotacao_direita_album(*raiz);
 
     if (cor_album((*raiz)->esquerda) == VERMELHO && cor_album((*raiz)->direita) == VERMELHO)
-        swap_cor_album(*raiz);
+        troca_cor_album(*raiz);
 
     return *raiz;
 }
 
 ////////////////////////////////  Funções do projeto
 
+
+/*
+Cria um nó album para uma arvore RB caso tenha memória disponivel,
+Caso consiga retorna o nó criado;
+Caso contrario retorna NULL;
+
+Args:
+    titulo::char: Titulo do Album que será criado;
+    ano::int: Ano de publicação do album
+
+Return:
+    no::RB_album*: No criado pela função ou NULL em caso de falha
+*/
 RB_album *cria_no_album(char titulo[TAM_TITULO], int ano)
 {
     RB_album *no;
@@ -180,22 +257,6 @@ RB_album *cria_no_album(char titulo[TAM_TITULO], int ano)
 
     return no;
 }
-
-/*
-RB_album *balanceia_album(RB_album *raiz)
-{
-    if (cor_album(raiz->direita) == VERMELHO && cor_album(raiz->esquerda) == PRETO)
-        raiz = rotacao_esquerda_album(&raiz);
-
-    if (cor_album(raiz->esquerda) == VERMELHO && cor_album(raiz->esquerda->esquerda) == VERMELHO)
-        raiz = rotacao_direita_album(&raiz);
-
-    if (cor_album(raiz->esquerda) == VERMELHO && cor_album(raiz->direita) == VERMELHO)
-        swap_cor_album(raiz);
-
-    return raiz;
-}
-*/
 
 int insere_no_RB_album(RB_album **raiz, RB_album *novo)
 {
@@ -255,9 +316,9 @@ RB_album *buscar_no_RB_album(RB_album *raiz,char titulo_buscado[TAM_TITULO])
     return no_buscado;
 }
 
-/*
 
-Album *move_esq_red_album(Album *raiz)
+/*
+Album *move2esquerda_caso_direita_vermelha(RB_album *raiz)
 {
     troca_Cor_album(raiz);
     if (cor_album(raiz->direita->esquerda) == VERMELHO)
@@ -288,7 +349,7 @@ Album *remove_menor_album(Album *raiz)
     }
     if (cor_album(raiz->esquerda) == PRETO && cor_album(raiz->esquerda->esquerda) == PRETO)
     {
-        raiz = move_esq_red_album(raiz);
+        raiz = move2esquerda_caso_direita_vermelha(raiz);
     }
 
     remove_menor_album(raiz->esquerda);
