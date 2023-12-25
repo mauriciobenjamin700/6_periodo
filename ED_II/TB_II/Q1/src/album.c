@@ -188,7 +188,15 @@ void troca_cor_album(RB_album *raiz)
             raiz->esquerda->cor = !raiz->esquerda->cor;
     }
 }
+/*
+Realiza a rotação do nó passado para a direita de forma a esquerda se tornar a raiz e a antiga raiz se torna a direta da nova raiz
 
+Args:
+    raiz::RB_album*: Ponteiro para o nó RB_album que sofrerá a rotação
+
+Return:
+    aux::RB_album*: Endereço do novo nó raiz
+*/
 RB_album *rotacao_direita_album(RB_album *raiz)
 {
     RB_album *aux = raiz->esquerda;
@@ -199,6 +207,15 @@ RB_album *rotacao_direita_album(RB_album *raiz)
     return aux;
 }
 
+/*
+Realiza a rotação do nó passado para a esquerda de forma a direita se tornar a raiz e a antiga raiz se torna a esquerda da nova raiz
+
+Args:
+    raiz::RB_album*: Ponteiro para o nó RB_album que sofrerá a rotação
+
+Return:
+    aux::RB_album*: Endereço do novo nó raiz
+*/
 RB_album *rotacao_esquerda_album(RB_album *raiz)
 {
     RB_album *aux = raiz->direita;
@@ -208,7 +225,18 @@ RB_album *rotacao_esquerda_album(RB_album *raiz)
     raiz->cor = VERMELHO;
     return aux;
 }
+/*
+Realiza o balanceamento do nó raiz de acordo com as clausulas usadas pela Arvore Rubro Negro, sendo elas:
+    1 - Nós vermelhos devem ficar somente a esquerda da raiz
+    2 - Se a esquerda e a direita do nó são vermelhos, então troca-se a cor do nó raiz e dos seus filhos da direita e da esquerda
+    3 - Se a esquerda da esquerda for vermelha e a direita for vermelha
 
+Args:
+    raiz::RB_album**: Endereço do Ponteiro para o nó RB_album que sofrerá a rotação
+
+Return:
+    raiz::RB_album*: Endereço do novo nó raiz
+*/
 RB_album *balancear_RB_album(RB_album **raiz)
 {
     if (cor_album((*raiz)->direita) == VERMELHO)
@@ -258,6 +286,20 @@ RB_album *cria_no_album(char titulo[TAM_TITULO], int ano)
     return no;
 }
 
+/*
+Insere um nó RB_album em uma arvore RB_album na posicação correta, usando o titulo do album como meio de ordenação
+A inserção pode resultar em 3 casos:
+    1 - Caso ensira com sucesso
+    0 - Caso não consiga inserir
+   -1 Caso já estivesse cadastrado na arvore
+
+Args:
+    raiz::RB_album**: Endedereço do ponteiro que apontara para o nó raiz
+    novo::RB_album*: Ponteiro para o novo nó que será inserido na arvore
+
+Return:
+    criou_no::int: Sinalização referente ao resultado da operação de inserção
+*/
 int insere_no_RB_album(RB_album **raiz, RB_album *novo)
 {
     int criou_no = 0;
@@ -288,6 +330,15 @@ int insere_no_RB_album(RB_album **raiz, RB_album *novo)
     return criou_no;
 }
 
+/*
+Mostra todos os dados de todos os albuns em uma arvore Rubro Negro de albuns.
+
+Args:
+    raiz::RB_album*: Ponteiro para a raiz da arvore que será percorrida para mostrar todos os seus albuns
+
+Return:
+    None
+*/
 void mostrar_tudo_RB_album(RB_album *raiz)
 {
     if (raiz != NULL)
@@ -298,6 +349,17 @@ void mostrar_tudo_RB_album(RB_album *raiz)
     }
 }
 
+/*
+Busca um nó RB_album dentro de uma arvore Rubro negro de albuns pelo titulo.
+
+Args:
+    raiz::RB_album*: Ponteiro para a raiz da arvore.
+    titulo_buscado::char: Titulo do album que deseja buscar dentro da arvore.
+
+Return:
+    raiz::RB_album*: Ponteiro para o nó buscado caso encontre, caso falhe retorna NULL
+
+*/
 RB_album *buscar_no_RB_album(RB_album *raiz,char titulo_buscado[TAM_TITULO])
 {
     RB_album *no_buscado = NULL;

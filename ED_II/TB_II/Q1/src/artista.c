@@ -1,8 +1,5 @@
 #include "album.c"
 
-#define VERMELHO 1
-#define PRETO 0
-
 #define NOME 50
 #define TIPO 40
 #define ESTILO 40
@@ -27,6 +24,18 @@ typedef struct RB_artista
 
 } RB_artista;
 
+/*
+Preenche um artista com seus respectivos dados
+
+Args:
+    artista::Artista*: Ponteiro para o artista que será preenchido
+    nome::char: Nome do Artista
+    tipo::char: Tipo do Artista
+    estilo::char: Estilo do Artista
+
+Return:
+    None
+*/
 void preencher_artista(Artista *artista, char nome[NOME], char tipo[TIPO], char estilo[ESTILO])
 {
     strcpy(artista->nome, nome);
@@ -36,6 +45,19 @@ void preencher_artista(Artista *artista, char nome[NOME], char tipo[TIPO], char 
     artista->albuns = NULL;
 }
 
+/*
+Cria um nó para um artista e dependendo do caso retorna:
+    Nó do artista quando criado com sucesso
+    NULL quando não consegue alocar o nó
+     
+Args:
+    cor::int: Cor do Nó onde (1 == Vermelho ou 0 == Preto)
+    artista::Artista: Struct artista contendo seus repectivos dados
+
+Return:
+    no::RB_artista*: Endereço de um nó RB artista;
+
+*/
 RB_artista *cria_no_artista(int cor, Artista artista)
 {
     RB_artista *no = (RB_artista *)malloc(sizeof(RB_artista));
@@ -53,6 +75,15 @@ RB_artista *cria_no_artista(int cor, Artista artista)
     return no;
 }
 
+/*
+Troca a cor de um nó e de seus filhos, onde for vermelho fica preto e onde for preto fica vermelho
+
+Args:
+    no::RB_artista: No que será modificado
+
+Return:
+    None
+*/
 void trocar_cor(RB_artista *no)
 {
     if (no != NULL)
@@ -196,8 +227,6 @@ RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[NOME])
     return artista_buscado;
 }
 
-// ################################ Funções para que o usuário irá acessar#################################### 
-
 void mostrar_artista(Artista artista)
 {
     printf("\n--------DADOS DO ARTISTA-------\n");
@@ -205,62 +234,4 @@ void mostrar_artista(Artista artista)
 
     mostrar_tudo_RB_album((artista.albuns));
     printf("\n------------------------------");
-}
-
-
-int cadastrar_album_artista(RB_artista *artista, RB_album *Album)
-{
-    int sinal = 0;
-
-    if (artista != NULL)
-    {
-        sinal = insere_no_RB_album(&(artista->artista.albuns),Album);
-
-        if (sinal==1)
-            artista->artista.num_albuns++;
-        
-    }
-
-    return sinal;
-
-}
-
-RB_album * buscar_album_artista(RB_artista *artista, char titulo_album[TAM_TITULO])
-{
-    RB_album *no_album_buscado = NULL;
-
-    if (artista != NULL)   
-        no_album_buscado = buscar_no_RB_album(artista->artista.albuns,titulo_album);
-
-
-    return no_album_buscado;
-
-}
-/* A ideia era buscar dentre todos os artistas qual tinha o album que eu quero, mas faltou ideias de como implementar
-RB_album * buscar_album_arv_artista(RB_artista *arvore, char titulo_album[TAM_TITULO])
-{
-    RB_album *no_album_buscado = NULL;
-
-    if (arvore != NULL) 
-    {
-        no_album_buscado = buscar_album_artista(arvore,titulo_album);
-        if (no_album_buscado==NULL)
-        {
-            no_album_buscado = buscar_album_arv_artista(arvore->esquerda,titulo_album);
-            no_album_buscado = buscar_album_arv_artista(arvore->direita,titulo_album);
-        }
-    }  
-    return no_album_buscado;
-    }
-
-*/      
-
-//Esta função remove todas as musicas,albuns e artistas do sistema visando liberar toda a memória usada!
-void encerrar_sistema(RB_artista **arvore)
-{
-    if(*arvore != NULL)
-    {
-        encerrar_sistema(&((*arvore)->esquerda));
-        encerrar_sistema(&((*arvore)->direita));
-    }
 }
