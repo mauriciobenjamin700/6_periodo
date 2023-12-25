@@ -80,6 +80,26 @@ int main(void)
             break;
 
         case 13:
+            printf("\n\nNOME DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%[^\n]",titulo);
+
+            no_artista = busca_no_artista(arvore_artista,titulo);
+
+            if(no_artista != NULL)
+                if(pode_remover_artista(no_artista))
+                {
+                    if (remove_no_artista_ARVRB(&arvore_artista,titulo))
+                        printf("\nREMOVIDO COM SUCESSO");
+                    else
+                        printf("\nFALHA AO REMOVER");
+                }
+                else
+                    printf("\nPRIMEIRO DEVE REMOVER OS ALBUNS PARA DEPOIS REMOVER O ARTISTA");
+                
+                
+            else
+                printf("\nFALHA AO ENCONTRAR O ARTISTA");
             break;
 
         case 21:
@@ -129,10 +149,7 @@ int main(void)
                 setbuf(stdin,NULL);
                 scanf("%[^\n]",titulo);
 
-
                 album = buscar_album_artista(no_artista,titulo);
-
-                
                 
                 if(album != NULL)
                     mostrar_no_RB_album(album);
@@ -146,6 +163,30 @@ int main(void)
             break;
 
         case 23:
+        printf("\n\nNOME DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%[^\n]",titulo);
+
+            no_artista = busca_no_artista(arvore_artista,titulo);
+
+            if(no_artista != NULL)
+            {
+                printf("\n\nTITULO DO ALBUM: ");
+                setbuf(stdin,NULL);
+                scanf("%[^\n]",titulo);
+
+                //Quando remover o album, tem que atualizar a quantidade de albuns do artista
+                //pra remover um album tem que remover as musicas dele primeiro
+                retorno = remove_no_album_ARVRB(&(no_artista->artista.albuns),titulo);
+                if(retorno)
+                    printf("\nALBUM REMOVIDO COM SUCESSO");
+                    
+                else
+                    printf("\nALBUM NAO ENCONTRADO!");
+            }
+            else
+                printf("\nFALHA AO ENCONTRAR O ARTISTA");
+
             break;
 
         case 31:

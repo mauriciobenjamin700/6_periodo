@@ -24,7 +24,7 @@ typedef struct RB_album
 
 } RB_album;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 Preenche um album com seus respectivos dados
 
@@ -142,8 +142,6 @@ void mostrar_no_RB_album(RB_album *no)
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////// Funções nativas da RB
-
 /*
 Retorna a cor do nó passado
     0: Caso seja preto
@@ -252,8 +250,97 @@ RB_album *balancear_RB_album(RB_album **raiz)
     return *raiz;
 }
 
-////////////////////////////////  Funções do projeto
+/*
+Realiza a rotação para a esquerda de um nó e retorna o novo nó central após a rotação
 
+Args:
+    no::RB_artista*: Ponteiro para o nó que será rotacionado
+
+Return:
+    no::RB_artista*: Ponteiro para o novo nó que será a raiz
+*/
+RB_album *move2EsqRED_album(RB_album *no)
+{
+    troca_cor_album(no);
+    if (cor_album(no->direita->esquerda) == VERMELHO)
+    {
+        no->direita = rotacao_direita_album(no->direita);
+        no = rotacao_esquerda_album(no);
+        troca_cor_album(no);
+    }
+    return no;
+}
+
+/*
+Realiza a rotação para a direita de um nó e retorna o novo nó central após a rotação
+
+Args:
+    no::RB_album*: Ponteiro para o nó que será rotacionado
+
+Return:
+    no::RB_album*: Ponteiro para o novo nó que será a raiz
+*/
+RB_album *move2DirRED_album(RB_album *no)
+{
+    troca_cor_album(no);
+    if (cor_album(no->esquerda->esquerda) == VERMELHO)
+    {
+        no = rotacao_direita_album(no);
+        troca_cor_album(no);
+    }
+    return no;
+}
+
+/*
+Realiza a remoção do menor nó RB_album de uma arvore
+
+Args:
+    no::RB_album*: Ponteiro para o nó que terá seu menor filho removido
+
+Return:
+    aux::RB_album*: Ponteiro para o novo nó que será a raiz
+*/
+RB_album * remover_menor_album(RB_album *no)
+{
+    RB_album *aux = NULL;
+
+    if(no->esquerda==NULL)
+        free(no);
+
+    else
+    {
+        if(cor_album(no->esquerda)==PRETO && cor_album(no->esquerda->esquerda)==PRETO)
+            no = move2EsqRED_album(no);
+
+        no->esquerda = remover_menor_album(no->esquerda);
+        aux = balancear_RB_album(&no);
+    }
+
+    return aux;
+}
+
+/*
+Retorna o menor nó de uma arvore 
+
+Args:
+    no::RB_album*: Ponteiro para o nó que terá seu menor filho procurado
+
+Return:
+    aux1::RB_album*: Ponteiro para o menor nó
+*/
+RB_album *procura_menor_album(RB_album *no)
+{
+    RB_album * aux1 = no;
+    RB_album * aux2 = no->esquerda;
+
+    while (aux2 != NULL)
+    {
+        aux1 = aux2;
+        aux2 = aux2->esquerda;
+    }
+
+    return aux1;
+}
 
 /*
 Cria um nó album para uma arvore RB caso tenha memória disponivel,
@@ -380,110 +467,102 @@ RB_album *buscar_no_RB_album(RB_album *raiz,char titulo_buscado[TAM_TITULO])
 
 
 /*
-Album *move2esquerda_caso_direita_vermelha(RB_album *raiz)
-{
-    troca_Cor_album(raiz);
-    if (cor_album(raiz->direita->esquerda) == VERMELHO)
-    {
-        rotacao_direita_album(raiz->direita);
-        rotacao_esquerda_album(raiz);
-        troca_Cor_album(raiz);
-    }
-    return raiz;
-}
+Remove um nó album de uma arvore de albuns
 
-Album *move_dir_red_album(Album *raiz)
-{
-    troca_Cor_album(raiz);
-    if (cor_album(*raiz->esquerda->esquerda) == VERMELHO)
-    {
-        rotacao_direita_album(raiz);
-        troca_Cor_album(raiz);
-    }
-    return raiz;
-}
+Args:
+    raiz::RB_album: ponteiro para a raiz da arvore
+    titulo::char: Titulo do album que será removido
 
-Album *remove_menor_album(Album *raiz)
-{
-    if (raiz->esquerda == NULL)
-    {
-        free(raiz);
-    }
-    if (cor_album(raiz->esquerda) == PRETO && cor_album(raiz->esquerda->esquerda) == PRETO)
-    {
-        raiz = move2esquerda_caso_direita_vermelha(raiz);
-    }
+Return:
+    raiz::RB_album: Ponteiro para a nova raiz da arvore após a remoção
 
-    remove_menor_album(raiz->esquerda);
-    return balanceia_album(raiz);
-}
-
-Album *procuraMenor_album(Album *atual)
+*/
+RB_album *remove_no_album(RB_album *raiz, char titulo_album[TAM_TITULO])
 {
-    Album *no1 = atual;
-    Album *no2 = atual->esquerda;
-    while (no2 != NULL)
+    if(compara_string(titulo_album,raiz->album.titulo) < 0)
     {
-        no1 = no2;
-        no2 = no2->esquerda;
-    }
-    return no1;
-}
+        if(cor_album(raiz->esquerda)==PRETO && cor_album(raiz->esquerda->esquerda)==PRETO)
+            raiz = move2EsqRED_album(raiz);
 
-Album *buscarFolha_album(Album *ultimo)
-{
-    if (ultimo->direita != NULL)
-    {
-        buscarFolha_album(ultimo->direita);
+        raiz->esquerda = remove_no_album(raiz->esquerda,titulo_album);
     }
     else
     {
-        return ultimo;
-    }
-}
+        RB_album *aux;
+        if(cor_album(raiz->esquerda)==VERMELHO)
+            raiz = rotacao_direita_album(raiz);
 
-Album *remove_NO_album(Album **raiz, char titulo[])
-{
-    int remove = 0;
-    Album *aux = NULL;
-
-    if (*raiz != NULL)
-    {
-        if (strcmp((*raiz)->titulo, titulo) == 0)
+        if(compara_string(titulo_album,raiz->album.titulo)==0 && raiz->direita == NULL)
         {
-            aux = *raiz;
-
-            if ((*raiz)->esquerda == NULL && (*raiz)->direita == NULL)
+            aux = raiz;
+            raiz = NULL;
+            free(aux);
+        }
+        else
+        {
+            if(cor_album(raiz->direita)==PRETO && cor_album(raiz->direita->esquerda)==PRETO)
+                raiz = move2DirRED_album(raiz);
+            
+            if(compara_string(titulo_album,raiz->album.titulo)==0)
             {
-                free(aux);
-                *raiz = NULL;
-            }
-            else if ((*raiz)->esquerda == NULL || (*raiz)->direita == NULL)
-            {
-                *raiz = ((*raiz)->esquerda != NULL) ? (*raiz)->esquerda : (*raiz)->direita;
-                free(aux);
+                aux = procura_menor_album(raiz->direita);
+                raiz->album = aux->album;
+                raiz->direita = remover_menor_album(raiz->direita);
             }
             else
-            {
-                aux = buscarFolha_album(&(*raiz)->esquerda);
-                strcpy((*raiz)->titulo, aux->titulo);
-                remove_NO_album(&(*raiz)->esquerda, aux->titulo);
-            }
+                remove_no_album(raiz->direita,titulo_album);
+        }
+        
+    }
+    if (raiz != NULL)
+        raiz = balancear_RB_album(&raiz);
+    
+    return raiz;
+}
 
-            remove = 1;
-        }
-        else if (strcmp((*raiz)->titulo, titulo) < 0)
-        {
-            remove = remove_NO_album(&((*raiz)->direita), titulo);
-        }
-        else if (strcmp((*raiz)->titulo, titulo) > 0)
-        {
-            remove = remove_NO_album(&((*raiz)->esquerda), titulo);
-        }
+/*
+Troca a cor da Raiz garantindo que a mesma sempre fique preta
+
+Args:
+    raiz::RB_artista*: Raiz que ficará preta caso tenha algum valor
+
+Return:
+    None
+*/
+void troca_cor_raiz_RB_album(RB_album *raiz)
+{
+    if (raiz != NULL)
+    {
+        raiz->cor = PRETO;
+    }
+}
+
+/*
+Remove um nó artista de uma arvore de artistas respeitando todas as normas da Rubro Negro
+Casos de retorno:
+    1 - Sucesso
+    0 - Falha
+
+Args:
+    raiz::RB_artista: Referência do ponteiro para a raiz da arvore
+    titulo_album::char: Nome do artista que será removido
+
+Return:
+    removi::int: Sinalização baseada no resultado da operação de remoção
+*/
+int remove_no_album_ARVRB(RB_album **raiz, char titulo_album[TAM_TITULO])
+{
+    int removi = 0;
+
+    if(*raiz!=NULL)
+    {
+        RB_album *aux = *raiz;
+        *raiz = remove_no_album(aux,titulo_album);
+
+        troca_cor_raiz_RB_album(*raiz);
+
+        removi = 1;
     }
 
-    balanceia_album(*raiz);
-
-    return *raiz;
+    return removi;
 }
-*/

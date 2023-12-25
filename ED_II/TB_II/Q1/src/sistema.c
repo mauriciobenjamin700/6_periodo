@@ -49,6 +49,18 @@ RB_album * buscar_album_arv_artista(RB_artista *arvore, char titulo_album[TAM_TI
 
 */      
 
+int pode_remover_artista(RB_artista *no)
+{
+    int confirmacao = 0;
+
+    if(no->artista.num_albuns == 0)
+        confirmacao = 1;
+
+    return confirmacao;
+}
+
+
+
 //Esta função remove todas as musicas,albuns e artistas do sistema visando liberar toda a memória usada!
 void encerrar_sistema(RB_artista **arvore)
 {
