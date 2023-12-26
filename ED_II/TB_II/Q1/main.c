@@ -37,6 +37,10 @@ int main(void)
             printf("\n\nSISTEMA ENCERRRANDO...\n\n");    
             break;
 
+        case 4:
+            mostrar_todos_nos_artista_ordenado(arvore_artista);
+            break;
+
         case 11:
 
             printf("\n\nNOME DO ARTISTA: ");
@@ -56,7 +60,7 @@ int main(void)
 
             if (no_artista != NULL)
             {
-                retorno = insere_no_artista(&arvore_artista,no_artista);
+                retorno = insere_no_artista_ARVRB(&arvore_artista,no_artista);
                 
                 if(retorno==1)
                     printf("\nCADASTRO REALIZADO COM SUCESSO!");
@@ -82,7 +86,6 @@ int main(void)
             else
                 printf("\nARTISTA NAO ENCONTRADO");
 
-
             break;
 
         case 13:
@@ -104,6 +107,37 @@ int main(void)
                     printf("\nPRIMEIRO DEVE REMOVER OS ALBUNS PARA DEPOIS REMOVER O ARTISTA");
                 
                 
+            else
+                printf("\nARTISTA NAO ENCONTRADO");
+            break;
+
+        
+            case 14:
+
+            printf("\n\nNOME DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%[^\n]",titulo);
+
+            no_artista = busca_no_artista(arvore_artista,titulo);
+
+            if(no_artista != NULL)
+            {
+                printf("\nTEM CERTEZA QUE QUER APAGAR O ARTISTA?\nTODOS OS ALBUNS VAO SER PERDIDOS!!!\n\n1 - CONFIRMAR\n0 - DESISTIR\n");
+                setbuf(stdin,NULL);
+                scanf("%d", &retorno);
+
+                if(retorno==1)
+                {
+                    remover_todos_albuns(&no_artista->artista.albuns);
+                    if (remove_no_artista_ARVRB(&arvore_artista,titulo))
+                        printf("\nARTISTA REMOVIDO COM SUCESSO");
+                    else
+                        printf("\nFALHA AO REMOVER O ARTISTA");
+                }
+                else
+                    printf("\nARTISTA E ALBUNS PERMANECEM INTOCADOS");
+                
+            }    
             else
                 printf("\nARTISTA NAO ENCONTRADO");
             break;
@@ -169,7 +203,7 @@ int main(void)
             break;
 
         case 23:
-        printf("\n\nNOME DO ARTISTA: ");
+            printf("\n\nNOME DO ARTISTA: ");
             setbuf(stdin,NULL);
             scanf("%[^\n]",titulo);
 
@@ -205,6 +239,50 @@ int main(void)
                 printf("\nARTISTA NAO ENCONTRADO");
 
             break;
+
+        case 24:
+            printf("\n\nNOME DO ARTISTA: ");
+            setbuf(stdin,NULL);
+            scanf("%[^\n]",titulo);
+
+            no_artista = busca_no_artista(arvore_artista,titulo);
+
+            if(no_artista != NULL)
+            {
+                printf("\n\nTITULO DO ALBUM: ");
+                setbuf(stdin,NULL);
+                scanf("%[^\n]",titulo);
+
+                no_album = buscar_album_artista(no_artista,titulo);
+
+                if(no_album != NULL)
+                {
+                    printf("\nTEM CERTEZA QUE QUER APAGAR O ALBUM?\nTODAS AS MUSICAS VAO SER PERDIDAS!!!\n\n1 - CONFIRMAR\n0 - DESISTIR\n");
+                    setbuf(stdin,NULL);
+                    scanf("%d", &retorno);
+
+                    if(retorno==1)
+                    {
+                        remover_todas_musicas(&(no_album->album.musicas));
+                        retorno = remover_album_artista(no_artista,titulo);
+                        if(retorno == 1)
+                            printf("\nALBUM REMOVIDO COM SUCESSO");
+                    
+                        else
+                            printf("\nALBUM NAO ENCONTRADO!");
+                    
+                   }
+                    else
+                        printf("\nALBUM E MUSICAS PERMANECEM INTOCADOS");
+                }    
+                else
+                    printf("\nALBUM NAO ENCONTRADO!");
+            }
+            else
+                printf("\nARTISTA NAO ENCONTRADO");
+
+            break;
+
 
         case 31:
 
@@ -335,10 +413,11 @@ int main(void)
             break;
 
         default:
+            printf("\nOPCAO INVALIDA!!!");
             break;
         }
     }
     
-
+    encerrar_sistema(&arvore_artista);
     return 0;
 }

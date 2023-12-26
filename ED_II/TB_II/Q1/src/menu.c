@@ -5,13 +5,13 @@ int menu_artista()
     int opc;
 
     printf("\n\n----------ARTISTA----------\n");
-    printf("| [1] - Cadastrar\n| [2] - Buscar\n| [3] - Remover\n| [0] - Voltar");
+    printf("| [1] - Cadastrar\n| [2] - Buscar\n| [3] - Remover\n| [4] - Remover Artista com todos os Albuns\n| [0] - Voltar");
     printf("\n\n----------ARTISTA----------\n");
     setbuf(stdin,NULL);
     printf("\nEscolha: ");
     scanf("%d", &opc);
 
-    if(opc < 0 || opc > 3)
+    if(opc < 0 || opc > 4)
         opc = -1;
 
     return opc;
@@ -23,13 +23,13 @@ int menu_album()
     int opc;
 
     printf("\n\n----------ALBUM----------\n");
-    printf("| [1] - Cadastrar\n| [2] - Buscar\n| [3] - Remover\n| [0] - Voltar");
+    printf("| [1] - Cadastrar\n| [2] - Buscar\n| [3] - Remover\n| [4] - Remover Album com todas as Musicas\n| [0] - Voltar");
     printf("\n\n----------ALBUM----------\n");
     setbuf(stdin,NULL);
     printf("\nEscolha: ");
     scanf("%d", &opc);
 
-    if(opc < 0 || opc > 3)
+    if(opc < 0 || opc > 4)
         opc = -1;
 
     return opc;
@@ -59,13 +59,13 @@ int menu()
     int opc;
 
     printf("\n\n----------GERAL----------\n");
-    printf("| [1] - Artista\n| [2] - Album\n| [3] - Musica\n| [0] - Sair");
+    printf("| [1] - Artista\n| [2] - Album\n| [3] - Musica\n| [4] - Visualizar ARV RB ALBUM\n| [0] - Sair");
     printf("\n\n----------GERAL----------\n");
     setbuf(stdin,NULL);
     printf("\nEscolha: ");
     scanf("%d", &opc);
 
-    if(opc < 0 || opc > 3)
+    if(opc < 0 || opc > 4)
         opc = -1;
 
     switch (opc)
@@ -87,28 +87,5 @@ int menu()
     }
 
     return opc;
-
-}
-
-
-void retornos(int sinal)
-{
-    switch (sinal)
-    {
-    case -1:
-        printf("\nFalha na operacao");
-        break;
-    
-    case 0:
-        printf("\nNao foi possivel realizar o processo");
-        break;
-
-    case 1:
-        printf("\nProcesso realizado com sucesso");
-        break;
-    
-    default:
-        break;
-    }
 
 }

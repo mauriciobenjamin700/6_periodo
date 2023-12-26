@@ -208,30 +208,6 @@ void mostar_todas_musicas(Lista_musicas *no)
     }
 }
 
-/*
-Conta a quantidade de musicas que estão em uma lista de musicas;
-
-Args:
-    raiz::Lista_musicas*: Nó Raiz de uma lista de musicas 
-
-Return:
-    qtd::int: Quantidade de musicas encontradas na lista de musicas;
-*/
-int contar_musicas(Lista_musicas *raiz)
-{
-    int qtd = 0;
-
-    if (raiz != NULL)
-    {
-        Lista_musicas *aux = raiz;
-        while (aux != NULL)
-        {
-            qtd++;
-            aux = aux->proximo_no;
-        }
-    }
-    return qtd;
-}
 
 /*
 Busca um nó musica dentro de uma lista de músicas com base no título da musica

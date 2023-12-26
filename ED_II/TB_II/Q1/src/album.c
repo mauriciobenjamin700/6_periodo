@@ -126,21 +126,6 @@ void mostrar_album(Album *album)
     }
 }
 
-/*
-Printa na tela todos os dados de um Album contido em um nó
-
-Args:
-    no::RB_album*: Ponteiro para o album que será impresso na tela
-
-Return:
-    None
-*/
-void mostrar_no_RB_album(RB_album *no)
-{
-    if (no != NULL)
-        mostrar_album(&(no->album));
-}
-
 
 /*
 Retorna a cor do nó passado
@@ -237,15 +222,22 @@ Return:
 */
 RB_album *balancear_RB_album(RB_album **raiz)
 {
-    if (cor_album((*raiz)->direita) == VERMELHO)
+    if (cor_album((*raiz)->direita) == VERMELHO && cor_album((*raiz)->esquerda) == PRETO)
         *raiz = rotacao_esquerda_album(*raiz);
-
+    
     if ((*raiz)->esquerda != NULL) 
+    {
         if (cor_album((*raiz)->direita) == VERMELHO && cor_album((*raiz)->esquerda->esquerda) == VERMELHO)
             *raiz = rotacao_direita_album(*raiz);
 
+        if(cor_album((*raiz)->esquerda)== VERMELHO && cor_album((*raiz)->esquerda->esquerda)==VERMELHO)
+            *raiz = rotacao_direita_album(*raiz);
+
+    }
+        
     if (cor_album((*raiz)->esquerda) == VERMELHO && cor_album((*raiz)->direita) == VERMELHO)
         troca_cor_album(*raiz);
+
 
     return *raiz;
 }
@@ -373,6 +365,8 @@ RB_album *cria_no_album(char titulo[TAM_TITULO], int ano)
     return no;
 }
 
+
+
 /*
 Insere um nó RB_album em uma arvore RB_album na posicação correta, usando o titulo do album como meio de ordenação
 A inserção pode resultar em 3 casos:
@@ -415,6 +409,21 @@ int insere_no_RB_album(RB_album **raiz, RB_album *novo)
     balancear_RB_album(&(*raiz));
 
     return criou_no;
+}
+
+/*
+Printa na tela todos os dados de um Album contido em um nó
+
+Args:
+    no::RB_album*: Ponteiro para o album que será impresso na tela
+
+Return:
+    None
+*/
+void mostrar_no_RB_album(RB_album *no)
+{
+    if (no != NULL)
+        mostrar_album(&(no->album));
 }
 
 /*
@@ -565,4 +574,41 @@ int remove_no_album_ARVRB(RB_album **raiz, char titulo_album[TAM_TITULO])
     }
 
     return removi;
+}
+
+/*
+Retorna a confirmação sobre o ato de remover um nó
+    1 - Pode
+    0 - Não
+
+Args:
+    no::RB_album*: Referencia do nó album que estamos checando a possibilidade de removelo
+
+Return:
+    confirmacao::int: Sinalização de confirmação sobre o ato de remover
+*/
+int pode_remover_album(RB_album *no)
+{
+    int confirmacao = 0;
+
+    if(no->album.qtd_musicas == 0)
+        confirmacao = 1;
+    
+    return confirmacao;
+}
+
+/*
+Remove todos os albuns de uma arvore e suas musicas
+*/
+void remover_todos_albuns(RB_album **raiz)
+{
+    if(*raiz != NULL)
+    {
+        remover_todos_albuns(&(*raiz)->esquerda);
+        remover_todos_albuns(&(*raiz)->direita);
+
+        remover_todas_musicas(&(*raiz)->album.musicas);
+        free(*raiz);
+        
+    }
 }

@@ -84,7 +84,7 @@ Args:
 Return:
     None
 */
-void trocar_cor(RB_artista *no)
+void trocar_cor_artista(RB_artista *no)
 {
     if (no != NULL)
     {
@@ -180,12 +180,12 @@ Return:
 */
 RB_artista *move2EsqRED_artista(RB_artista *no)
 {
-    trocar_cor(no);
+    trocar_cor_artista(no);
     if (cor_artista(no->direita->esquerda) == VERMELHO)
     {
         no->direita = rotacao_direita_artista(no->direita);
         no = rotacao_esquerda_artista(no);
-        trocar_cor(no);
+        trocar_cor_artista(no);
     }
     return no;
 }
@@ -201,11 +201,11 @@ Return:
 */
 RB_artista *move2DirRED_artista(RB_artista *no)
 {
-    trocar_cor(no);
+    trocar_cor_artista(no);
     if (cor_artista(no->esquerda->esquerda) == VERMELHO)
     {
         no = rotacao_direita_artista(no);
-        trocar_cor(no);
+        trocar_cor_artista(no);
     }
     return no;
 }
@@ -222,21 +222,21 @@ Return:
 */
 RB_artista *balancear_RB_artista(RB_artista *no)
 {
-    if (cor_artista(no->direita) == VERMELHO)
-    {
+    if (cor_artista(no->direita) == VERMELHO && cor_artista(no->esquerda) == PRETO)
         no = rotacao_esquerda_artista(no);
-    }
 
-    if (no->esquerda != NULL)
+    if ((no->esquerda) != NULL)
     {
         if (cor_artista(no->direita) == VERMELHO && cor_artista(no->esquerda->esquerda) == VERMELHO)
             no = rotacao_direita_artista(no);
-               
+        
+        if(cor_artista(no->esquerda)== VERMELHO && cor_artista(no->esquerda->esquerda)==VERMELHO)
+            no = rotacao_direita_artista(no);
     }
 
     if (cor_artista(no->esquerda) == VERMELHO && cor_artista(no->direita) == VERMELHO)
     {
-        trocar_cor(no);
+        trocar_cor_artista(no);
     }
 
     return no;
@@ -306,7 +306,6 @@ Args:
 Return:
     inseri::int: Sinalização sobre o resultado da inserção
 */
-
 int insere_no_artista(RB_artista **raiz, RB_artista *novo_no)
 {
     int inseri = 0;
@@ -317,20 +316,22 @@ int insere_no_artista(RB_artista **raiz, RB_artista *novo_no)
     }
     else
     {
-        /*
-            Nesse caso ele verifica se o id do artista é maior ou menor e
-            segue até chegar na raiz nula, insere nela, o ultimo else é no caso de ser igual
-            nesse caso a arvore permanece igual.
-        */
         if (compara_string(novo_no->artista.nome,(*raiz)->artista.nome) < 0)
-            insere_no_artista(&(*raiz)->esquerda, novo_no);
+            inseri =  insere_no_artista(&(*raiz)->esquerda, novo_no);
 
         else if (compara_string(novo_no->artista.nome,(*raiz)->artista.nome) > 0)
-            insere_no_artista(&(*raiz)->direita, novo_no);
+            inseri = insere_no_artista(&(*raiz)->direita, novo_no);
         
     }
     (*raiz) = balancear_RB_artista((*raiz));
 
+    return inseri;
+}
+
+int insere_no_artista_ARVRB(RB_artista **raiz, RB_artista *novo_nov)
+{
+    int inseri = insere_no_artista(&(*raiz),novo_nov);
+    (*raiz)->cor_artista = PRETO;
     return inseri;
 }
 
@@ -466,4 +467,141 @@ int remove_no_artista_ARVRB(RB_artista **raiz, char nome_artista[NOME])
     }
 
     return removi;
+}
+
+/*
+Cadastra um album em um artista e retorna o resultado do processo
+    1 - Sucesso
+    0 - Falha
+   -1 - Já estava cadastrado
+
+Args:
+    artista::RB_artista*: Refência do nó que contem o artista que receberá um novo album
+    album::RB_album*: Referência para o album que será adicionando ao artista
+
+Return:
+    cadastrei::int: Sinalização referente ao resultado da operação
+*/
+int cadastrar_album_artista(RB_artista *artista, RB_album *album)
+{
+    int cadastrei = 0;
+
+    if (artista != NULL)
+    {
+        cadastrei = insere_no_RB_album(&(artista->artista.albuns),album);
+
+        if (cadastrei==1)
+            artista->artista.num_albuns++;
+        
+    }
+
+    return cadastrei;
+}
+
+/*
+Busca um album dentro de um artista, podendo retornar a referência daquele album em caso de encontrar ou NULL caso falhe
+
+Args:
+    artista::RB_artista*: Referência do nó que contem o artista que iremos acessar buscando o album.
+    titulo_album::char: Titulo do album que estaremos buscando.
+
+Return:
+    no_album_buscado::RB_album*: Referência do album buscado
+*/
+RB_album * buscar_album_artista(RB_artista *artista, char titulo_album[TAM_TITULO])
+{
+    RB_album *no_album_buscado = NULL;
+
+    if (artista != NULL)   
+        no_album_buscado = buscar_no_RB_album(artista->artista.albuns,titulo_album);
+
+
+    return no_album_buscado;
+
+}
+
+/*
+Remove um nó album de uma arvore de albuns respeitando todas as normas da Rubro Negro e decrementa a quantidade de albuns do artista
+Casos de retorno:
+    1 - Sucesso
+    0 - Falha
+
+Args:
+    artista::RB_artista*: Referência do artista que terá um album removido
+    titulo_album::char: Nome do artista que será removido
+
+Return:
+    removi::int: Sinalização baseada no resultado da operação de remoção
+*/
+int remover_album_artista(RB_artista *artista, char titulo_album[TAM_TITULO])
+{
+    int removi =  remove_no_album_ARVRB(&(artista->artista.albuns),titulo_album);
+    if(removi==1)
+        artista->artista.num_albuns --;
+
+    return removi;
+}
+
+/*
+Retorna a confirmação sobre o ato de remover um nó
+    1 - Pode
+    0 - Não
+
+Args:
+    no::RB_artista*: Referencia do nó artista que estamos checando a possibilidade de removelo
+
+Return:
+    confirmacao::int: Sinalização de confirmação sobre o ato de remover
+*/
+int pode_remover_artista(RB_artista *no)
+{
+    int confirmacao = 0;
+
+    if(no->artista.num_albuns == 0)
+        confirmacao = 1;
+
+    return confirmacao;
+}
+
+
+/*
+Função para visualizar se o nó está na cor certa
+*/
+void mostrar_no_artista(RB_artista * artista)
+{
+    printf("\n\n------------------------\n");
+    printf("\n\tCor: %d\n\tNome: %s",artista->cor_artista,artista->artista.nome);
+    printf("\n\n------------------------\n");
+}
+
+/*
+Função para percorrer a arvore e ver se as cores dos nós estão seguindo as normas vistas em sala de aula
+*/
+void mostrar_todos_nos_artista_ordenado(RB_artista *artista)
+{
+    if (artista!=NULL)
+    {
+        mostrar_todos_nos_artista_ordenado(artista->esquerda);
+        mostrar_no_artista(artista);
+        mostrar_todos_nos_artista_ordenado(artista->direita);
+    }
+    
+}
+
+
+
+/*
+Remove todos os artistas de uma arvore
+*/
+void remover_todos_artistas(RB_artista **raiz)
+{
+    if(*raiz != NULL)
+    {
+        remover_todos_artistas(&(*raiz)->esquerda);
+        remover_todos_artistas(&(*raiz)->direita);
+
+        remover_todos_albuns(&(*raiz)->artista.albuns);
+        free(*raiz);
+        
+    }
 }
