@@ -538,13 +538,13 @@ void troca_cor_raiz_RB_album(RB_album *raiz)
 }
 
 /*
-Remove um nó artista de uma arvore de artistas respeitando todas as normas da Rubro Negro
+Remove um nó album de uma arvore de albuns respeitando todas as normas da Rubro Negro
 Casos de retorno:
     1 - Sucesso
     0 - Falha
 
 Args:
-    raiz::RB_artista: Referência do ponteiro para a raiz da arvore
+    raiz::RB_album**: Referência do ponteiro para a raiz da arvore
     titulo_album::char: Nome do artista que será removido
 
 Return:

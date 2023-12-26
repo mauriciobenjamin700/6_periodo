@@ -296,20 +296,24 @@ RB_artista *procura_menor_artista(RB_artista *no)
 
 /*
 Insere um novo nó artista em uma arvore de artistas
+    1 - Sucesso
+    0 - Já cadastrado
 
 Args:
     raiz::RB_artista**: Referência do Ponteiro que guarda a raiz da arvore
     novo_no::RB_artista**: Ponteiro para o novo nó que será inserido na arvore
 
 Return:
-    None
+    inseri::int: Sinalização sobre o resultado da inserção
 */
 
-void insere_no_artista(RB_artista **raiz, RB_artista *novo_no)
+int insere_no_artista(RB_artista **raiz, RB_artista *novo_no)
 {
+    int inseri = 0;
     if (*raiz == NULL)
     {
         *raiz = novo_no;
+        inseri = 1;
     }
     else
     {
@@ -319,18 +323,28 @@ void insere_no_artista(RB_artista **raiz, RB_artista *novo_no)
             nesse caso a arvore permanece igual.
         */
         if (compara_string(novo_no->artista.nome,(*raiz)->artista.nome) < 0)
-        {
             insere_no_artista(&(*raiz)->esquerda, novo_no);
-        }
+
         else if (compara_string(novo_no->artista.nome,(*raiz)->artista.nome) > 0)
-        {
             insere_no_artista(&(*raiz)->direita, novo_no);
-        }
+        
     }
     (*raiz) = balancear_RB_artista((*raiz));
 
+    return inseri;
 }
 
+/*
+Busca um nó artista dentro da arvore com base no nome do artista
+
+
+Args:
+    raiz::RB_artista*: Ponteiro para a raiz da arvore de artistas
+    nome_artista::char: Nome do artista que estamos buscando
+
+Return:
+    artista_buscado::RB_artista*: Referência do artista buscado
+*/
 RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[NOME])
 {
     RB_artista *artista_buscado = NULL;
