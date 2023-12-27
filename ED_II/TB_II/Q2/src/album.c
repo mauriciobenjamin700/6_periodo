@@ -15,14 +15,14 @@ typedef struct Album
 
 } Album;
 
-typedef struct RB_album
+typedef struct Arv_23_album
 {
     Album album;
-    struct RB_album *esquerda;
-    struct RB_album *direita;
+    struct Arv_23_album *esquerda;
+    struct Arv_23_album *direita;
     int cor;
 
-} RB_album;
+} Arv_23_album;
 
 
 /*
@@ -59,7 +59,7 @@ Return:
     adicionei::int: Sinalização de acordo com o resultado do processo. 
 
 */
-int adiciona_musica_no_album(RB_album *album, Musica *musica)
+int adiciona_musica_no_album(Arv_23_album *album, Musica *musica)
 {
     int adicionei = adicionar_musica_ordenada(&(album->album.musicas), musica);
     if (adicionei)
@@ -69,17 +69,17 @@ int adiciona_musica_no_album(RB_album *album, Musica *musica)
 }
 
 /*
-Busca um nó Lista_musicas dentro de um nó RB_album.
+Busca um nó Lista_musicas dentro de um nó Arv_23_album.
 
 Args:
-    album::RB_album*: Ponteiro para um nó RB_album 
+    album::Arv_23_album*: Ponteiro para um nó Arv_23_album 
     titulo::char: Título da musica que estamos buscando
 
 Return:
     aux::Lista_musicas*: Apontamento para o nó da musica buscada em casa de sucesso na busca ou NULL caso a musica não seja encontrada
 
 */
-Lista_musicas * buscar_musica_no_album(RB_album *album,char titulo[TAM_TITULO])
+Lista_musicas * buscar_musica_no_album(Arv_23_album *album,char titulo[TAM_TITULO])
 {
 
     return buscar_no_musica(album->album.musicas,titulo);
@@ -133,12 +133,12 @@ Retorna a cor do nó passado
     1: Caso seja vermelho
 
 Args:
-    raiz::RB_album: Nó de uma arvore Rubro Negro de albuns
+    raiz::Arv_23_album: Nó de uma arvore Rubro Negro de albuns
 
 Return:
     cor::int: Valor que representa a cor do nó.
 */
-int cor_album(RB_album *raiz)
+int cor_album(Arv_23_album *raiz)
 {
     int cor;
 
@@ -153,12 +153,12 @@ int cor_album(RB_album *raiz)
 Troca a cor do nó passado e de seus filhos
 
 Args:
-    raiz::RB_album: Nó de uma arvore Rubro Negro de albuns
+    raiz::Arv_23_album: Nó de uma arvore Rubro Negro de albuns
 
 Return:
     None
 */
-void troca_cor_album(RB_album *raiz)
+void troca_cor_album(Arv_23_album *raiz)
 {
     if (raiz != NULL)
     {
@@ -175,14 +175,14 @@ void troca_cor_album(RB_album *raiz)
 Realiza a rotação do nó passado para a direita de forma a esquerda se tornar a raiz e a antiga raiz se torna a direta da nova raiz
 
 Args:
-    raiz::RB_album*: Ponteiro para o nó RB_album que sofrerá a rotação
+    raiz::Arv_23_album*: Ponteiro para o nó Arv_23_album que sofrerá a rotação
 
 Return:
-    aux::RB_album*: Endereço do novo nó raiz
+    aux::Arv_23_album*: Endereço do novo nó raiz
 */
-RB_album *rotacao_direita_album(RB_album *raiz)
+Arv_23_album *rotacao_direita_album(Arv_23_album *raiz)
 {
-    RB_album *aux = raiz->esquerda;
+    Arv_23_album *aux = raiz->esquerda;
     raiz->esquerda = aux->direita;
     aux->direita = raiz;
     aux->cor = raiz->cor;
@@ -194,14 +194,14 @@ RB_album *rotacao_direita_album(RB_album *raiz)
 Realiza a rotação do nó passado para a esquerda de forma a direita se tornar a raiz e a antiga raiz se torna a esquerda da nova raiz
 
 Args:
-    raiz::RB_album*: Ponteiro para o nó RB_album que sofrerá a rotação
+    raiz::Arv_23_album*: Ponteiro para o nó Arv_23_album que sofrerá a rotação
 
 Return:
-    aux::RB_album*: Endereço do novo nó raiz
+    aux::Arv_23_album*: Endereço do novo nó raiz
 */
-RB_album *rotacao_esquerda_album(RB_album *raiz)
+Arv_23_album *rotacao_esquerda_album(Arv_23_album *raiz)
 {
-    RB_album *aux = raiz->direita;
+    Arv_23_album *aux = raiz->direita;
     raiz->direita = aux->esquerda;
     aux->esquerda = raiz;
     aux->cor = raiz->cor;
@@ -215,12 +215,12 @@ Realiza o balanceamento do nó raiz de acordo com as clausulas usadas pela Arvor
     3 - Se a esquerda da esquerda for vermelha e a direita for vermelha
 
 Args:
-    raiz::RB_album**: Endereço do Ponteiro para o nó RB_album que sofrerá a rotação
+    raiz::Arv_23_album**: Endereço do Ponteiro para o nó Arv_23_album que sofrerá a rotação
 
 Return:
-    raiz::RB_album*: Endereço do novo nó raiz
+    raiz::Arv_23_album*: Endereço do novo nó raiz
 */
-RB_album *balancear_RB_album(RB_album **raiz)
+Arv_23_album *balancear_RB_album(Arv_23_album **raiz)
 {
     if (cor_album((*raiz)->direita) == VERMELHO && cor_album((*raiz)->esquerda) == PRETO)
         *raiz = rotacao_esquerda_album(*raiz);
@@ -251,7 +251,7 @@ Args:
 Return:
     no::RB_artista*: Ponteiro para o novo nó que será a raiz
 */
-RB_album *move2EsqRED_album(RB_album *no)
+Arv_23_album *move2EsqRED_album(Arv_23_album *no)
 {
     troca_cor_album(no);
     if (cor_album(no->direita->esquerda) == VERMELHO)
@@ -267,12 +267,12 @@ RB_album *move2EsqRED_album(RB_album *no)
 Realiza a rotação para a direita de um nó e retorna o novo nó central após a rotação
 
 Args:
-    no::RB_album*: Ponteiro para o nó que será rotacionado
+    no::Arv_23_album*: Ponteiro para o nó que será rotacionado
 
 Return:
-    no::RB_album*: Ponteiro para o novo nó que será a raiz
+    no::Arv_23_album*: Ponteiro para o novo nó que será a raiz
 */
-RB_album *move2DirRED_album(RB_album *no)
+Arv_23_album *move2DirRED_album(Arv_23_album *no)
 {
     troca_cor_album(no);
     if (cor_album(no->esquerda->esquerda) == VERMELHO)
@@ -284,17 +284,17 @@ RB_album *move2DirRED_album(RB_album *no)
 }
 
 /*
-Realiza a remoção do menor nó RB_album de uma arvore
+Realiza a remoção do menor nó Arv_23_album de uma arvore
 
 Args:
-    no::RB_album*: Ponteiro para o nó que terá seu menor filho removido
+    no::Arv_23_album*: Ponteiro para o nó que terá seu menor filho removido
 
 Return:
-    aux::RB_album*: Ponteiro para o novo nó que será a raiz
+    aux::Arv_23_album*: Ponteiro para o novo nó que será a raiz
 */
-RB_album * remover_menor_album(RB_album *no)
+Arv_23_album * remover_menor_album(Arv_23_album *no)
 {
-    RB_album *aux = NULL;
+    Arv_23_album *aux = NULL;
 
     if(no->esquerda==NULL)
         free(no);
@@ -315,15 +315,15 @@ RB_album * remover_menor_album(RB_album *no)
 Retorna o menor nó de uma arvore 
 
 Args:
-    no::RB_album*: Ponteiro para o nó que terá seu menor filho procurado
+    no::Arv_23_album*: Ponteiro para o nó que terá seu menor filho procurado
 
 Return:
-    aux1::RB_album*: Ponteiro para o menor nó
+    aux1::Arv_23_album*: Ponteiro para o menor nó
 */
-RB_album *procura_menor_album(RB_album *no)
+Arv_23_album *procura_menor_album(Arv_23_album *no)
 {
-    RB_album * aux1 = no;
-    RB_album * aux2 = no->esquerda;
+    Arv_23_album * aux1 = no;
+    Arv_23_album * aux2 = no->esquerda;
 
     while (aux2 != NULL)
     {
@@ -344,12 +344,12 @@ Args:
     ano::int: Ano de publicação do album
 
 Return:
-    no::RB_album*: No criado pela função ou NULL em caso de falha
+    no::Arv_23_album*: No criado pela função ou NULL em caso de falha
 */
-RB_album *cria_no_album(char titulo[TAM_TITULO], int ano)
+Arv_23_album *cria_no_album(char titulo[TAM_TITULO], int ano)
 {
-    RB_album *no;
-    no = (RB_album *)malloc(sizeof(RB_album));
+    Arv_23_album *no;
+    no = (Arv_23_album *)malloc(sizeof(Arv_23_album));
 
     if (no)
     {
@@ -368,20 +368,20 @@ RB_album *cria_no_album(char titulo[TAM_TITULO], int ano)
 
 
 /*
-Insere um nó RB_album em uma arvore RB_album na posicação correta, usando o titulo do album como meio de ordenação
+Insere um nó Arv_23_album em uma arvore Arv_23_album na posicação correta, usando o titulo do album como meio de ordenação
 A inserção pode resultar em 3 casos:
     1 - Caso ensira com sucesso
     0 - Caso não consiga inserir
    -1 Caso já estivesse cadastrado na arvore
 
 Args:
-    raiz::RB_album**: Endedereço do ponteiro que apontara para o nó raiz
-    novo::RB_album*: Ponteiro para o novo nó que será inserido na arvore
+    raiz::Arv_23_album**: Endedereço do ponteiro que apontara para o nó raiz
+    novo::Arv_23_album*: Ponteiro para o novo nó que será inserido na arvore
 
 Return:
     criou_no::int: Sinalização referente ao resultado da operação de inserção
 */
-int insere_no_RB_album(RB_album **raiz, RB_album *novo)
+int insere_no_RB_album(Arv_23_album **raiz, Arv_23_album *novo)
 {
     int criou_no = 0;
 
@@ -396,13 +396,13 @@ int insere_no_RB_album(RB_album **raiz, RB_album *novo)
 
     else if (compara_string(novo->album.titulo,(*raiz)->album.titulo) > 0)
     {
-        RB_album *aux = *raiz;
+        Arv_23_album *aux = *raiz;
         criou_no = insere_no_RB_album(&((aux)->direita), novo);
     }
 
     else
     {
-        RB_album *aux = *raiz;
+        Arv_23_album *aux = *raiz;
         criou_no = insere_no_RB_album(&((aux)->esquerda), novo);
     }
 
@@ -415,12 +415,12 @@ int insere_no_RB_album(RB_album **raiz, RB_album *novo)
 Printa na tela todos os dados de um Album contido em um nó
 
 Args:
-    no::RB_album*: Ponteiro para o album que será impresso na tela
+    no::Arv_23_album*: Ponteiro para o album que será impresso na tela
 
 Return:
     None
 */
-void mostrar_no_RB_album(RB_album *no)
+void mostrar_no_RB_album(Arv_23_album *no)
 {
     if (no != NULL)
         mostrar_album(&(no->album));
@@ -430,12 +430,12 @@ void mostrar_no_RB_album(RB_album *no)
 Mostra todos os dados de todos os albuns em uma arvore Rubro Negro de albuns.
 
 Args:
-    raiz::RB_album*: Ponteiro para a raiz da arvore que será percorrida para mostrar todos os seus albuns
+    raiz::Arv_23_album*: Ponteiro para a raiz da arvore que será percorrida para mostrar todos os seus albuns
 
 Return:
     None
 */
-void mostrar_tudo_RB_album(RB_album *raiz)
+void mostrar_tudo_RB_album(Arv_23_album *raiz)
 {
     if (raiz != NULL)
     {
@@ -446,19 +446,19 @@ void mostrar_tudo_RB_album(RB_album *raiz)
 }
 
 /*
-Busca um nó RB_album dentro de uma arvore Rubro negro de albuns pelo titulo.
+Busca um nó Arv_23_album dentro de uma arvore Rubro negro de albuns pelo titulo.
 
 Args:
-    raiz::RB_album*: Ponteiro para a raiz da arvore.
+    raiz::Arv_23_album*: Ponteiro para a raiz da arvore.
     titulo_buscado::char: Titulo do album que deseja buscar dentro da arvore.
 
 Return:
-    raiz::RB_album*: Ponteiro para o nó buscado caso encontre, caso falhe retorna NULL
+    raiz::Arv_23_album*: Ponteiro para o nó buscado caso encontre, caso falhe retorna NULL
 
 */
-RB_album *buscar_no_RB_album(RB_album *raiz,char titulo_buscado[TAM_TITULO])
+Arv_23_album *buscar_no_RB_album(Arv_23_album *raiz,char titulo_buscado[TAM_TITULO])
 {
-    RB_album *no_buscado = NULL;
+    Arv_23_album *no_buscado = NULL;
 
     if (raiz != NULL)
     {
@@ -479,14 +479,14 @@ RB_album *buscar_no_RB_album(RB_album *raiz,char titulo_buscado[TAM_TITULO])
 Remove um nó album de uma arvore de albuns
 
 Args:
-    raiz::RB_album: ponteiro para a raiz da arvore
+    raiz::Arv_23_album: ponteiro para a raiz da arvore
     titulo::char: Titulo do album que será removido
 
 Return:
-    raiz::RB_album: Ponteiro para a nova raiz da arvore após a remoção
+    raiz::Arv_23_album: Ponteiro para a nova raiz da arvore após a remoção
 
 */
-RB_album *remove_no_album(RB_album *raiz, char titulo_album[TAM_TITULO])
+Arv_23_album *remove_no_album(Arv_23_album *raiz, char titulo_album[TAM_TITULO])
 {
     if(compara_string(titulo_album,raiz->album.titulo) < 0)
     {
@@ -497,7 +497,7 @@ RB_album *remove_no_album(RB_album *raiz, char titulo_album[TAM_TITULO])
     }
     else
     {
-        RB_album *aux;
+        Arv_23_album *aux;
         if(cor_album(raiz->esquerda)==VERMELHO)
             raiz = rotacao_direita_album(raiz);
 
@@ -538,7 +538,7 @@ Args:
 Return:
     None
 */
-void troca_cor_raiz_RB_album(RB_album *raiz)
+void troca_cor_raiz_RB_album(Arv_23_album *raiz)
 {
     if (raiz != NULL)
     {
@@ -553,19 +553,19 @@ Casos de retorno:
     0 - Falha
 
 Args:
-    raiz::RB_album**: Referência do ponteiro para a raiz da arvore
+    raiz::Arv_23_album**: Referência do ponteiro para a raiz da arvore
     titulo_album::char: Nome do artista que será removido
 
 Return:
     removi::int: Sinalização baseada no resultado da operação de remoção
 */
-int remove_no_album_ARVRB(RB_album **raiz, char titulo_album[TAM_TITULO])
+int remove_no_album_ARVRB(Arv_23_album **raiz, char titulo_album[TAM_TITULO])
 {
     int removi = 0;
 
     if(*raiz!=NULL)
     {
-        RB_album *aux = *raiz;
+        Arv_23_album *aux = *raiz;
         *raiz = remove_no_album(aux,titulo_album);
 
         troca_cor_raiz_RB_album(*raiz);
@@ -582,12 +582,12 @@ Retorna a confirmação sobre o ato de remover um nó
     0 - Não
 
 Args:
-    no::RB_album*: Referencia do nó album que estamos checando a possibilidade de removelo
+    no::Arv_23_album*: Referencia do nó album que estamos checando a possibilidade de removelo
 
 Return:
     confirmacao::int: Sinalização de confirmação sobre o ato de remover
 */
-int pode_remover_album(RB_album *no)
+int pode_remover_album(Arv_23_album *no)
 {
     int confirmacao = 0;
 
@@ -600,7 +600,7 @@ int pode_remover_album(RB_album *no)
 /*
 Remove todos os albuns de uma arvore e suas musicas
 */
-void remover_todos_albuns(RB_album **raiz)
+void remover_todos_albuns(Arv_23_album **raiz)
 {
     if(*raiz != NULL)
     {

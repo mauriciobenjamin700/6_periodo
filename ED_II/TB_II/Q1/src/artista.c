@@ -1,8 +1,8 @@
 #include "album.c"
 
 #define NOME 50
-#define TIPO 40
-#define ESTILO 40
+#define TIPO 20
+#define ESTILO 20
 
 typedef struct Artista
 {
@@ -16,11 +16,10 @@ typedef struct Artista
 
 typedef struct RB_artista
 {
-    int cor_artista;
-
     Artista artista;
     struct RB_artista *esquerda;
     struct RB_artista *direita;
+    int cor_artista;
 
 } RB_artista;
 
