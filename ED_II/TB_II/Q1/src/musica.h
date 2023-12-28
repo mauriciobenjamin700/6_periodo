@@ -1,3 +1,6 @@
+#ifndef MUSICA_H_INCLUDED
+#define MUSICA_H_INCLUDED
+
 typedef struct Musica Musica;
 typedef struct Lista_musicas Lista_musicas;
 
@@ -11,3 +14,6 @@ Lista_musicas *buscar_no_musica(Lista_musicas *raiz, char titulo[]);
 Musica* buscar_musica(Lista_musicas *raiz, char titulo[]);
 int remover_musica(Lista_musicas **raiz, char titulo[]);
 void remover_todas_musicas(Lista_musicas **raiz);
+
+
+#endif

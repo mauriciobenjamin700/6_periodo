@@ -1,3 +1,5 @@
+#ifndef ARTISTA_H_INCLUDED
+#define ARTISTA_H_INCLUDED
 #include "album.h"
 
 #define NOME 50
@@ -36,3 +38,4 @@ void mostrar_todos_nos_artista_ordenado(RB_artista *artista);
 void remover_todos_artistas(RB_artista **raiz);
 
 
+#endif // ARTISTA_H_INCLUDED

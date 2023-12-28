@@ -1,3 +1,6 @@
+#ifndef ALBUM_H_INCLUDED
+#define ALBUM_H_INCLUDED
+
 #include "musica.h"
 #define TAM_TITULO 50
 
@@ -28,3 +31,6 @@ void troca_cor_raiz_RB_album(RB_album *raiz);
 int remove_no_album_ARVRB(RB_album **raiz, char titulo_album[TAM_TITULO]);
 int pode_remover_album(RB_album *no);
 void remover_todos_albuns(RB_album **raiz);
+
+
+#endif 
