@@ -160,75 +160,7 @@ void ordenar_artistas(Artista *a1, Artista *a2, Artista *a3)
     }
 }
 
-/*Dica do GPT
-void quebra_no_artista(Arv_23_artista **raiz, Artista artista)
-    {
-    if ((*raiz)->qtd_infos == 2)
-    {
-        // Criando um novo nó para acomodar a terceira informação
-        Arv_23_artista *novo_no = cria_no_artista();
-
-        if (novo_no != NULL)
-        {
-            Artista temp[3];
-            temp[0] = (*raiz)->info1;
-            temp[1] = (*raiz)->info2;
-            temp[2] = artista;
-
-            ordenar_artistas(&temp[0], &temp[1], &temp[2]);
-
-            // Atribuindo as informações aos nós
-            (*raiz)->info1 = temp[0];
-            (*raiz)->info2 = temp[1];
-            novo_no->info1 = temp[2];
-
-            // Dividindo os filhos (se existirem)
-            novo_no->esquerda = (*raiz)->esquerda;
-            novo_no->centro = (*raiz)->direita;
-
-            (*raiz)->esquerda = NULL;
-            (*raiz)->direita = NULL;
-
-            (*raiz)->qtd_infos = 1;
-            novo_no->qtd_infos = 1;
-
-            // Se o nó for raiz, redefinir a raiz
-            if ((*raiz) == (*raiz)->direita)
-            {
-                Arv_23_artista *nova_raiz = cria_no_artista();
-                nova_raiz->info1 = temp[1];
-                nova_raiz->esquerda = (*raiz);
-                nova_raiz->centro = novo_no;
-                (*raiz) = nova_raiz;
-            }
-            else
-            {
-                // Promovendo o elemento do meio para o nó pai
-                artista = temp[1];
-                (*raiz)->info1 = temp[0];
-                (*raiz)->info2 = temp[1];
-                (*raiz)->qtd_infos = 1;
-
-                // Recursão para inserir no nó pai
-                if (compara_string(artista.nome, (*raiz)->info1.nome) < 0)
-                    inserir_artista_arv23(&(*raiz)->esquerda, artista);
-                else
-                    inserir_artista_arv23(&(*raiz)->centro, artista);
-            }
-        }
-    }
-}
-*/
-
-/*
-Sobe uma informação de um nó atual para o seu pai,  para tentar inserir no pai essa informação
-
-Args:
-    raiz::Arv_23_artista**: Referência do ponteiro que aponta para o nó que guarda o pai
-
-*/
-
-
+/*Funciona até 6 elementos
 Arv_23_artista *quebra_no_artista(Arv_23_artista *raiz, Artista artista)
 {
 
@@ -253,9 +185,9 @@ Arv_23_artista *quebra_no_artista(Arv_23_artista *raiz, Artista artista)
     Arv_23_artista *esquerda = raiz;
     Arv_23_artista *direita = novo_no;
 
-    Arv_23_artista *nova_raiz = raiz->pai;
+    Arv_23_artista **nova_raiz = &raiz->pai;
     //se não existe um pai (o no anterior já era a raiz)
-    if((nova_raiz) == NULL)
+    if((*nova_raiz) == NULL)
     {
         Arv_23_artista *padrasto = cria_no_artista();
 
@@ -265,10 +197,10 @@ Arv_23_artista *quebra_no_artista(Arv_23_artista *raiz, Artista artista)
             padrasto->esquerda = esquerda;
             padrasto->centro = direita;
             padrasto->qtd_infos = 1;
-            nova_raiz = padrasto;
-            
-            esquerda->pai = nova_raiz;
-            direita->pai = nova_raiz;
+            *nova_raiz = padrasto;
+
+            esquerda->pai = *nova_raiz;
+            direita->pai = *nova_raiz;
         }
         else
             printf("\nFALHA AO ALOCAR MEMORIA");
@@ -277,39 +209,132 @@ Arv_23_artista *quebra_no_artista(Arv_23_artista *raiz, Artista artista)
     else
     {
         //checar se tem espaço, se tiver inserir na posição correta
-        if((nova_raiz)->qtd_infos == 1)
+        if((*nova_raiz)->qtd_infos == 1)
         {
-            int retorno = compara_string((nova_raiz)->info1.nome,subiu.nome);
-            
+            int retorno = compara_string((*nova_raiz)->info1.nome,subiu.nome);
+
             if (retorno < 0)
             {
-                nova_raiz->info2 = subiu;
-                nova_raiz->direita = direita;
-                nova_raiz->qtd_infos = 2;
+                (*nova_raiz)->info2 = subiu;
+                (*nova_raiz)->direita = direita;
+                (*nova_raiz)->qtd_infos = 2;
 
-                direita->pai = nova_raiz;
+                direita->pai = *nova_raiz;
+
+                //realizamos todos os apontamentos corretamente agora, mas já que estamos numa pilha recursiva, vamos garantir que o nó atual será mantido e a raiz será atualizada
+                nova_raiz = &esquerda;
             }
             else if (retorno > 0)
             {
-                nova_raiz->info2 = (nova_raiz)->info1;
-                nova_raiz->info1 = subiu;
+                (*nova_raiz)->info2 = (*nova_raiz)->info1;
+                (*nova_raiz)->info1 = subiu;
 
-                nova_raiz->direita = direita;
-                nova_raiz->qtd_infos = 2;
+                (*nova_raiz)->direita = direita;
+                (*nova_raiz)->qtd_infos = 2;
 
-                direita->pai = nova_raiz;      
+                direita->pai = *nova_raiz;
             }
         }
         //caso não tenha espaço, precisa quebrar o nó novamente e repetir o processo
-        else
-            nova_raiz = quebra_no_artista(nova_raiz,subiu);
-        
+        else if((*nova_raiz)->qtd_infos == 2)
+            *nova_raiz = quebra_no_artista(*nova_raiz,subiu);
+
     }
+
+    return *nova_raiz;
+}
+*/
+
+/*
+Sobe uma informação de um nó atual para o seu pai,  para tentar inserir no pai essa informação
+
+Args:
+    raiz::Arv_23_artista**: Referência do ponteiro que aponta para o nó que guarda o pai
+
+*/
+
+Arv_23_artista *quebra_no_artista(Arv_23_artista **no, Artista artista, Arv_23_artista *esquerda_novo_no, Arv_23_artista *direita_novo_no)
+{
+    Arv_23_artista *nova_raiz = NULL;
+
+    Arv_23_artista *novo_no = cria_no_artista();
+
+    Artista temp[3];
+    temp[0] = (*no)->info1;
+    temp[1] = (*no)->info2;
+    temp[2] = artista;
+
+    ordenar_artistas(&temp[0], &temp[1], &temp[2]);
+    // garantirmos que o maior fique no novo nó e o do meio fique na info2
+    (*no)->info1 = temp[0];
+    (*no)->info2 = temp[1];
+    novo_no->info1 = temp[2];
+
+    (*no)->qtd_infos = 1;
+    novo_no->qtd_infos = 1;
+    
+    novo_no->esquerda = esquerda_novo_no;
+    novo_no->direita = direita_novo_no;
+
+    Artista subiu = (*no)->info2;
+    Arv_23_artista *esquerda = (*no);
+    Arv_23_artista *direita = novo_no;
+
+    // se não existe um pai (o no anterior já era a raiz)
+    if (((*no)->pai) == NULL)
+    {
+        Arv_23_artista *padrasto = cria_no_artista();
+
+        if (padrasto != NULL)
+        {
+            padrasto->info1 = subiu;
+            padrasto->esquerda = esquerda;
+            padrasto->centro = direita;
+            padrasto->qtd_infos = 1;
+
+            esquerda->pai = padrasto;
+            direita->pai = padrasto;
+
+            //*no = padrasto; //questionavel
+            nova_raiz = padrasto;
+        }
+        else
+            printf("\nFALHA AO ALOCAR MEMORIA");
+    }
+    // caso exista um pai
+    else
+    {
+        Arv_23_artista *pai = (*no)->pai;
+        // checar se tem espaço, se tiver inserir na posição correta
+        if (pai->qtd_infos == 1)
+        {
+            int retorno = compara_string((pai)->info1.nome, subiu.nome);
+
+            if (retorno < 0)
+            {
+                (pai)->info2 = subiu;
+                (pai)->direita = direita;
+                (pai)->qtd_infos = 2;
+                direita->pai = pai;
+            }
+            else if (retorno > 0)
+            {
+                (pai)->info2 = (pai)->info1;
+                (pai)->info1 = subiu;
+                (pai)->direita = direita;
+                (pai)->qtd_infos = 2;
+                direita->pai = pai;
+            }
+        }
+        // caso não tenha espaço, precisa quebrar o nó novamente e repetir o processo
+        else if ((pai)->qtd_infos == 2)
+        {
+            nova_raiz = quebra_no_artista(&pai, subiu,*no,novo_no);
+        }
+    }   
 
     return nova_raiz;
 }
-
-
 
 /*
 Insere um novo nó artista em uma arvore de artistas
@@ -326,6 +351,7 @@ Return:
 */
 int inserir_artista_arv23(Arv_23_artista **raiz, Artista artista)
 {
+    Arv_23_artista *aux = *raiz;
     int inseri = 0;
     if (*raiz == NULL)
     {
@@ -344,7 +370,7 @@ int inserir_artista_arv23(Arv_23_artista **raiz, Artista artista)
         if ((*raiz)->qtd_infos == 1)
         {
             int retorno = compara_string((*raiz)->info1.nome, artista.nome);
-            //caso o novo valor seja maior que o valor em info1
+            // caso o novo valor seja maior que o valor em info1
             if (retorno < 0)
             {
                 (*raiz)->info2 = artista;
@@ -362,9 +388,13 @@ int inserir_artista_arv23(Arv_23_artista **raiz, Artista artista)
         // caso sejá folha e tenha 2 infos, precisamos quebrar o nó
         else if ((*raiz)->qtd_infos == 2)
         {
-            *raiz = quebra_no_artista((*raiz),artista);
-            if(raiz!=NULL)
-                inseri = 1;
+            Arv_23_artista *retorno;
+
+            retorno = quebra_no_artista(&aux, artista,aux->esquerda,aux->centro);
+            if (retorno != NULL)
+                *raiz = retorno;
+
+            inseri = 1;
         }
     }
     // Caso não seja folha vamos ter que percorrer a arvore para achar uma folha pronta para ser inserida
@@ -403,17 +433,17 @@ int inserir_artista_arv23(Arv_23_artista **raiz, Artista artista)
 
 void mostrar_no_artista(Arv_23_artista *no)
 {
-    if(no != NULL)
+    if (no != NULL)
     {
         printf("\n\nInfo1: %s", no->info1.nome);
-        if(no->qtd_infos==2)
+        if (no->qtd_infos == 2)
             printf("\nInfo2: %s", no->info2.nome);
     }
 }
 
 void mostrar_arv_artistas(Arv_23_artista *raiz)
 {
-    if(raiz != NULL)
+    if (raiz != NULL)
     {
         mostrar_no_artista(raiz);
         mostrar_arv_artistas(raiz->esquerda);
