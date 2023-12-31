@@ -184,9 +184,9 @@ void quebra_no_artista(Arv_23_artista **no, Artista artista, Arv_23_artista *nov
     *vai_subir = (*no)->info2;
 }
 
-Arv_23_artista * sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz ,Artista sobe, Arv_23_artista * novo_no)
+Arv_23_artista *sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz, Artista sobe, Arv_23_artista *novo_no)
 {
-    Arv_23_artista * head = NULL;
+    Arv_23_artista *head = NULL;
     // se não existe um pai (então é a raiz)
     if (((*pai)) == NULL)
     {
@@ -202,7 +202,7 @@ Arv_23_artista * sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz ,Artis
             (*raiz)->pai = padrasto;
             (*raiz)->direita = NULL;
             novo_no->pai = padrasto;
-            
+
             head = padrasto; // questionavel
         }
         else
@@ -232,7 +232,7 @@ Arv_23_artista * sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz ,Artis
                 (*pai)->info1 = sobe;
                 (*pai)->direita = novo_no;
                 (*pai)->qtd_infos = 2;
-                
+
                 novo_no->pai = (*pai);
 
                 head = *pai;
@@ -243,129 +243,307 @@ Arv_23_artista * sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz ,Artis
         {
             Arv_23_artista *aux = cria_no_artista();
             Artista sobe_quebra_dupla;
-            novo_no->pai = aux;  
-            quebra_no_artista(&(*pai),sobe,aux,&sobe_quebra_dupla,*raiz,novo_no);
-            //teste
+            novo_no->pai = aux;
+            quebra_no_artista(&(*pai), sobe, aux, &sobe_quebra_dupla, *raiz, novo_no);
+            // teste
             (*pai)->direita = NULL;
 
-            head = sobe_artista(&(*pai)->pai,&(*pai),sobe_quebra_dupla,aux);
+            head = sobe_artista(&(*pai)->pai, &(*pai), sobe_quebra_dupla, aux);
         }
     }
 
     return head;
 }
-    /*
-    Insere um novo nó artista em uma arvore de artistas
-        1 - Sucesso
-        0 - Já cadastrado
-       -1 - Falha ao alocar memoria para a inserção
+/*
+Insere um novo nó artista em uma arvore de artistas e retorna o nó raiz da arvore;
 
-    Args:
-        raiz::Arv_23_artista**: Referência do Ponteiro que guarda a raiz da arvore
-        novo_no::Arv_23_artista**: Ponteiro para o novo nó que será inserido na arvore
 
-    Return:
-        inseri::int: Sinalização sobre o resultado da inserção
-    */
-Arv_23_artista* inserir_artista_arv23(Arv_23_artista *raiz, Artista artista)
-    {
+Args:
+    raiz::Arv_23_artista*: Referência para a raiz da arvore;
+    Artista::Artista: Estrutura artista que será inserida na arvore se possivel
+
+Return:
+    aux::Arv_23_artista*: Ponteiro para a raiz da arvore.
+*/
+Arv_23_artista *inserir_artista_arv23(Arv_23_artista *raiz, Artista artista)
+{
     Arv_23_artista *aux = raiz;
 
-        if (aux == NULL)
+    if (aux == NULL)
+    {
+        aux = cria_no_artista();
+        if (aux != NULL)
         {
-            aux = cria_no_artista();
-            if (aux != NULL)
-            {
-                (aux)->info1 = artista;
-                (aux)->qtd_infos = 1;
-            }
+            (aux)->info1 = artista;
+            (aux)->qtd_infos = 1;
         }
-        else if (no_artista_eh_folha(aux))
-        {
-            if ((aux)->qtd_infos == 1)
-            {
-                int retorno = compara_string((aux)->info1.nome, artista.nome);
-                // caso o novo valor seja maior que o valor em info1
-                if (retorno < 0)
-                {
-                    (aux)->info2 = artista;
-                    (aux)->qtd_infos = 2;
-                }
-                else if (retorno > 0)
-                {
-                    (aux)->info2 = (aux)->info1;
-                    (aux)->info1 = artista;
-                    (aux)->qtd_infos = 2;
-                }
-            }
-            // caso sejá folha e tenha 2 infos, precisamos quebrar o nó (mas vamos garantir que a info não seja igual as que ja temos)
-            else if ((aux)->qtd_infos == 2)
-            {
-                if(compara_string(aux->info1.nome,artista.nome) != 0 && compara_string(aux->info2.nome,artista.nome) != 0 )
-                {
-                    Arv_23_artista *novo_no =  cria_no_artista();
-                    Artista vai_subir;
-                    quebra_no_artista(&(raiz), artista, novo_no,&vai_subir,NULL,NULL);
-                    aux = sobe_artista(&((raiz)->pai),&raiz,vai_subir,novo_no);
-                }
-                
-            }
-        }
-        // Caso não seja folha vamos ter que percorrer a arvore para achar uma folha pronta para ser inserida
-        else
+    }
+    else if (no_artista_eh_folha(aux))
+    {
+        if ((aux)->qtd_infos == 1)
         {
             int retorno = compara_string((aux)->info1.nome, artista.nome);
-
-            // caso info 1 seja maior que o artista vamos pra esquerda
-            if (retorno > 0)
-                aux = inserir_artista_arv23(aux->esquerda, artista);
-
-            // caso info 1 seja menor que o artista, precisamos ver existe info2, caso exista vamos comparar com info 2, caso não vamos apenas ir para a direita de info 1 que será nosso centro
-            else if (retorno < 0)
+            // caso o novo valor seja maior que o valor em info1
+            if (retorno < 0)
             {
-                // se a direita for diferente de null, então existe info 2 para compararmos
-                if ((aux)->direita != NULL)
-                {
-                    retorno = compara_string(aux->info2.nome, artista.nome);
-
-                    // caso info 2 seja menor que o artista, então vamos para a direita
-                    if (retorno < 0)
-                        aux = inserir_artista_arv23(aux->direita, artista);
-
-                    // caso info 2 seja maior que o artista, então vamos pro centro
-                    else if (retorno > 0)
-                        aux = inserir_artista_arv23(aux->centro, artista);
-                }
-                // já que não existe info 2, vamos para o centro
-                else
-                    aux = inserir_artista_arv23(aux->centro, artista);
+                (aux)->info2 = artista;
+                (aux)->qtd_infos = 2;
+            }
+            else if (retorno > 0)
+            {
+                (aux)->info2 = (aux)->info1;
+                (aux)->info1 = artista;
+                (aux)->qtd_infos = 2;
             }
         }
-        while (aux->pai != NULL)
+        // caso sejá folha e tenha 2 infos, precisamos quebrar o nó (mas vamos garantir que a info não seja igual as que ja temos)
+        else if ((aux)->qtd_infos == 2)
         {
-            aux = aux->pai;
+            if (compara_string(aux->info1.nome, artista.nome) != 0 && compara_string(aux->info2.nome, artista.nome) != 0)
+            {
+                Arv_23_artista *novo_no = cria_no_artista();
+                Artista vai_subir;
+                quebra_no_artista(&(raiz), artista, novo_no, &vai_subir, NULL, NULL);
+                aux = sobe_artista(&((raiz)->pai), &raiz, vai_subir, novo_no);
+            }
         }
-            
-        return aux;
+    }
+    // Caso não seja folha vamos ter que percorrer a arvore para achar uma folha pronta para ser inserida
+    else
+    {
+        int retorno = compara_string((aux)->info1.nome, artista.nome);
+
+        // caso info 1 seja maior que o artista vamos pra esquerda
+        if (retorno > 0)
+            aux = inserir_artista_arv23(aux->esquerda, artista);
+
+        // caso info 1 seja menor que o artista, precisamos ver existe info2, caso exista vamos comparar com info 2, caso não vamos apenas ir para a direita de info 1 que será nosso centro
+        else if (retorno < 0)
+        {
+            // se a direita for diferente de null, então existe info 2 para compararmos
+            if ((aux)->direita != NULL)
+            {
+                retorno = compara_string(aux->info2.nome, artista.nome);
+
+                // caso info 2 seja menor que o artista, então vamos para a direita
+                if (retorno < 0)
+                    aux = inserir_artista_arv23(aux->direita, artista);
+
+                // caso info 2 seja maior que o artista, então vamos pro centro
+                else if (retorno > 0)
+                    aux = inserir_artista_arv23(aux->centro, artista);
+            }
+            // já que não existe info 2, vamos para o centro
+            else
+                aux = inserir_artista_arv23(aux->centro, artista);
+        }
+    }
+    // percorre o nó atual até chegar na raiz da arvore
+    while (aux->pai != NULL)
+    {
+        aux = aux->pai;
+    }
+
+    return aux;
 }
 
-    void mostrar_no_artista(Arv_23_artista * no)
+void mostrar_no_artista(Arv_23_artista *no)
+{
+    if (no != NULL)
     {
-        if (no != NULL)
+        printf("\n\nInfo1: %s", no->info1.nome);
+        if (no->qtd_infos == 2)
+            printf("\tInfo2: %s", no->info2.nome);
+    }
+}
+
+void mostrar_arv_artistas(Arv_23_artista *raiz)
+{
+    if (raiz != NULL)
+    {
+        mostrar_no_artista(raiz);
+        mostrar_arv_artistas(raiz->esquerda);
+        mostrar_arv_artistas(raiz->centro);
+        mostrar_arv_artistas(raiz->direita);
+    }
+}
+
+Artista *buscar_artista(Arv_23_artista *raiz, char nome_artista[])
+{
+    Artista *artista_buscado = NULL;
+
+    if (raiz != NULL)
+    {
+        int retorno;
+
+        retorno = compara_string(raiz->info1.nome, nome_artista);
+
+        // caso sejam iguais, achamos o artista buscado
+        if (retorno == 0)
+            artista_buscado = &raiz->info1;
+
+        // caso o primeiro seja menor que o segundo, vamos checar se existe info 2 para comparar
+        else if (retorno < 0)
         {
-            printf("\n\nInfo1: %s", no->info1.nome);
-            if (no->qtd_infos == 2)
-                printf("\tInfo2: %s", no->info2.nome);
+            if (raiz->qtd_infos == 2)
+            {
+
+                retorno = compara_string(raiz->info2.nome, nome_artista);
+
+                // pode ser que info2 sejá quem estamos procurando
+                if (retorno == 0)
+                    artista_buscado = &raiz->info2;
+
+                // caso o primeiro seja menor que o segundo, vamos para a direita do nó atual
+                else if (retorno < 0)
+                    artista_buscado = buscar_artista(raiz->direita, nome_artista);
+            }
+            // já que só temos info1 e ela é menor, vamos pro centro
+            else
+                artista_buscado = buscar_artista(raiz->centro, nome_artista);
         }
+        // caso o primeiro sejá maior que o segundo, vamos para a esquerda
+        else
+            artista_buscado = buscar_artista(raiz->esquerda, nome_artista);
     }
 
-    void mostrar_arv_artistas(Arv_23_artista * raiz)
+    return artista_buscado;
+}
+
+Arv_23_artista *buscar_no_artista(Arv_23_artista *raiz, char nome_artista[])
+{
+    Arv_23_artista *artista_buscado = NULL;
+
+    if (raiz != NULL)
     {
-        if (raiz != NULL)
+        int retorno;
+
+        retorno = compara_string(raiz->info1.nome, nome_artista);
+
+        // caso sejam iguais, achamos o artista buscado
+        if (retorno == 0)
+            artista_buscado = raiz;
+
+        // caso o primeiro seja menor que o segundo, vamos checar se existe info 2 para comparar
+        else if (retorno < 0)
         {
-            mostrar_no_artista(raiz);
-            mostrar_arv_artistas(raiz->esquerda);
-            mostrar_arv_artistas(raiz->centro);
-            mostrar_arv_artistas(raiz->direita);
+            if (raiz->qtd_infos == 2)
+            {
+                // caso o primeiro seja menor que o segundo, vamos para a direita do nó atual
+                retorno = compara_string(raiz->info2.nome, nome_artista);
+
+                if (retorno == 0)
+                    artista_buscado = raiz;
+
+                else if (retorno < 0)
+                    artista_buscado = buscar_artista(raiz->direita, nome_artista);
+            }
+            // já que só temos info1 e ela é menor, vamos pro centro
+            else
+                artista_buscado = buscar_artista(raiz->centro, nome_artista);
+        }
+        // caso o primeiro sejá maior que o segundo, vamos para a esquerda
+        else
+            artista_buscado = buscar_artista(raiz->esquerda, nome_artista);
+    }
+
+    return artista_buscado;
+}
+
+int conta_info_artista(Arv_23_artista *raiz)
+{
+    int total = 0;
+
+    if(raiz != NULL)
+    {
+        if(raiz->qtd_infos == 2)
+        {
+            total+=2;
+            total += conta_info_artista(raiz->esquerda);
+            total += conta_info_artista(raiz->centro);
+            total += conta_info_artista(raiz->direita);
+        }
+        //caso não tenha 2, então tem uma
+        else
+        {
+            total+=1;
+            total += conta_info_artista(raiz->esquerda);
+            total += conta_info_artista(raiz->centro);
         }
     }
+    return total;
+}
+
+Artista buscar_menor_artista(Arv_23_artista *raiz)
+{
+    Artista menor = raiz->info1;
+
+    if(raiz->esquerda != NULL)
+        menor = buscar_menor_artista(raiz->esquerda);    
+
+    return menor;
+}
+
+Arv_23_artista *remover_artista_arv23(Arv_23_artista *raiz, char nome_artista[])
+{
+    Arv_23_artista *vai_sumir = buscar_no_artista(raiz, nome_artista);
+
+    if (vai_sumir != NULL)
+    {
+        if (no_artista_eh_folha(vai_sumir))
+        {
+            int retorno;
+
+            if (vai_sumir->qtd_infos == 2)
+            {
+                retorno = compara_string(vai_sumir->info2.nome, nome_artista);
+
+                // caso seja info2, apenas deixamos info2 desativada com o contador de infos
+                if (retorno == 0)
+                    vai_sumir->qtd_infos = 1;
+
+                // se for info1 e temos 2 infos, info1 será sobreposta por info2 e desativamos info2
+                else
+                {
+                    vai_sumir->info1 = vai_sumir->info2;
+                    vai_sumir->qtd_infos = 1;
+                }
+            }
+            // é folha e só tem uma informação, vai dar trabalho
+            else
+            {
+                // ele é a raiz da arvore?   se sim então removemos o nó e nossa arvore fica nula
+                if (raiz->pai == NULL)
+                {
+                    Arv_23_artista *aux = raiz;
+                    free(aux);
+                    raiz = NULL;
+                }
+                // se não for a raiz, precisamos checar se o pai tem 3 ou mais informações nos irmãos proximos para pedir ajuda
+                else
+                {
+                    int infos_proximas = conta_info_artista(raiz->pai);
+                    
+                    //se tiver mais de 3 informações nas proximidades, podemos pedir ajuda na remoção
+                    if(infos_proximas > 3)
+                    {
+                        //o centro pode fornecer ajuda?
+                        infos_proximas = conta_info_artista(raiz->pai->centro);
+                        //levando em conta que o pai tem pelomenos uma info1, o centro precisa ter no minimo 2 infos pra fornecer ajuda
+                        if(infos_proximas > 1)
+                        {
+                            //sobe-se o menor do centro para o pai ficando na info1, e a info1 do pai desce para substituir o nó que será removido
+                            Artista menor_centro = buscar_menor_artista(raiz->pai->centro);
+                            Artista desce_pai = raiz->pai->info1;
+                            raiz->pai->info1 = menor_centro;
+                            vai_sumir->info1 = desce_pai;
+                            
+                            //falta bolar um jeito de remover o menor do centro
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}
