@@ -20,10 +20,7 @@ int main(void)
         preencher_artista(&artista,dado,dado,dado);
 
 
-        if (inserir_artista_arv23(&arvore_artistas,artista)==1)
-            printf("\n\nINSERIDO COM SUCESSO");
-        else
-            printf("\n\nALGUMA FALHA ACONTECEU");
+        arvore_artistas =  inserir_artista_arv23(arvore_artistas,artista);
 
 
         printf("\n\nARVORE DE ARTISTAS A BAIXO \n");
