@@ -707,18 +707,22 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         }
                         // se o centro não pode fornecer ajuda, vamos procurar na esquerda, só que dessa vez será o maior
                         // levando em conta que o pai tem 2 informações, vamos realizar o movimento de "onda para reposicionar os valores"
-                        //a onda pegando emprestado da direita não deu pra vizualizar 
-                        //pensar nisso e desenhar uma solução
+                        
                         else if (conta_info_artista(vai_sumir->pai->esquerda) > 1)
                         {
                             Arv_23_artista *maior_esquerda = buscar_maior_artista(vai_sumir->pai->esquerda);
-                            vai_sumir->info1 = vai_sumir->pai->info1;
+                            
+                            vai_sumir->info1 = vai_sumir->pai->info2;
+                            vai_sumir->pai->info2 = vai_sumir->pai->centro->info1;
+                            vai_sumir->pai->centro->info1 = vai_sumir->pai->info1;
+
                             // o movimento de onda consiste em mover o menor valor da direita para info2, descer info 2 do pai para o filho do centro e subir a info1 do filho do centro para o info1 do pai. após esse processo a antiga info1 do pai será enviada como info1 do nó que perderá seu valor
 
                             // o maior da esquerda tem info2? se não tiver então pegamos info1 mesmo
                             if (maior_esquerda->qtd_infos == 2)
                             {
                                 vai_sumir->pai->info1 = maior_esquerda->info2;
+                                raiz = remover_artista_arv23(maior_esquerda, maior_esquerda->info2.nome);
                             }
                             else
                             {
@@ -729,12 +733,14 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         // se nem o centro e a esquerda podem, vamos precisar juntar
                         else
                         {
-                            vai_sumir->pai->centro->info2 = vai_sumir->pai->centro->info2;
+                            //adaptar aqui
+                            vai_sumir->pai->centro->info2 = vai_sumir->pai->info2;
                             vai_sumir->pai->qtd_infos = 1;
                             Arv_23_artista *aux = vai_sumir;
                             vai_sumir->pai->direita = NULL;
                             raiz = vai_sumir->pai;
                             free(aux);
+                            
                         }
                     }
                     else if (vai_sumir->pai->pai != NULL)
