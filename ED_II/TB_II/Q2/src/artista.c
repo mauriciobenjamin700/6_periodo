@@ -474,14 +474,31 @@ int conta_info_artista(Arv_23_artista *raiz)
     return total;
 }
 
-Artista buscar_menor_artista(Arv_23_artista *raiz)
+Arv_23_artista *buscar_menor_artista(Arv_23_artista *raiz)
 {
-    Artista menor = raiz->info1;
+    Arv_23_artista *menor = raiz;
 
     if(raiz->esquerda != NULL)
         menor = buscar_menor_artista(raiz->esquerda);    
 
     return menor;
+}
+
+void remover_menor_artista(Arv_23_artista *menor)
+{
+    //temos que testar todos os casos possiveis para remover esse menor valor
+    //se temos 2 informações, podemos só sobrepor a menor
+    if(menor->qtd_infos == 2)
+    {
+        menor->info1 = menor->info2;
+        menor->qtd_infos = 1;
+    }
+    // caso só tivesse uma informação, vamos precisar pedir ajuda de outro lugar e continuar o clico
+    //vamos pedir ao pai do menor para saber se ele pode fornecer uma nova info para sobrepor
+    else
+    {
+        printf("\nBolar uma forma de tratar isso");
+    }
 }
 
 Arv_23_artista *remover_artista_arv23(Arv_23_artista *raiz, char nome_artista[])
@@ -530,15 +547,34 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *raiz, char nome_artista[])
                         //o centro pode fornecer ajuda?
                         infos_proximas = conta_info_artista(raiz->pai->centro);
                         //levando em conta que o pai tem pelomenos uma info1, o centro precisa ter no minimo 2 infos pra fornecer ajuda
-                        if(infos_proximas > 1)
+                        if(infos_proximas > 1)  
                         {
                             //sobe-se o menor do centro para o pai ficando na info1, e a info1 do pai desce para substituir o nó que será removido
-                            Artista menor_centro = buscar_menor_artista(raiz->pai->centro);
+                            Arv_23_artista *menor_centro = buscar_menor_artista(raiz->pai->centro);
                             Artista desce_pai = raiz->pai->info1;
-                            raiz->pai->info1 = menor_centro;
+                            raiz->pai->info1 = menor_centro->info1;
                             vai_sumir->info1 = desce_pai;
-                            
-                            //falta bolar um jeito de remover o menor do centro
+                            remover_menor_artista(menor_centro);
+                        }
+                        //se o centro não pode fornecer ajuda, vamos procurar pela direita
+
+                        infos_proximas = conta_info_artista(raiz->pai->direita);
+                        //levando em conta que o pai tem 2 informações, vamos realizar o movimento de "onda para reposicionar os valores"
+                        if(infos_proximas > 1)
+                        {
+                            Arv_23_artista *menor_direita = buscar_menor_artista(raiz->pai->direita);
+                            Artista desce_pai = raiz->pai->info1;
+                            //o movimento de onda consiste em mover o menor valor da direita para info2, descer info 2 do pai para o filho do centro e subir a info1 do filho do centro para o info1 do pai. após esse processo a antiga info1 do pai será enviada como info1 do nó que perderá seu valor
+                            raiz->pai->info1 = raiz->pai->centro->info1;
+                            raiz->pai->centro->info1 = raiz->pai->info2;
+                            raiz->pai->info2 = menor_direita->info1;
+                            vai_sumir->info1 = desce_pai;
+                            remover_menor_artista(menor_direita);
+                        }
+                        // se nem o centro e nem a direita podem, vamos precisar juntar
+                        else
+                        {
+                            printf("\nBolar uma form de juntar os nós quando a arvore não consegue fornecer ajuda");
                         }
                     }
 
