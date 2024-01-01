@@ -484,21 +484,16 @@ Arv_23_artista *buscar_menor_artista(Arv_23_artista *raiz)
     return menor;
 }
 
-void remover_menor_artista(Arv_23_artista *menor)
+Arv_23_artista *buscar_maior_artista(Arv_23_artista *raiz)
 {
-    // temos que testar todos os casos possiveis para remover esse menor valor
-    // se temos 2 informações, podemos só sobrepor a menor
-    if (menor->qtd_infos == 2)
-    {
-        menor->info1 = menor->info2;
-        menor->qtd_infos = 1;
-    }
-    // caso só tivesse uma informação, vamos precisar pedir ajuda de outro lugar e continuar o clico
-    // vamos pedir ao pai do menor para saber se ele pode fornecer uma nova info para sobrepor
-    else
-    {
-        printf("\nBolar uma forma de tratar isso");
-    }
+    Arv_23_artista *maior = raiz;
+
+    if (raiz->direita != NULL)
+        maior = buscar_maior_artista(raiz->direita);
+    else if (raiz->centro != NULL)
+        maior = buscar_menor_artista(raiz->centro);
+
+    return maior;
 }
 
 /*
@@ -507,13 +502,13 @@ Busca saber se o nó atual é filho da esquerda, centro ou direita de um nó pai
      0 para centro
      1 para direita
 */
-int onde_estou_artista(Arv_23_artista * no)
+int onde_estou_artista(Arv_23_artista *no)
 {
     int sinal;
 
-    if(no == no->pai->esquerda)
+    if (no == no->pai->esquerda)
         sinal = -1;
-    else if(no == no->pai->centro)
+    else if (no == no->pai->centro)
         sinal = 0;
     else
         sinal = 1;
@@ -523,6 +518,7 @@ int onde_estou_artista(Arv_23_artista * no)
 
 Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artista[])
 {
+    Arv_23_artista *raiz = vai_sumir;
 
     if (no_artista_eh_folha(vai_sumir))
     {
@@ -557,14 +553,14 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
             else
             {
                 int onde_estou = onde_estou_artista(vai_sumir);
-                printf("\nEstou na %d", onde_estou);
-                int infos_proximas = conta_info_artista(vai_sumir->pai);
 
-                // se tiver mais de 3 informações nas proximidades, podemos pedir ajuda na remoção
-                if (infos_proximas > 3)
+                // se estou na esquerda, precisamos olhar pro centro e/ou para direita
+                if (onde_estou == -1)
                 {
-                    if(onde_estou == -1)
-                    {    
+                    int infos_proximas = conta_info_artista(vai_sumir->pai);
+                    // se tiver mais de 3 informações nas proximidades, podemos pedir ajuda na remoção
+                    if (infos_proximas > 3)
+                    {
                         // o centro pode fornecer ajuda?
                         // levando em conta que o pai tem pelomenos uma info1, o centro precisa ter no minimo 2 infos pra fornecer ajuda
                         if (conta_info_artista(vai_sumir->pai->centro) > 1)
@@ -573,22 +569,19 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                             Arv_23_artista *menor_centro = buscar_menor_artista(vai_sumir->pai->centro);
                             vai_sumir->info1 = vai_sumir->pai->info1;
                             vai_sumir->pai->info1 = menor_centro->info1;
-                            remover_menor_artista(menor_centro);
-                            menor_centro->qtd_infos -=1;
-
+                            raiz = remover_artista_arv23(menor_centro, menor_centro->info1.nome);
                         }
                         // se o centro não pode fornecer ajuda, vamos procurar pela direita
                         // levando em conta que o pai tem 2 informações, vamos realizar o movimento de "onda para reposicionar os valores"
                         else if (conta_info_artista(vai_sumir->pai->direita) > 1)
                         {
                             Arv_23_artista *menor_direita = buscar_menor_artista(vai_sumir->pai->direita);
-                            Artista desce_pai = vai_sumir->pai->info1;
+                            vai_sumir->info1 = vai_sumir->pai->info1;
                             // o movimento de onda consiste em mover o menor valor da direita para info2, descer info 2 do pai para o filho do centro e subir a info1 do filho do centro para o info1 do pai. após esse processo a antiga info1 do pai será enviada como info1 do nó que perderá seu valor
                             vai_sumir->pai->info1 = vai_sumir->pai->centro->info1;
                             vai_sumir->pai->centro->info1 = vai_sumir->pai->info2;
                             vai_sumir->pai->info2 = menor_direita->info1;
-                            vai_sumir->info1 = desce_pai;
-                            remover_menor_artista(menor_direita);
+                            raiz = remover_artista_arv23(menor_direita, menor_direita->info1.nome);
                         }
                         // se nem o centro e nem a direita podem, vamos precisar juntar
                         else
@@ -604,31 +597,161 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                             vai_sumir->pai->centro->qtd_infos = 2;
                         }
                     }
+                    else if (vai_sumir->pai->pai != NULL)
+                    {
+                            printf("\nPedir help do avo");
+                    }
+                        // caso não tenha 3 informações nas proximidades, vamos precisar juntar em um unico bloco
+                    else
+                        {
+                            vai_sumir->info1 = vai_sumir->pai->info1;
+                            vai_sumir->info2 = vai_sumir->pai->centro->info1;
+                            free(vai_sumir->pai->centro);
+                            Arv_23_artista *aux = vai_sumir->pai;
+                            vai_sumir->pai = NULL;
+                            free(aux);
+                            vai_sumir->qtd_infos = 2;
+                        }
                 }
-                else if(vai_sumir->pai->pai != NULL)
+                    // se estou no centro, preciso olhar para direita e/ou para esquerda
+                else if (onde_estou == 0)
                 {
-                    printf("\nPedir help do avo");
+                    int infos_proximas = conta_info_artista(vai_sumir->pai);
+                    // se tiver mais de 3 informações nas proximidades, podemos pedir ajuda na remoção
+                    if (infos_proximas > 3)
+                    {
+                        // A direita pode fornecer ajuda?
+                        // levando em conta que o pai tem pelomenos uma info1, o centro precisa ter no minimo 2 infos pra fornecer ajuda
+                        if (conta_info_artista(vai_sumir->pai->direita) > 1)
+                        {
+                            // sobe-se o menor da direita para o pai ficando na info2, e a info2 do pai desce para substituir o nó que será removido no centro
+                            Arv_23_artista *menor_direita = buscar_menor_artista(vai_sumir->pai->direita);
+                            vai_sumir->info1 = vai_sumir->pai->info2;
+                            vai_sumir->pai->info2 = menor_direita->info1;
+                            raiz = remover_artista_arv23(menor_direita, menor_direita->info1.nome);
+                        }
+                        // se a direita não pode fornecer ajuda, vamos procurar na esquerda, só que dessa vez será o maior
+                        // levando em conta que o pai tem 2 informações, vamos realizar o movimento de "onda para reposicionar os valores"
+                        else if (conta_info_artista(vai_sumir->pai->esquerda) > 1)
+                        {
+                            Arv_23_artista *maior_esquerda = buscar_maior_artista(vai_sumir->pai->esquerda);
+                            vai_sumir->info1 = vai_sumir->pai->info1;
+                            // o movimento de onda consiste em mover o menor valor da direita para info2, descer info 2 do pai para o filho do centro e subir a info1 do filho do centro para o info1 do pai. após esse processo a antiga info1 do pai será enviada como info1 do nó que perderá seu valor
+
+                            // o maior da esquerda tem info2? se não tiver então pegamos info1 mesmo
+                            if (maior_esquerda->qtd_infos == 2)
+                            {
+                                vai_sumir->pai->info1 = maior_esquerda->info2;
+                            }
+                            else
+                            {
+                                vai_sumir->pai->info1 = maior_esquerda->info1;
+                                raiz = remover_artista_arv23(maior_esquerda, maior_esquerda->info1.nome);
+                            }
+                        }
+                        // se nem a direita e a esquerda podem, vamos precisar juntar
+                        else
+                        {
+                            vai_sumir->info1 = vai_sumir->pai->info2;
+                            vai_sumir->info2 = vai_sumir->pai->direita->info1;
+                            vai_sumir->pai->qtd_infos = 1;
+                            Arv_23_artista *aux = vai_sumir->pai->direita;
+                            vai_sumir->pai->direita = NULL;
+                            free(aux);
+                            vai_sumir->qtd_infos = 2;
+                        }
+                    }
+                    else if (vai_sumir->pai->pai != NULL)
+                    {
+                            printf("\nPedir help do avo");
+                    }
+                    else
+                    {
+                        raiz = vai_sumir->pai;
+
+                        vai_sumir->pai->info2 = vai_sumir->pai->info1;
+                        vai_sumir->pai->info1 = vai_sumir->pai->esquerda->info1;
+                        vai_sumir->pai->qtd_infos = 2;
+                        Arv_23_artista *aux1,*aux2;
+                        aux1 = vai_sumir->pai->esquerda;
+                        aux2 = vai_sumir;
+                        vai_sumir->pai->esquerda = NULL;
+                        vai_sumir->pai->centro = NULL;
+                        free(aux1);
+                        free(aux2);
+                    }
                 }
-                //caso não tenha 3 informações nas proximidades, vamos precisar juntar em um unico bloco
-                else
+                //se estou na direita, vou olhar para o centro e para a esquerda
+                else if (onde_estou == 1)
                 {
-                    vai_sumir->info1 = vai_sumir->pai->info1;
-                    vai_sumir->info2 = vai_sumir->pai->centro->info1;
-                    free(vai_sumir->pai->centro);
-                    Arv_23_artista *aux = vai_sumir->pai;
-                    vai_sumir->pai = NULL;
-                    free(aux);
-                    vai_sumir->qtd_infos = 2;
+                    int infos_proximas = conta_info_artista(vai_sumir->pai);
+                    // se tiver mais de 3 informações nas proximidades, podemos pedir ajuda na remoção
+                    if (infos_proximas > 3)
+                    {
+                        // o centro pode fornecer ajuda?
+                        if (conta_info_artista(vai_sumir->pai->centro) > 1)
+                        {
+                            //vamos buscar o maior do centro e subir para o pai, e pegar a info2 do pai e descer
+                            Arv_23_artista *maior_centro = buscar_maior_artista(vai_sumir->pai->centro);
+                            vai_sumir->info1 = vai_sumir->pai->info2;
+                            if(maior_centro->qtd_infos == 2)
+                            {
+                                vai_sumir->pai->info2 = maior_centro->info2;
+                                raiz = remover_artista_arv23(maior_centro, maior_centro->info2.nome);
+                            }
+                            else
+                            {
+                                vai_sumir->pai->info2 = maior_centro->info1;
+                                raiz = remover_artista_arv23(maior_centro, maior_centro->info1.nome);
+                            }
+                        }
+                        // se o centro não pode fornecer ajuda, vamos procurar na esquerda, só que dessa vez será o maior
+                        // levando em conta que o pai tem 2 informações, vamos realizar o movimento de "onda para reposicionar os valores"
+                        //a onda pegando emprestado da direita não deu pra vizualizar 
+                        //pensar nisso e desenhar uma solução
+                        else if (conta_info_artista(vai_sumir->pai->esquerda) > 1)
+                        {
+                            Arv_23_artista *maior_esquerda = buscar_maior_artista(vai_sumir->pai->esquerda);
+                            vai_sumir->info1 = vai_sumir->pai->info1;
+                            // o movimento de onda consiste em mover o menor valor da direita para info2, descer info 2 do pai para o filho do centro e subir a info1 do filho do centro para o info1 do pai. após esse processo a antiga info1 do pai será enviada como info1 do nó que perderá seu valor
+
+                            // o maior da esquerda tem info2? se não tiver então pegamos info1 mesmo
+                            if (maior_esquerda->qtd_infos == 2)
+                            {
+                                vai_sumir->pai->info1 = maior_esquerda->info2;
+                            }
+                            else
+                            {
+                                vai_sumir->pai->info1 = maior_esquerda->info1;
+                                raiz = remover_artista_arv23(maior_esquerda, maior_esquerda->info1.nome);
+                            }
+                        }
+                        // se nem o centro e a esquerda podem, vamos precisar juntar
+                        else
+                        {
+                            vai_sumir->pai->centro->info2 = vai_sumir->pai->centro->info2;
+                            vai_sumir->pai->qtd_infos = 1;
+                            Arv_23_artista *aux = vai_sumir;
+                            vai_sumir->pai->direita = NULL;
+                            raiz = vai_sumir->pai;
+                            free(aux);
+                        }
+                    }
+                    else if (vai_sumir->pai->pai != NULL)
+                    {
+                            printf("\nPedir help do avo");
+                    }
                 }
             }
         }
     }
-    
-    if (vai_sumir != NULL)
+
+
+    if (raiz != NULL)
     {
-        while (vai_sumir->pai != NULL)
-            vai_sumir = vai_sumir->pai;
+        while (raiz->pai != NULL)
+            raiz = raiz->pai;
     }
-    
-    return vai_sumir;
+
+    return raiz;
 }
