@@ -599,21 +599,21 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                     }
                     else if (vai_sumir->pai->pai != NULL)
                     {
-                            printf("\nPedir help do avo");
+                        printf("\nPedir help do avo");
                     }
-                        // caso não tenha 3 informações nas proximidades, vamos precisar juntar em um unico bloco
+                    // caso não tenha 3 informações nas proximidades, vamos precisar juntar em um unico bloco
                     else
-                        {
-                            vai_sumir->info1 = vai_sumir->pai->info1;
-                            vai_sumir->info2 = vai_sumir->pai->centro->info1;
-                            free(vai_sumir->pai->centro);
-                            Arv_23_artista *aux = vai_sumir->pai;
-                            vai_sumir->pai = NULL;
-                            free(aux);
-                            vai_sumir->qtd_infos = 2;
-                        }
+                    {
+                        vai_sumir->info1 = vai_sumir->pai->info1;
+                        vai_sumir->info2 = vai_sumir->pai->centro->info1;
+                        free(vai_sumir->pai->centro);
+                        Arv_23_artista *aux = vai_sumir->pai;
+                        vai_sumir->pai = NULL;
+                        free(aux);
+                        vai_sumir->qtd_infos = 2;
+                    }
                 }
-                    // se estou no centro, preciso olhar para direita e/ou para esquerda
+                // se estou no centro, preciso olhar para direita e/ou para esquerda
                 else if (onde_estou == 0)
                 {
                     int infos_proximas = conta_info_artista(vai_sumir->pai);
@@ -663,7 +663,7 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                     }
                     else if (vai_sumir->pai->pai != NULL)
                     {
-                            printf("\nPedir help do avo");
+                        printf("\nPedir help do avo");
                     }
                     else
                     {
@@ -672,7 +672,7 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         vai_sumir->pai->info2 = vai_sumir->pai->info1;
                         vai_sumir->pai->info1 = vai_sumir->pai->esquerda->info1;
                         vai_sumir->pai->qtd_infos = 2;
-                        Arv_23_artista *aux1,*aux2;
+                        Arv_23_artista *aux1, *aux2;
                         aux1 = vai_sumir->pai->esquerda;
                         aux2 = vai_sumir;
                         vai_sumir->pai->esquerda = NULL;
@@ -681,7 +681,7 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         free(aux2);
                     }
                 }
-                //se estou na direita, vou olhar para o centro e para a esquerda
+                // se estou na direita, vou olhar para o centro e para a esquerda
                 else if (onde_estou == 1)
                 {
                     int infos_proximas = conta_info_artista(vai_sumir->pai);
@@ -691,10 +691,10 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         // o centro pode fornecer ajuda?
                         if (conta_info_artista(vai_sumir->pai->centro) > 1)
                         {
-                            //vamos buscar o maior do centro e subir para o pai, e pegar a info2 do pai e descer
+                            // vamos buscar o maior do centro e subir para o pai, e pegar a info2 do pai e descer
                             Arv_23_artista *maior_centro = buscar_maior_artista(vai_sumir->pai->centro);
                             vai_sumir->info1 = vai_sumir->pai->info2;
-                            if(maior_centro->qtd_infos == 2)
+                            if (maior_centro->qtd_infos == 2)
                             {
                                 vai_sumir->pai->info2 = maior_centro->info2;
                                 raiz = remover_artista_arv23(maior_centro, maior_centro->info2.nome);
@@ -707,8 +707,8 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         }
                         // se o centro não pode fornecer ajuda, vamos procurar na esquerda, só que dessa vez será o maior
                         // levando em conta que o pai tem 2 informações, vamos realizar o movimento de "onda para reposicionar os valores"
-                        //a onda pegando emprestado da direita não deu pra vizualizar 
-                        //pensar nisso e desenhar uma solução
+                        // a onda pegando emprestado da direita não deu pra vizualizar
+                        // pensar nisso e desenhar uma solução
                         else if (conta_info_artista(vai_sumir->pai->esquerda) > 1)
                         {
                             Arv_23_artista *maior_esquerda = buscar_maior_artista(vai_sumir->pai->esquerda);
@@ -739,13 +739,141 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                     }
                     else if (vai_sumir->pai->pai != NULL)
                     {
-                            printf("\nPedir help do avo");
+                        printf("\nPedir help do avo");
                     }
                 }
             }
         }
     }
+    // se não for folha vamos precisar olhar para os filhos e para as infos que vamos remover
+    else
+    {
+        if (vai_sumir->qtd_infos == 2)
+        {
+            int retorno = compara_string(vai_sumir->info1.nome, nome_artista);
 
+            // caso não seja info1, entãa é info2
+            if (retorno < 0)
+            {
+                //olhamos primeiro pro centro
+                if (conta_info_artista(vai_sumir->centro) > 1)
+                {
+                    Arv_23_artista *maior_centro = buscar_maior_artista(vai_sumir->centro);
+
+                    if (maior_centro->qtd_infos == 2)
+                    {
+                        vai_sumir->info2 = maior_centro->info2;
+                        remover_artista_arv23(maior_centro, maior_centro->info2.nome);
+                    }
+                    else
+                    {
+                        vai_sumir->info2 = maior_centro->info1;
+                        remover_artista_arv23(maior_centro, maior_centro->info1.nome);
+                    }
+                }
+                // nesse caso vamos a direita da arvore tenter pedir ajuda
+                else if (conta_info_artista(vai_sumir->direita) > 1)
+                {
+                    Arv_23_artista *menor_direita = buscar_menor_artista(vai_sumir->direita);
+                    vai_sumir->info2 = menor_direita->info1;
+                    remover_artista_arv23(menor_direita, menor_direita->info1.nome);
+                }
+                
+                // se nem a direita e nem o centro podem ajudar, vamos tentar na esquerda fazendo o movimento de onda
+                else if (conta_info_artista(vai_sumir->esquerda) > 1)
+                {
+                    Arv_23_artista *maior_esquerda = buscar_maior_artista(vai_sumir->esquerda);
+
+                    if (maior_esquerda->qtd_infos == 2)
+                    {
+                        vai_sumir->info2 = vai_sumir->centro->info1;
+                        vai_sumir->centro->info1 = vai_sumir->info1;
+                        vai_sumir->info1 = maior_esquerda->info2;
+                        remover_artista_arv23(maior_esquerda, maior_esquerda->info2.nome);
+                    }
+                    else
+                    {
+                        vai_sumir->info2 = vai_sumir->centro->info1;
+                        vai_sumir->centro->info1 = vai_sumir->info1;
+                        vai_sumir->info1 = maior_esquerda->info1;
+                        remover_artista_arv23(maior_esquerda, maior_esquerda->info1.nome);
+                    }
+                }
+                else if (vai_sumir->pai != NULL)
+                {
+                    printf("\nPedir ajuda aos ancestrais");
+                }
+                // se nem um dos filhos pode ajudar, vamos precisar quebrar e juntar
+                else
+                {
+                    vai_sumir->qtd_infos = 1;
+                    vai_sumir->centro->info2 = vai_sumir->direita->info1;
+                    vai_sumir->centro->qtd_infos = 2;
+                    Arv_23_artista *aux = vai_sumir->direita;
+                    vai_sumir->direita = NULL;
+                    free(aux);
+                }
+            }
+            //caso seja info1
+            else
+            {
+                //vamos primeiro ver se o centro pode ajudar
+                //olhamos primeiro pro centro
+                if (conta_info_artista(vai_sumir->centro) > 1)
+                {
+                    Arv_23_artista *menor_centro = buscar_menor_artista(vai_sumir->centro);
+                    vai_sumir->info1 = menor_centro->info1;
+                    remover_artista_arv23(menor_centro, menor_centro->info1.nome);
+                }
+                //se o centro não puder ajudar, vamos olhar a esquerda
+                else if (conta_info_artista(vai_sumir->esquerda) > 1)
+                {
+                    Arv_23_artista * maior_esquerda = buscar_maior_artista(vai_sumir->esquerda);
+
+                    if(maior_esquerda->qtd_infos == 2)
+                    {
+                        vai_sumir->info1 = maior_esquerda->info2;
+                        remover_artista_arv23(maior_esquerda,maior_esquerda->info2.nome);
+                    }
+                    else
+                    {
+                        vai_sumir->info1 = maior_esquerda->info1;
+                        remover_artista_arv23(maior_esquerda,maior_esquerda->info1.nome);
+                    }
+                }
+                //se nem o centro e nem a direita podem ajudar, vamos ter que recorrer a onda que vem da direita
+                else if (conta_info_artista(vai_sumir->direita) > 1)
+                {
+                    vai_sumir->info1 = vai_sumir->centro->info1;
+                    vai_sumir->centro->info1 = vai_sumir->info2;
+                    Arv_23_artista *menor_direita = buscar_menor_artista(vai_sumir->direita);
+                    vai_sumir->info2 = menor_direita->info1;
+                    remover_artista_arv23(menor_direita,menor_direita->info1.nome);
+                }       
+                else if (vai_sumir->pai != NULL)
+                {
+                    printf("\nPedir ajuda aos ancestrais");
+                }
+                // se nem um dos filhos pode ajudar, vamos precisar quebrar e juntar
+                else
+                {
+                    vai_sumir->qtd_infos = 1;
+                    vai_sumir->esquerda->info2 = vai_sumir->centro->info1;
+                    vai_sumir->esquerda->qtd_infos = 2;
+                    vai_sumir->info1 = vai_sumir->info2;
+                    vai_sumir->centro->info1 = vai_sumir->direita->info1;
+                    Arv_23_artista *aux = vai_sumir->direita;
+                    vai_sumir->direita = NULL;
+                    free(aux);
+                }     
+            }
+        }
+        //se só tem uma informação
+        else
+        {
+            printf("\nTratar quando só tem uma informação na raiz");
+        }
+    }
 
     if (raiz != NULL)
     {
