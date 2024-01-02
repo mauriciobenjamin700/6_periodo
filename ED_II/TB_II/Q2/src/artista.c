@@ -437,6 +437,8 @@ Arv_23_artista *buscar_no_artista(Arv_23_artista *raiz, char nome_artista[])
 
                 else if (retorno < 0)
                     artista_buscado = buscar_no_artista(raiz->direita, nome_artista);
+                else
+                    artista_buscado = buscar_no_artista(raiz->centro, nome_artista);
             }
             // já que só temos info1 e ela é menor, vamos pro centro
             else
@@ -545,9 +547,8 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
             // ele é a raiz da arvore?   se sim então removemos o nó e nossa arvore fica nula
             if (vai_sumir->pai == NULL)
             {
-                Arv_23_artista *aux = vai_sumir;
-                vai_sumir = NULL;
-                free(aux);
+                raiz = NULL;
+                free(vai_sumir);
             }
             // se não for a raiz, precisamos checar se o pai tem 3 ou mais informações nos irmãos proximos para pedir ajuda
             else
@@ -875,10 +876,45 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                 }     
             }
         }
-        //se só tem uma informação
+        //se só tem uma informação então não tem filhos da direita
         else
         {
-            printf("\nTratar quando só tem uma informação na raiz");
+            //o centro pode pedir fornecer ajuda?
+            if(conta_info_artista(vai_sumir->centro)>1)
+            {
+                Arv_23_artista *menor_centro = buscar_menor_artista(vai_sumir->centro);
+                vai_sumir->info1 = menor_centro->info1;
+                remover_artista_arv23(menor_centro,menor_centro->info1.nome);
+            }
+            // se o centro não puder ajudar, procuramos ajuda na esquerda
+            else if (conta_info_artista(vai_sumir->esquerda) > 1)
+            {
+                Arv_23_artista *maior_esquerda = buscar_maior_artista(vai_sumir->esquerda);
+                if(maior_esquerda->qtd_infos == 2)
+                {
+                    vai_sumir->info1 = maior_esquerda->info2;
+                    remover_artista_arv23(maior_esquerda,maior_esquerda->info2.nome);
+                }
+                else
+                {
+                    vai_sumir->info1 = maior_esquerda->info1;
+                    remover_artista_arv23(maior_esquerda,maior_esquerda->info1.nome);    
+                }
+            }
+            //se nem o centro nem a esquerda podem ajudar, então vamos remover e juntar
+            else
+            {
+                vai_sumir->info1 = vai_sumir->esquerda->info1;
+                vai_sumir->info2 = vai_sumir->centro->info1;
+                vai_sumir->qtd_infos = 2;
+                Arv_23_artista *esquerda, *centro;
+                esquerda = vai_sumir->esquerda;
+                centro = vai_sumir->centro;
+                vai_sumir->esquerda = NULL;
+                vai_sumir->centro = NULL;
+                free(esquerda);
+                free(centro);
+            }
         }
     }
 
