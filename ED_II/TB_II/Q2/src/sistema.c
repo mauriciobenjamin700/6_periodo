@@ -1,10 +1,23 @@
 #include "artista.c"
 
-//Esta função remove todas as musicas,albuns e artistas do sistema visando liberar toda a memória usada para encerrar o sistema
-void encerrar_sistema(RB_artista **arvore)
+int inserir_musica_album(Album *album,Musica musica)
 {
-    if(*arvore != NULL)
+    int inseri = 0;
+
+    if(album->musicas == NULL)
     {
-        remover_todos_artistas(&(*arvore));
+        album->musicas = iniciar_no_lista();
+
+        if(album->musicas != NULL)
+        {
+            inseri = adicionar_musica_ordenada(&(album->musicas),&musica);
+        }
     }
+
+    return inseri;
+}
+
+int inserir_album_artista(Arv_23_artista **raiz,Artista *artista, Album album)
+{
+    *raiz =  inserir_album_arv23(artista->albuns,album);
 }
