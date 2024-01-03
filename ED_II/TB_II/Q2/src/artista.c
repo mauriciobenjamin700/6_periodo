@@ -160,7 +160,21 @@ void ordenar_artistas(Artista *a1, Artista *a2, Artista *a3)
     }
 }
 
-void quebra_no_artista(Arv_23_artista **no, Artista artista, Arv_23_artista *novo_no, Artista *vai_subir, Arv_23_artista *esquerda_novo_no, Arv_23_artista *direita_novo_no)
+/*
+Quebra um nó que tem 2 informações e recebeu mais uma, de forma a que a menor informação fique no nó, a informação do meio suba para o nó pai e a maior informação será alocada em outro nó
+
+Args:
+    no::Arv_23_artista**: Referência do ponteiro que guarda o nó que será quebrado
+    artista::Artista: Estrutura do tipo Artista que deveria ter sido inserida caso tivesse espaço
+    novo_no::Arv_23_artista*: Novo nó da arvore que será destinado a guardar a maior informação resultante da quebra nó
+    vai_subir::Artista*: Ponteiro para a estrutura Artista que irá subir para o nó pai
+    esquerda_novo_no::Arv_23_artista*: Endereço do nó que será a esquerda do novo nó
+    centro_novo_no::Arv_23_artista*: Endereço do nó que será o centro do novo nó
+
+Return:
+    None
+*/
+void quebra_no_artista(Arv_23_artista **no, Artista artista, Arv_23_artista *novo_no, Artista *vai_subir, Arv_23_artista *esquerda_novo_no, Arv_23_artista *centro_novo_no)
 {
 
     Artista temp[3];
@@ -179,11 +193,31 @@ void quebra_no_artista(Arv_23_artista **no, Artista artista, Arv_23_artista *nov
     novo_no->qtd_infos = 1;
 
     novo_no->esquerda = esquerda_novo_no;
-    novo_no->centro = direita_novo_no;
+    novo_no->centro = centro_novo_no;
 
     *vai_subir = (*no)->info2;
 }
 
+/*
+Após realizar a quebra do nó, o dado do meio deve subir para o nó pai, entretanto nem sempre isso é possivel já que existem 3 casos comuns para esse problema
+    1 - Não existir um pai
+        a - Significa que nó que estamos é a raiz da arvore, então precisamos criar um novo nó, para que seja a raiza da arvore e a antiga raiz e o nó alocado se tornem filhos dele
+    2 - Existir um pai com uma informação
+        a - Então apenas subimos a informação para ele, adicionando na posição correta e a direita desse pai se torna o novo nó
+    3 - Existir um pai com duas informações
+        a - Nesse caso devemos quebrar o nó pai e continuar escalando a arvore até que consigamos encontrar espaço ou a raiz da arvore seja mudada
+
+
+Args:
+    pai::Arv_23_artista**: Referência do ponteiro que guarda o nó pai
+    raiz::Arv_23_artista**: Referência do ponteiro que guarda o nó que sofreu a quebra nó
+    sobe::Artista: Estrutura do tipo Artista que acabou subindo devido a quebra nó
+    novo_no::Arv_23_artista*: Novo nó da arvore que será destinado a guardar a maior informação resultante da quebra nó
+
+Return:
+    head::Arv_23_artista*: Referência do nó raiz da árvore
+
+*/
 Arv_23_artista *sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz, Artista sobe, Arv_23_artista *novo_no)
 {
     Arv_23_artista *head = NULL;
@@ -245,7 +279,6 @@ Arv_23_artista *sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz, Artist
             Artista sobe_quebra_dupla;
             novo_no->pai = aux;
             quebra_no_artista(&(*pai), sobe, aux, &sobe_quebra_dupla, *raiz, novo_no);
-            // teste
             (*pai)->direita = NULL;
 
             head = sobe_artista(&(*pai)->pai, &(*pai), sobe_quebra_dupla, aux);
@@ -263,12 +296,13 @@ Args:
     Artista::Artista: Estrutura artista que será inserida na arvore se possivel
 
 Return:
-    aux::Arv_23_artista*: Ponteiro para a raiz da arvore.
+    aux::Arv_23_artista*: Referência para a raiz da arvore.
 */
 Arv_23_artista *inserir_artista_arv23(Arv_23_artista *raiz, Artista artista)
 {
     Arv_23_artista *aux = raiz;
-
+    
+    //se a raiz da árvore é nula, então não existe arvore, basta criar um nó e definilo como raiz
     if (aux == NULL)
     {
         aux = cria_no_artista();
@@ -347,6 +381,7 @@ Arv_23_artista *inserir_artista_arv23(Arv_23_artista *raiz, Artista artista)
     return aux;
 }
 
+//Visualiza o nó artista 
 void mostrar_no_artista(Arv_23_artista *no)
 {
     if (no != NULL)
@@ -357,6 +392,9 @@ void mostrar_no_artista(Arv_23_artista *no)
     }
 }
 
+/*
+Função usada para visualizar a estrutura da arvore artista e checar se a mesma segue os padrões da arvore 2-3
+*/
 void mostrar_arv_artistas(Arv_23_artista *raiz)
 {
     if (raiz != NULL)
@@ -368,6 +406,19 @@ void mostrar_arv_artistas(Arv_23_artista *raiz)
     }
 }
 
+/*
+Busca uma estrutura Artista dentro de uma árvore 2-3 de artistas e retorna:
+    NULL - Caso não encontre
+    Artista* - Caso encontre
+
+Args:
+    raiz::Arv_23_artista*: Referência da raiz que guarda os artistas
+    nome_artista::char: Nome do artista que estamos buscando
+
+Return:
+    artista_buscado::Artista*: Resultado da busca
+
+*/
 Artista *buscar_artista(Arv_23_artista *raiz, char nome_artista[])
 {
     Artista *artista_buscado = NULL;
@@ -410,6 +461,19 @@ Artista *buscar_artista(Arv_23_artista *raiz, char nome_artista[])
     return artista_buscado;
 }
 
+/*
+Busca uma nó artista dentro de uma árvore 2-3 de artistas e retorna:
+    NULL - Caso não encontre
+    Arv_23_artista* - Caso encontre
+
+Args:
+    raiz::Arv_23_artista*: Referência da raiz que guarda os artistas
+    nome_artista::char: Nome do artista que estamos buscando
+
+Return:
+    artista_buscado::Arv_23_artista*: Resultado da busca
+
+*/
 Arv_23_artista *buscar_no_artista(Arv_23_artista *raiz, char nome_artista[])
 {
     Arv_23_artista *artista_buscado = NULL;
@@ -452,6 +516,15 @@ Arv_23_artista *buscar_no_artista(Arv_23_artista *raiz, char nome_artista[])
     return artista_buscado;
 }
 
+/*
+Conta a quantidade de informações proximas a um nó, sendo elas seus valores, o de seus descendentes
+
+Args:
+    raiz::Arv_23_artista*: Nó que será acessado para realizar a contagem das informações
+
+Return:
+    total::int: total de informações encontradas
+*/
 int conta_info_artista(Arv_23_artista *raiz)
 {
     int total = 0;
@@ -476,6 +549,16 @@ int conta_info_artista(Arv_23_artista *raiz)
     return total;
 }
 
+/*
+Busca o nó que contem a menor informação dentro da árvore
+
+Args:
+    raiz::Arv_23_artista*: Ponto de partida para realizar a busca
+
+Return:
+    menor::Arv_23_artista*: Menor nó encontrado
+
+*/
 Arv_23_artista *buscar_menor_artista(Arv_23_artista *raiz)
 {
     Arv_23_artista *menor = raiz;
@@ -486,6 +569,16 @@ Arv_23_artista *buscar_menor_artista(Arv_23_artista *raiz)
     return menor;
 }
 
+/*
+Busca o nó que contem a maior informação dentro da árvore
+
+Args:
+    raiz::Arv_23_artista*: Ponto de partida para realizar a busca
+
+Return:
+    maior::Arv_23_artista*: maior nó encontrado
+    
+*/
 Arv_23_artista *buscar_maior_artista(Arv_23_artista *raiz)
 {
     Arv_23_artista *maior = raiz;
@@ -503,6 +596,12 @@ Busca saber se o nó atual é filho da esquerda, centro ou direita de um nó pai
     -1 para esquerda
      0 para centro
      1 para direita
+
+Args:
+    no::Arv_23_artista*: Ponto de partida da consulta
+
+Return:
+    sinal::int: Sinalização referente a localização
 */
 int onde_estou_artista(Arv_23_artista *no)
 {
@@ -518,6 +617,16 @@ int onde_estou_artista(Arv_23_artista *no)
     return sinal;
 }
 
+/*
+Remove um Artista de um nó passado de uma árvore
+
+Args:
+    vai_sumir::Arv_23_artista*: Referência do nó que terá um artista removido
+    nome_artista::char: Nome do artista que será removido
+
+Return:
+    raiz::Arv_23_artista*: Referência da raiz da arvore resultante da remoção do valor passado
+*/
 Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artista[])
 {
     Arv_23_artista *raiz = vai_sumir;
@@ -600,7 +709,7 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                     }
                     else if (vai_sumir->pai->pai != NULL)
                     {
-                        printf("\nPedir help do avo");
+                        printf("\nPedir help ds ancestrais");
                     }
                     // caso não tenha 3 informações nas proximidades, vamos precisar juntar em um unico bloco
                     else
