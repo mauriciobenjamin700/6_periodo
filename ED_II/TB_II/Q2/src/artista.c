@@ -24,7 +24,6 @@ typedef struct Arv_23_artista
     struct Arv_23_artista *esquerda;
     struct Arv_23_artista *centro;
     struct Arv_23_artista *direita;
-
 } Arv_23_artista;
 
 /*
@@ -237,7 +236,7 @@ Arv_23_artista *sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz, Artist
             (*raiz)->direita = NULL;
             novo_no->pai = padrasto;
 
-            head = padrasto; // questionavel
+            head = padrasto; 
         }
         else
             printf("\nFALHA AO ALOCAR MEMORIA");
@@ -1034,4 +1033,13 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
     }
 
     return raiz;
+}
+
+void mostrar_artista(Artista *artista)
+{
+    printf("\n--------DADOS DO ARTISTA-------\n");
+    printf("\nNOME: %s\nTIPO: %s\nESTILO: %s\nTOTAL DE ALBUNS: %d\n ",artista->nome,artista->tipo,artista->estilo,artista->num_albuns);
+
+    mostrar_tudo_album((artista->albuns));
+    printf("\n------------------------------");
 }

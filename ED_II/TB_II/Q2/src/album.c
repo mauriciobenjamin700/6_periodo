@@ -27,7 +27,6 @@ typedef struct Arv_23_album
 
 } Arv_23_album;
 
-
 /*
 Preenche um album com seus respectivos dados
 
@@ -299,8 +298,8 @@ Return:
 Arv_23_album *inserir_album_arv23(Arv_23_album *raiz, Album album)
 {
     Arv_23_album *aux = raiz;
-    
-    //se a raiz da árvore é nula, então não existe arvore, basta criar um nó e definilo como raiz
+
+    // se a raiz da árvore é nula, então não existe arvore, basta criar um nó e definilo como raiz
     if (aux == NULL)
     {
         aux = cria_no_album();
@@ -379,7 +378,7 @@ Arv_23_album *inserir_album_arv23(Arv_23_album *raiz, Album album)
     return aux;
 }
 
-//Visualiza o nó album 
+// Visualiza o nó album
 void mostrar_no_album(Arv_23_album *no)
 {
     if (no != NULL)
@@ -575,7 +574,7 @@ Args:
 
 Return:
     maior::Arv_23_album*: maior nó encontrado
-    
+
 */
 Arv_23_album *buscar_maior_album(Arv_23_album *raiz)
 {
@@ -815,12 +814,12 @@ Arv_23_album *remover_album_arv23(Arv_23_album *vai_sumir, char nome_album[])
                         }
                         // se o centro não pode fornecer ajuda, vamos procurar na esquerda, só que dessa vez será o maior
                         // levando em conta que o pai tem 2 informações, vamos realizar o movimento de "onda para reposicionar os valores"
-                        //a onda pegando emprestado da direita não deu pra vizualizar 
-                        //pensar nisso e desenhar uma solução
+                        // a onda pegando emprestado da direita não deu pra vizualizar
+                        // pensar nisso e desenhar uma solução
                         else if (conta_info_album(vai_sumir->pai->esquerda) > 1)
                         {
                             Arv_23_album *maior_esquerda = buscar_maior_album(vai_sumir->pai->esquerda);
-                            
+
                             vai_sumir->info1 = vai_sumir->pai->info2;
                             vai_sumir->pai->info2 = vai_sumir->pai->centro->info1;
                             vai_sumir->pai->centro->info1 = vai_sumir->pai->info1;
@@ -842,14 +841,13 @@ Arv_23_album *remover_album_arv23(Arv_23_album *vai_sumir, char nome_album[])
                         // se nem o centro e a esquerda podem, vamos precisar juntar
                         else
                         {
-                            //adaptar aqui
+                            // adaptar aqui
                             vai_sumir->pai->centro->info2 = vai_sumir->pai->info2;
                             vai_sumir->pai->qtd_infos = 1;
                             Arv_23_album *aux = vai_sumir;
                             vai_sumir->pai->direita = NULL;
                             raiz = vai_sumir->pai;
                             free(aux);
-                            
                         }
                     }
                     else if (vai_sumir->pai->pai != NULL)
@@ -870,7 +868,7 @@ Arv_23_album *remover_album_arv23(Arv_23_album *vai_sumir, char nome_album[])
             // caso não seja info1, entãa é info2
             if (retorno < 0)
             {
-                //olhamos primeiro pro centro
+                // olhamos primeiro pro centro
                 if (conta_info_album(vai_sumir->centro) > 1)
                 {
                     Arv_23_album *maior_centro = buscar_maior_album(vai_sumir->centro);
@@ -893,7 +891,7 @@ Arv_23_album *remover_album_arv23(Arv_23_album *vai_sumir, char nome_album[])
                     vai_sumir->info2 = menor_direita->info1;
                     remover_album_arv23(menor_direita, menor_direita->info1.titulo);
                 }
-                
+
                 // se nem a direita e nem o centro podem ajudar, vamos tentar na esquerda fazendo o movimento de onda
                 else if (conta_info_album(vai_sumir->esquerda) > 1)
                 {
@@ -929,42 +927,42 @@ Arv_23_album *remover_album_arv23(Arv_23_album *vai_sumir, char nome_album[])
                     free(aux);
                 }
             }
-            //caso seja info1
+            // caso seja info1
             else
             {
-                //vamos primeiro ver se o centro pode ajudar
-                //olhamos primeiro pro centro
+                // vamos primeiro ver se o centro pode ajudar
+                // olhamos primeiro pro centro
                 if (conta_info_album(vai_sumir->centro) > 1)
                 {
                     Arv_23_album *menor_centro = buscar_menor_album(vai_sumir->centro);
                     vai_sumir->info1 = menor_centro->info1;
                     remover_album_arv23(menor_centro, menor_centro->info1.titulo);
                 }
-                //se o centro não puder ajudar, vamos olhar a esquerda
+                // se o centro não puder ajudar, vamos olhar a esquerda
                 else if (conta_info_album(vai_sumir->esquerda) > 1)
                 {
-                    Arv_23_album * maior_esquerda = buscar_maior_album(vai_sumir->esquerda);
+                    Arv_23_album *maior_esquerda = buscar_maior_album(vai_sumir->esquerda);
 
-                    if(maior_esquerda->qtd_infos == 2)
+                    if (maior_esquerda->qtd_infos == 2)
                     {
                         vai_sumir->info1 = maior_esquerda->info2;
-                        remover_album_arv23(maior_esquerda,maior_esquerda->info2.titulo);
+                        remover_album_arv23(maior_esquerda, maior_esquerda->info2.titulo);
                     }
                     else
                     {
                         vai_sumir->info1 = maior_esquerda->info1;
-                        remover_album_arv23(maior_esquerda,maior_esquerda->info1.titulo);
+                        remover_album_arv23(maior_esquerda, maior_esquerda->info1.titulo);
                     }
                 }
-                //se nem o centro e nem a direita podem ajudar, vamos ter que recorrer a onda que vem da direita
+                // se nem o centro e nem a direita podem ajudar, vamos ter que recorrer a onda que vem da direita
                 else if (conta_info_album(vai_sumir->direita) > 1)
                 {
                     vai_sumir->info1 = vai_sumir->centro->info1;
                     vai_sumir->centro->info1 = vai_sumir->info2;
                     Arv_23_album *menor_direita = buscar_menor_album(vai_sumir->direita);
                     vai_sumir->info2 = menor_direita->info1;
-                    remover_album_arv23(menor_direita,menor_direita->info1.titulo);
-                }       
+                    remover_album_arv23(menor_direita, menor_direita->info1.titulo);
+                }
                 else if (vai_sumir->pai != NULL)
                 {
                     printf("\nPedir ajuda aos ancestrais");
@@ -980,35 +978,35 @@ Arv_23_album *remover_album_arv23(Arv_23_album *vai_sumir, char nome_album[])
                     Arv_23_album *aux = vai_sumir->direita;
                     vai_sumir->direita = NULL;
                     free(aux);
-                }     
+                }
             }
         }
-        //se só tem uma informação então não tem filhos da direita
+        // se só tem uma informação então não tem filhos da direita
         else
         {
-            //o centro pode pedir fornecer ajuda?
-            if(conta_info_album(vai_sumir->centro)>1)
+            // o centro pode pedir fornecer ajuda?
+            if (conta_info_album(vai_sumir->centro) > 1)
             {
                 Arv_23_album *menor_centro = buscar_menor_album(vai_sumir->centro);
                 vai_sumir->info1 = menor_centro->info1;
-                remover_album_arv23(menor_centro,menor_centro->info1.titulo);
+                remover_album_arv23(menor_centro, menor_centro->info1.titulo);
             }
             // se o centro não puder ajudar, procuramos ajuda na esquerda
             else if (conta_info_album(vai_sumir->esquerda) > 1)
             {
                 Arv_23_album *maior_esquerda = buscar_maior_album(vai_sumir->esquerda);
-                if(maior_esquerda->qtd_infos == 2)
+                if (maior_esquerda->qtd_infos == 2)
                 {
                     vai_sumir->info1 = maior_esquerda->info2;
-                    remover_album_arv23(maior_esquerda,maior_esquerda->info2.titulo);
+                    remover_album_arv23(maior_esquerda, maior_esquerda->info2.titulo);
                 }
                 else
                 {
                     vai_sumir->info1 = maior_esquerda->info1;
-                    remover_album_arv23(maior_esquerda,maior_esquerda->info1.titulo);    
+                    remover_album_arv23(maior_esquerda, maior_esquerda->info1.titulo);
                 }
             }
-            //se nem o centro nem a esquerda podem ajudar, então vamos remover e juntar
+            // se nem o centro nem a esquerda podem ajudar, então vamos remover e juntar
             else
             {
                 vai_sumir->info1 = vai_sumir->esquerda->info1;
@@ -1032,4 +1030,36 @@ Arv_23_album *remover_album_arv23(Arv_23_album *vai_sumir, char nome_album[])
     }
 
     return raiz;
+}
+
+/*
+Mostra todos os dados de um album
+
+Args:
+    album::Album*: Referência do album que será mostrado
+
+Return:
+    None
+
+*/
+void mostrar_album(Album *album)
+{
+    if (album != NULL)
+    {
+        printf("\n\nALBUM:\n\tTITULO: %s\n\tANO: %d\n\tTOTAL DE MUSICAS: %d\n", album->titulo, album->ano, album->qtd_musicas);
+        mostar_todas_musicas(album->musicas);
+    }
+}
+
+void mostrar_tudo_album(Arv_23_album *raiz)
+{
+    if(raiz !=NULL)
+    {
+        mostrar_tudo_album(raiz->esquerda);
+        mostrar_album(&raiz->info1);
+        if(raiz->qtd_infos == 2)
+            mostrar_album(&raiz->info2);
+        mostrar_tudo_album(raiz->centro);
+        mostrar_tudo_album(raiz->direita);
+    }
 }
