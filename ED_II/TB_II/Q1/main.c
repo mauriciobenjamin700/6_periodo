@@ -54,7 +54,7 @@ int main(void)
             scanf("%[^\n]", estilo_artista);
 
             preencher_artista(&artista, nome_artista, tipo_artista, estilo_artista);
-            no_artista = cria_no_artista(VERMELHO, artista);
+            no_artista = cria_no_artista(artista);
 
             if (no_artista != NULL)
             {

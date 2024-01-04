@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include "artista.h"
 #include "album.c"
 
 #define NOME 50
@@ -57,13 +59,13 @@ Return:
     no::RB_artista*: Endereço de um nó RB artista;
 
 */
-RB_artista *cria_no_artista(int cor_artista, Artista artista)
+RB_artista *cria_no_artista(Artista artista)
 {
     RB_artista *no = (RB_artista *)malloc(sizeof(RB_artista));
 
     if (no)
     {
-        no->cor_artista = cor_artista;
+        no->cor_artista = VERMELHO;
         no->artista = artista;
         no->esquerda = NULL;
         no->direita = NULL;
@@ -541,26 +543,7 @@ int remover_album_artista(RB_artista *artista, char titulo_album[])
     return removi;
 }
 
-/*
-Retorna a confirmação sobre o ato de remover um nó
-    1 - Pode
-    0 - Não
 
-Args:
-    no::RB_artista*: Referencia do nó artista que estamos checando a possibilidade de removelo
-
-Return:
-    confirmacao::int: Sinalização de confirmação sobre o ato de remover
-*/
-int pode_remover_artista(RB_artista *no)
-{
-    int confirmacao = 0;
-
-    if(no->artista.num_albuns == 0)
-        confirmacao = 1;
-
-    return confirmacao;
-}
 
 
 /*
@@ -589,18 +572,3 @@ void mostrar_todos_nos_artista_ordenado(RB_artista *artista)
 
 
 
-/*
-Remove todos os artistas de uma arvore
-*/
-void remover_todos_artistas(RB_artista **raiz)
-{
-    if(*raiz != NULL)
-    {
-        remover_todos_artistas(&(*raiz)->esquerda);
-        remover_todos_artistas(&(*raiz)->direita);
-
-        remover_todos_albuns(&(*raiz)->artista.albuns);
-        free(*raiz);
-        
-    }
-}

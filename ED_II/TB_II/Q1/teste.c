@@ -25,7 +25,7 @@ int main(void) {
         printf("\nValor: %s", str);
 
         preencher_artista(&artista, str, str, str); // Ajuste para strings fixas para 'tipo' e 'estilo'
-        no = cria_no_artista(VERMELHO, artista);
+        no = cria_no_artista(artista);
 
         insere_no_artista_ARVRB(&arvore, no);
 
@@ -37,7 +37,7 @@ int main(void) {
 
     media = media / TEST_SIZE;
 
-    printf("\n\nResultado: %.\n\n", media);
+    printf("\n\nResultado: %f\n\n", media);
 
     encerrar_sistema(&arvore);
     return 0;

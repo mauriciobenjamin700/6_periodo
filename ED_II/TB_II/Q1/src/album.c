@@ -576,39 +576,3 @@ int remove_no_album_ARVRB(RB_album **raiz, char titulo_album[])
     return removi;
 }
 
-/*
-Retorna a confirmação sobre o ato de remover um nó
-    1 - Pode
-    0 - Não
-
-Args:
-    no::RB_album*: Referencia do nó album que estamos checando a possibilidade de removelo
-
-Return:
-    confirmacao::int: Sinalização de confirmação sobre o ato de remover
-*/
-int pode_remover_album(RB_album *no)
-{
-    int confirmacao = 0;
-
-    if(no->album.qtd_musicas == 0)
-        confirmacao = 1;
-    
-    return confirmacao;
-}
-
-/*
-Remove todos os albuns de uma arvore e suas musicas
-*/
-void remover_todos_albuns(RB_album **raiz)
-{
-    if(*raiz != NULL)
-    {
-        remover_todos_albuns(&(*raiz)->esquerda);
-        remover_todos_albuns(&(*raiz)->direita);
-
-        remover_todas_musicas(&(*raiz)->album.musicas);
-        free(*raiz);
-        
-    }
-}
