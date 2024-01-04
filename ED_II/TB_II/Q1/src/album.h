@@ -28,8 +28,7 @@ RB_album *buscar_no_RB_album(RB_album *raiz,char titulo_buscado[]);
 RB_album *remove_no_album(RB_album *raiz, char titulo_album[]);
 void troca_cor_raiz_RB_album(RB_album *raiz);
 int remove_no_album_ARVRB(RB_album **raiz, char titulo_album[]);
-int pode_remover_album(RB_album *no);
-void remover_todos_albuns(RB_album **raiz);
+
 
 
 #endif 

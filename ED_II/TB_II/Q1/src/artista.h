@@ -6,7 +6,7 @@ typedef struct Artista Artista;
 typedef struct RB_artista RB_artista;
 
 void preencher_artista(Artista *artista, char nome[], char tipo[], char estilo[]);
-RB_artista *cria_no_artista(int cor_artista, Artista artista);
+RB_artista *cria_no_artista(Artista artista);
 void trocar_cor_artista(RB_artista *no);
 void troca_cor_raiz_RB_artista(RB_artista *raiz);
 int cor_artista(RB_artista *no);
@@ -26,11 +26,9 @@ int remove_no_artista_ARVRB(RB_artista **raiz, char nome_artista[]);
 int cadastrar_album_artista(RB_artista *artista, RB_album *album);
 RB_album * buscar_album_artista(RB_artista *artista, char titulo_album[]);
 int remover_album_artista(RB_artista *artista, char titulo_album[]);
-int pode_remover_artista(RB_artista *no);
-
 void mostrar_no_artista(RB_artista * artista);
 void mostrar_todos_nos_artista_ordenado(RB_artista *artista);
-void remover_todos_artistas(RB_artista **raiz);
+
 
 
 #endif // ARTISTA_H_INCLUDED

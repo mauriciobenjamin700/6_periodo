@@ -59,7 +59,7 @@ int menu()
     int opc;
 
     printf("\n\n----------GERAL----------\n");
-    printf("| [1] - Artista\n| [2] - Album\n| [3] - Musica\n| [4] - Visualizar ARV RB ALBUM\n| [0] - Sair");
+    printf("| [1] - Artista\n| [2] - Album\n| [3] - Musica\n| [4] - Visualizar ARV RB ARTISTA\n| [0] - Sair");
     printf("\n\n----------GERAL----------\n");
     setbuf(stdin,NULL);
     printf("\nEscolha: ");

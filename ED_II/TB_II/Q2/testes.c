@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include "src/sistema.c"
 
-#define TEST_SIZE 300
-#define DIGIT 3
+#define TEST_SIZE 30
+#define DIGIT 2
 
 int main(void)
 {
@@ -16,8 +16,8 @@ int main(void)
     char buscar[TEST_SIZE][DIGIT];
 
     Artista artista;
-    RB_artista *no;
-    RB_artista *arvore;
+    Artista *no;
+    Arv_23_artista *arvore=NULL;
 
     for (i = 0; i < TEST_SIZE; i++)
     {
@@ -26,16 +26,14 @@ int main(void)
         //snprintf(str, sizeof(str), "%d", i);
         printf("\nValor: %s", str);
         preencher_artista(&artista, str, str, str); // Ajuste para strings fixas para 'tipo' e 'estilo'
-        no = cria_no_artista(artista);
-        insere_no_artista_ARVRB(&arvore, no);
+        arvore = inserir_artista_arv23(arvore,artista);   
     }
 
     for (i = 0; i < TEST_SIZE; i++)
     {
         start = clock();
-        no = busca_no_artista(arvore, buscar[i]);
+        no = buscar_artista(arvore, buscar[i]);
         end = clock();
-
         time = (float)(end - start) / CLOCKS_PER_SEC * 1000.0; // tempo decorrido em milissegundos
         media += time;
     }
@@ -44,6 +42,5 @@ int main(void)
 
     printf("\n\nResultado: %f\n\n", media);
 
-    encerrar_sistema(&arvore);
     return 0;
 }
