@@ -35,7 +35,7 @@ Args:
 Return:
     None
 */
-void preencher_artista(Artista *artista, char nome[NOME], char tipo[TIPO], char estilo[ESTILO])
+void preencher_artista(Artista *artista, char nome[], char tipo[], char estilo[])
 {
     strcpy(artista->nome, nome);
     strcpy(artista->tipo, tipo);
@@ -345,7 +345,7 @@ Args:
 Return:
     artista_buscado::RB_artista*: Referência do artista buscado
 */
-RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[NOME])
+RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[])
 {
     RB_artista *artista_buscado = NULL;
 
@@ -395,7 +395,7 @@ Return:
     raiz::RB_artista: Ponteiro para a nova raiz da arvore após a remoção
 
 */
-RB_artista *remove_no_artista(RB_artista *raiz, char nome_artista[NOME])
+RB_artista *remove_no_artista(RB_artista *raiz, char nome_artista[])
 {
     if(compara_string(nome_artista,raiz->artista.nome) < 0)
     {
@@ -451,7 +451,7 @@ Args:
 Return:
     removi::int: Sinalização baseada no resultado da operação de remoção
 */
-int remove_no_artista_ARVRB(RB_artista **raiz, char nome_artista[NOME])
+int remove_no_artista_ARVRB(RB_artista **raiz, char nome_artista[])
 {
     int removi = 0;
 
@@ -507,7 +507,7 @@ Args:
 Return:
     no_album_buscado::RB_album*: Referência do album buscado
 */
-RB_album * buscar_album_artista(RB_artista *artista, char titulo_album[TAM_TITULO])
+RB_album * buscar_album_artista(RB_artista *artista, char titulo_album[])
 {
     RB_album *no_album_buscado = NULL;
 
@@ -532,7 +532,7 @@ Args:
 Return:
     removi::int: Sinalização baseada no resultado da operação de remoção
 */
-int remover_album_artista(RB_artista *artista, char titulo_album[TAM_TITULO])
+int remover_album_artista(RB_artista *artista, char titulo_album[])
 {
     int removi =  remove_no_album_ARVRB(&(artista->artista.albuns),titulo_album);
     if(removi==1)

@@ -24,7 +24,6 @@ typedef struct Arv_23_artista
     struct Arv_23_artista *esquerda;
     struct Arv_23_artista *centro;
     struct Arv_23_artista *direita;
-
 } Arv_23_artista;
 
 /*
@@ -160,7 +159,21 @@ void ordenar_artistas(Artista *a1, Artista *a2, Artista *a3)
     }
 }
 
-void quebra_no_artista(Arv_23_artista **no, Artista artista, Arv_23_artista *novo_no, Artista *vai_subir, Arv_23_artista *esquerda_novo_no, Arv_23_artista *direita_novo_no)
+/*
+Quebra um nó que tem 2 informações e recebeu mais uma, de forma a que a menor informação fique no nó, a informação do meio suba para o nó pai e a maior informação será alocada em outro nó
+
+Args:
+    no::Arv_23_artista**: Referência do ponteiro que guarda o nó que será quebrado
+    artista::Artista: Estrutura do tipo Artista que deveria ter sido inserida caso tivesse espaço
+    novo_no::Arv_23_artista*: Novo nó da arvore que será destinado a guardar a maior informação resultante da quebra nó
+    vai_subir::Artista*: Ponteiro para a estrutura Artista que irá subir para o nó pai
+    esquerda_novo_no::Arv_23_artista*: Endereço do nó que será a esquerda do novo nó
+    centro_novo_no::Arv_23_artista*: Endereço do nó que será o centro do novo nó
+
+Return:
+    None
+*/
+void quebra_no_artista(Arv_23_artista **no, Artista artista, Arv_23_artista *novo_no, Artista *vai_subir, Arv_23_artista *esquerda_novo_no, Arv_23_artista *centro_novo_no)
 {
 
     Artista temp[3];
@@ -179,11 +192,31 @@ void quebra_no_artista(Arv_23_artista **no, Artista artista, Arv_23_artista *nov
     novo_no->qtd_infos = 1;
 
     novo_no->esquerda = esquerda_novo_no;
-    novo_no->centro = direita_novo_no;
+    novo_no->centro = centro_novo_no;
 
     *vai_subir = (*no)->info2;
 }
 
+/*
+Após realizar a quebra do nó, o dado do meio deve subir para o nó pai, entretanto nem sempre isso é possivel já que existem 3 casos comuns para esse problema
+    1 - Não existir um pai
+        a - Significa que nó que estamos é a raiz da arvore, então precisamos criar um novo nó, para que seja a raiza da arvore e a antiga raiz e o nó alocado se tornem filhos dele
+    2 - Existir um pai com uma informação
+        a - Então apenas subimos a informação para ele, adicionando na posição correta e a direita desse pai se torna o novo nó
+    3 - Existir um pai com duas informações
+        a - Nesse caso devemos quebrar o nó pai e continuar escalando a arvore até que consigamos encontrar espaço ou a raiz da arvore seja mudada
+
+
+Args:
+    pai::Arv_23_artista**: Referência do ponteiro que guarda o nó pai
+    raiz::Arv_23_artista**: Referência do ponteiro que guarda o nó que sofreu a quebra nó
+    sobe::Artista: Estrutura do tipo Artista que acabou subindo devido a quebra nó
+    novo_no::Arv_23_artista*: Novo nó da arvore que será destinado a guardar a maior informação resultante da quebra nó
+
+Return:
+    head::Arv_23_artista*: Referência do nó raiz da árvore
+
+*/
 Arv_23_artista *sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz, Artista sobe, Arv_23_artista *novo_no)
 {
     Arv_23_artista *head = NULL;
@@ -203,7 +236,7 @@ Arv_23_artista *sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz, Artist
             (*raiz)->direita = NULL;
             novo_no->pai = padrasto;
 
-            head = padrasto; // questionavel
+            head = padrasto; 
         }
         else
             printf("\nFALHA AO ALOCAR MEMORIA");
@@ -245,7 +278,6 @@ Arv_23_artista *sobe_artista(Arv_23_artista **pai, Arv_23_artista **raiz, Artist
             Artista sobe_quebra_dupla;
             novo_no->pai = aux;
             quebra_no_artista(&(*pai), sobe, aux, &sobe_quebra_dupla, *raiz, novo_no);
-            // teste
             (*pai)->direita = NULL;
 
             head = sobe_artista(&(*pai)->pai, &(*pai), sobe_quebra_dupla, aux);
@@ -263,12 +295,13 @@ Args:
     Artista::Artista: Estrutura artista que será inserida na arvore se possivel
 
 Return:
-    aux::Arv_23_artista*: Ponteiro para a raiz da arvore.
+    aux::Arv_23_artista*: Referência para a raiz da arvore.
 */
 Arv_23_artista *inserir_artista_arv23(Arv_23_artista *raiz, Artista artista)
 {
     Arv_23_artista *aux = raiz;
-
+    
+    //se a raiz da árvore é nula, então não existe arvore, basta criar um nó e definilo como raiz
     if (aux == NULL)
     {
         aux = cria_no_artista();
@@ -347,6 +380,7 @@ Arv_23_artista *inserir_artista_arv23(Arv_23_artista *raiz, Artista artista)
     return aux;
 }
 
+//Visualiza o nó artista 
 void mostrar_no_artista(Arv_23_artista *no)
 {
     if (no != NULL)
@@ -357,6 +391,9 @@ void mostrar_no_artista(Arv_23_artista *no)
     }
 }
 
+/*
+Função usada para visualizar a estrutura da arvore artista e checar se a mesma segue os padrões da arvore 2-3
+*/
 void mostrar_arv_artistas(Arv_23_artista *raiz)
 {
     if (raiz != NULL)
@@ -368,6 +405,19 @@ void mostrar_arv_artistas(Arv_23_artista *raiz)
     }
 }
 
+/*
+Busca uma estrutura Artista dentro de uma árvore 2-3 de artistas e retorna:
+    NULL - Caso não encontre
+    Artista* - Caso encontre
+
+Args:
+    raiz::Arv_23_artista*: Referência da raiz que guarda os artistas
+    nome_artista::char: Nome do artista que estamos buscando
+
+Return:
+    artista_buscado::Artista*: Resultado da busca
+
+*/
 Artista *buscar_artista(Arv_23_artista *raiz, char nome_artista[])
 {
     Artista *artista_buscado = NULL;
@@ -410,6 +460,19 @@ Artista *buscar_artista(Arv_23_artista *raiz, char nome_artista[])
     return artista_buscado;
 }
 
+/*
+Busca uma nó artista dentro de uma árvore 2-3 de artistas e retorna:
+    NULL - Caso não encontre
+    Arv_23_artista* - Caso encontre
+
+Args:
+    raiz::Arv_23_artista*: Referência da raiz que guarda os artistas
+    nome_artista::char: Nome do artista que estamos buscando
+
+Return:
+    artista_buscado::Arv_23_artista*: Resultado da busca
+
+*/
 Arv_23_artista *buscar_no_artista(Arv_23_artista *raiz, char nome_artista[])
 {
     Arv_23_artista *artista_buscado = NULL;
@@ -437,6 +500,8 @@ Arv_23_artista *buscar_no_artista(Arv_23_artista *raiz, char nome_artista[])
 
                 else if (retorno < 0)
                     artista_buscado = buscar_no_artista(raiz->direita, nome_artista);
+                else
+                    artista_buscado = buscar_no_artista(raiz->centro, nome_artista);
             }
             // já que só temos info1 e ela é menor, vamos pro centro
             else
@@ -450,6 +515,15 @@ Arv_23_artista *buscar_no_artista(Arv_23_artista *raiz, char nome_artista[])
     return artista_buscado;
 }
 
+/*
+Conta a quantidade de informações proximas a um nó, sendo elas seus valores, o de seus descendentes
+
+Args:
+    raiz::Arv_23_artista*: Nó que será acessado para realizar a contagem das informações
+
+Return:
+    total::int: total de informações encontradas
+*/
 int conta_info_artista(Arv_23_artista *raiz)
 {
     int total = 0;
@@ -474,6 +548,16 @@ int conta_info_artista(Arv_23_artista *raiz)
     return total;
 }
 
+/*
+Busca o nó que contem a menor informação dentro da árvore
+
+Args:
+    raiz::Arv_23_artista*: Ponto de partida para realizar a busca
+
+Return:
+    menor::Arv_23_artista*: Menor nó encontrado
+
+*/
 Arv_23_artista *buscar_menor_artista(Arv_23_artista *raiz)
 {
     Arv_23_artista *menor = raiz;
@@ -484,6 +568,16 @@ Arv_23_artista *buscar_menor_artista(Arv_23_artista *raiz)
     return menor;
 }
 
+/*
+Busca o nó que contem a maior informação dentro da árvore
+
+Args:
+    raiz::Arv_23_artista*: Ponto de partida para realizar a busca
+
+Return:
+    maior::Arv_23_artista*: maior nó encontrado
+    
+*/
 Arv_23_artista *buscar_maior_artista(Arv_23_artista *raiz)
 {
     Arv_23_artista *maior = raiz;
@@ -501,6 +595,12 @@ Busca saber se o nó atual é filho da esquerda, centro ou direita de um nó pai
     -1 para esquerda
      0 para centro
      1 para direita
+
+Args:
+    no::Arv_23_artista*: Ponto de partida da consulta
+
+Return:
+    sinal::int: Sinalização referente a localização
 */
 int onde_estou_artista(Arv_23_artista *no)
 {
@@ -516,6 +616,16 @@ int onde_estou_artista(Arv_23_artista *no)
     return sinal;
 }
 
+/*
+Remove um Artista de um nó passado de uma árvore
+
+Args:
+    vai_sumir::Arv_23_artista*: Referência do nó que terá um artista removido
+    nome_artista::char: Nome do artista que será removido
+
+Return:
+    raiz::Arv_23_artista*: Referência da raiz da arvore resultante da remoção do valor passado
+*/
 Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artista[])
 {
     Arv_23_artista *raiz = vai_sumir;
@@ -545,9 +655,8 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
             // ele é a raiz da arvore?   se sim então removemos o nó e nossa arvore fica nula
             if (vai_sumir->pai == NULL)
             {
-                Arv_23_artista *aux = vai_sumir;
-                vai_sumir = NULL;
-                free(aux);
+                raiz = NULL;
+                free(vai_sumir);
             }
             // se não for a raiz, precisamos checar se o pai tem 3 ou mais informações nos irmãos proximos para pedir ajuda
             else
@@ -599,21 +708,21 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                     }
                     else if (vai_sumir->pai->pai != NULL)
                     {
-                            printf("\nPedir help do avo");
+                        printf("\nPedir help ds ancestrais");
                     }
-                        // caso não tenha 3 informações nas proximidades, vamos precisar juntar em um unico bloco
+                    // caso não tenha 3 informações nas proximidades, vamos precisar juntar em um unico bloco
                     else
-                        {
-                            vai_sumir->info1 = vai_sumir->pai->info1;
-                            vai_sumir->info2 = vai_sumir->pai->centro->info1;
-                            free(vai_sumir->pai->centro);
-                            Arv_23_artista *aux = vai_sumir->pai;
-                            vai_sumir->pai = NULL;
-                            free(aux);
-                            vai_sumir->qtd_infos = 2;
-                        }
+                    {
+                        vai_sumir->info1 = vai_sumir->pai->info1;
+                        vai_sumir->info2 = vai_sumir->pai->centro->info1;
+                        free(vai_sumir->pai->centro);
+                        Arv_23_artista *aux = vai_sumir->pai;
+                        vai_sumir->pai = NULL;
+                        free(aux);
+                        vai_sumir->qtd_infos = 2;
+                    }
                 }
-                    // se estou no centro, preciso olhar para direita e/ou para esquerda
+                // se estou no centro, preciso olhar para direita e/ou para esquerda
                 else if (onde_estou == 0)
                 {
                     int infos_proximas = conta_info_artista(vai_sumir->pai);
@@ -663,7 +772,7 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                     }
                     else if (vai_sumir->pai->pai != NULL)
                     {
-                            printf("\nPedir help do avo");
+                        printf("\nPedir help do avo");
                     }
                     else
                     {
@@ -672,7 +781,7 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         vai_sumir->pai->info2 = vai_sumir->pai->info1;
                         vai_sumir->pai->info1 = vai_sumir->pai->esquerda->info1;
                         vai_sumir->pai->qtd_infos = 2;
-                        Arv_23_artista *aux1,*aux2;
+                        Arv_23_artista *aux1, *aux2;
                         aux1 = vai_sumir->pai->esquerda;
                         aux2 = vai_sumir;
                         vai_sumir->pai->esquerda = NULL;
@@ -681,7 +790,7 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         free(aux2);
                     }
                 }
-                //se estou na direita, vou olhar para o centro e para a esquerda
+                // se estou na direita, vou olhar para o centro e para a esquerda
                 else if (onde_estou == 1)
                 {
                     int infos_proximas = conta_info_artista(vai_sumir->pai);
@@ -691,10 +800,10 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         // o centro pode fornecer ajuda?
                         if (conta_info_artista(vai_sumir->pai->centro) > 1)
                         {
-                            //vamos buscar o maior do centro e subir para o pai, e pegar a info2 do pai e descer
+                            // vamos buscar o maior do centro e subir para o pai, e pegar a info2 do pai e descer
                             Arv_23_artista *maior_centro = buscar_maior_artista(vai_sumir->pai->centro);
                             vai_sumir->info1 = vai_sumir->pai->info2;
-                            if(maior_centro->qtd_infos == 2)
+                            if (maior_centro->qtd_infos == 2)
                             {
                                 vai_sumir->pai->info2 = maior_centro->info2;
                                 raiz = remover_artista_arv23(maior_centro, maior_centro->info2.nome);
@@ -707,7 +816,8 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                         }
                         // se o centro não pode fornecer ajuda, vamos procurar na esquerda, só que dessa vez será o maior
                         // levando em conta que o pai tem 2 informações, vamos realizar o movimento de "onda para reposicionar os valores"
-                        
+                        //a onda pegando emprestado da direita não deu pra vizualizar 
+                        //pensar nisso e desenhar uma solução
                         else if (conta_info_artista(vai_sumir->pai->esquerda) > 1)
                         {
                             Arv_23_artista *maior_esquerda = buscar_maior_artista(vai_sumir->pai->esquerda);
@@ -745,13 +855,176 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
                     }
                     else if (vai_sumir->pai->pai != NULL)
                     {
-                            printf("\nPedir help do avo");
+                        printf("\nPedir help do avo");
                     }
                 }
             }
         }
     }
+    // se não for folha vamos precisar olhar para os filhos e para as infos que vamos remover
+    else
+    {
+        if (vai_sumir->qtd_infos == 2)
+        {
+            int retorno = compara_string(vai_sumir->info1.nome, nome_artista);
 
+            // caso não seja info1, entãa é info2
+            if (retorno < 0)
+            {
+                //olhamos primeiro pro centro
+                if (conta_info_artista(vai_sumir->centro) > 1)
+                {
+                    Arv_23_artista *maior_centro = buscar_maior_artista(vai_sumir->centro);
+
+                    if (maior_centro->qtd_infos == 2)
+                    {
+                        vai_sumir->info2 = maior_centro->info2;
+                        remover_artista_arv23(maior_centro, maior_centro->info2.nome);
+                    }
+                    else
+                    {
+                        vai_sumir->info2 = maior_centro->info1;
+                        remover_artista_arv23(maior_centro, maior_centro->info1.nome);
+                    }
+                }
+                // nesse caso vamos a direita da arvore tenter pedir ajuda
+                else if (conta_info_artista(vai_sumir->direita) > 1)
+                {
+                    Arv_23_artista *menor_direita = buscar_menor_artista(vai_sumir->direita);
+                    vai_sumir->info2 = menor_direita->info1;
+                    remover_artista_arv23(menor_direita, menor_direita->info1.nome);
+                }
+                
+                // se nem a direita e nem o centro podem ajudar, vamos tentar na esquerda fazendo o movimento de onda
+                else if (conta_info_artista(vai_sumir->esquerda) > 1)
+                {
+                    Arv_23_artista *maior_esquerda = buscar_maior_artista(vai_sumir->esquerda);
+
+                    if (maior_esquerda->qtd_infos == 2)
+                    {
+                        vai_sumir->info2 = vai_sumir->centro->info1;
+                        vai_sumir->centro->info1 = vai_sumir->info1;
+                        vai_sumir->info1 = maior_esquerda->info2;
+                        remover_artista_arv23(maior_esquerda, maior_esquerda->info2.nome);
+                    }
+                    else
+                    {
+                        vai_sumir->info2 = vai_sumir->centro->info1;
+                        vai_sumir->centro->info1 = vai_sumir->info1;
+                        vai_sumir->info1 = maior_esquerda->info1;
+                        remover_artista_arv23(maior_esquerda, maior_esquerda->info1.nome);
+                    }
+                }
+                else if (vai_sumir->pai != NULL)
+                {
+                    printf("\nPedir ajuda aos ancestrais");
+                }
+                // se nem um dos filhos pode ajudar, vamos precisar quebrar e juntar
+                else
+                {
+                    vai_sumir->qtd_infos = 1;
+                    vai_sumir->centro->info2 = vai_sumir->direita->info1;
+                    vai_sumir->centro->qtd_infos = 2;
+                    Arv_23_artista *aux = vai_sumir->direita;
+                    vai_sumir->direita = NULL;
+                    free(aux);
+                }
+            }
+            //caso seja info1
+            else
+            {
+                //vamos primeiro ver se o centro pode ajudar
+                //olhamos primeiro pro centro
+                if (conta_info_artista(vai_sumir->centro) > 1)
+                {
+                    Arv_23_artista *menor_centro = buscar_menor_artista(vai_sumir->centro);
+                    vai_sumir->info1 = menor_centro->info1;
+                    remover_artista_arv23(menor_centro, menor_centro->info1.nome);
+                }
+                //se o centro não puder ajudar, vamos olhar a esquerda
+                else if (conta_info_artista(vai_sumir->esquerda) > 1)
+                {
+                    Arv_23_artista * maior_esquerda = buscar_maior_artista(vai_sumir->esquerda);
+
+                    if(maior_esquerda->qtd_infos == 2)
+                    {
+                        vai_sumir->info1 = maior_esquerda->info2;
+                        remover_artista_arv23(maior_esquerda,maior_esquerda->info2.nome);
+                    }
+                    else
+                    {
+                        vai_sumir->info1 = maior_esquerda->info1;
+                        remover_artista_arv23(maior_esquerda,maior_esquerda->info1.nome);
+                    }
+                }
+                //se nem o centro e nem a direita podem ajudar, vamos ter que recorrer a onda que vem da direita
+                else if (conta_info_artista(vai_sumir->direita) > 1)
+                {
+                    vai_sumir->info1 = vai_sumir->centro->info1;
+                    vai_sumir->centro->info1 = vai_sumir->info2;
+                    Arv_23_artista *menor_direita = buscar_menor_artista(vai_sumir->direita);
+                    vai_sumir->info2 = menor_direita->info1;
+                    remover_artista_arv23(menor_direita,menor_direita->info1.nome);
+                }       
+                else if (vai_sumir->pai != NULL)
+                {
+                    printf("\nPedir ajuda aos ancestrais");
+                }
+                // se nem um dos filhos pode ajudar, vamos precisar quebrar e juntar
+                else
+                {
+                    vai_sumir->qtd_infos = 1;
+                    vai_sumir->esquerda->info2 = vai_sumir->centro->info1;
+                    vai_sumir->esquerda->qtd_infos = 2;
+                    vai_sumir->info1 = vai_sumir->info2;
+                    vai_sumir->centro->info1 = vai_sumir->direita->info1;
+                    Arv_23_artista *aux = vai_sumir->direita;
+                    vai_sumir->direita = NULL;
+                    free(aux);
+                }     
+            }
+        }
+        //se só tem uma informação então não tem filhos da direita
+        else
+        {
+            //o centro pode pedir fornecer ajuda?
+            if(conta_info_artista(vai_sumir->centro)>1)
+            {
+                Arv_23_artista *menor_centro = buscar_menor_artista(vai_sumir->centro);
+                vai_sumir->info1 = menor_centro->info1;
+                remover_artista_arv23(menor_centro,menor_centro->info1.nome);
+            }
+            // se o centro não puder ajudar, procuramos ajuda na esquerda
+            else if (conta_info_artista(vai_sumir->esquerda) > 1)
+            {
+                Arv_23_artista *maior_esquerda = buscar_maior_artista(vai_sumir->esquerda);
+                if(maior_esquerda->qtd_infos == 2)
+                {
+                    vai_sumir->info1 = maior_esquerda->info2;
+                    remover_artista_arv23(maior_esquerda,maior_esquerda->info2.nome);
+                }
+                else
+                {
+                    vai_sumir->info1 = maior_esquerda->info1;
+                    remover_artista_arv23(maior_esquerda,maior_esquerda->info1.nome);    
+                }
+            }
+            //se nem o centro nem a esquerda podem ajudar, então vamos remover e juntar
+            else
+            {
+                vai_sumir->info1 = vai_sumir->esquerda->info1;
+                vai_sumir->info2 = vai_sumir->centro->info1;
+                vai_sumir->qtd_infos = 2;
+                Arv_23_artista *esquerda, *centro;
+                esquerda = vai_sumir->esquerda;
+                centro = vai_sumir->centro;
+                vai_sumir->esquerda = NULL;
+                vai_sumir->centro = NULL;
+                free(esquerda);
+                free(centro);
+            }
+        }
+    }
 
     if (raiz != NULL)
     {
@@ -760,4 +1033,22 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
     }
 
     return raiz;
+}
+
+/*
+Mostra os dados de um artista acessado via referência
+
+Args:
+    artista::Artista*: Referência de um artista
+
+Return:
+    None
+*/
+void mostrar_artista(Artista *artista)
+{
+    printf("\n--------DADOS DO ARTISTA-------\n");
+    printf("\nNOME: %s\nTIPO: %s\nESTILO: %s\nTOTAL DE ALBUNS: %d\n ",artista->nome,artista->tipo,artista->estilo,artista->num_albuns);
+
+    mostrar_tudo_album((artista->albuns));
+    printf("\n------------------------------");
 }

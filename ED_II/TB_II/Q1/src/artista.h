@@ -2,15 +2,10 @@
 #define ARTISTA_H_INCLUDED
 #include "album.h"
 
-#define NOME 50
-#define TIPO 20
-#define ESTILO 20
-
-
 typedef struct Artista Artista;
 typedef struct RB_artista RB_artista;
 
-void preencher_artista(Artista *artista, char nome[NOME], char tipo[TIPO], char estilo[ESTILO]);
+void preencher_artista(Artista *artista, char nome[], char tipo[], char estilo[]);
 RB_artista *cria_no_artista(int cor_artista, Artista artista);
 void trocar_cor_artista(RB_artista *no);
 void troca_cor_raiz_RB_artista(RB_artista *raiz);
@@ -24,13 +19,13 @@ RB_artista * remover_menor_artista(RB_artista *no);
 RB_artista *procura_menor_artista(RB_artista *no);
 int insere_no_artista(RB_artista **raiz, RB_artista *novo_no);
 int insere_no_artista_ARVRB(RB_artista **raiz, RB_artista *novo_nov);
-RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[NOME]);
+RB_artista *busca_no_artista(RB_artista *raiz, char nome_artista[]);
 void mostrar_artista(Artista artista);
-RB_artista *remove_no_artista(RB_artista *raiz, char nome_artista[NOME]);
-int remove_no_artista_ARVRB(RB_artista **raiz, char nome_artista[NOME]);
+RB_artista *remove_no_artista(RB_artista *raiz, char nome_artista[]);
+int remove_no_artista_ARVRB(RB_artista **raiz, char nome_artista[]);
 int cadastrar_album_artista(RB_artista *artista, RB_album *album);
-RB_album * buscar_album_artista(RB_artista *artista, char titulo_album[TAM_TITULO]);
-int remover_album_artista(RB_artista *artista, char titulo_album[TAM_TITULO]);
+RB_album * buscar_album_artista(RB_artista *artista, char titulo_album[]);
+int remover_album_artista(RB_artista *artista, char titulo_album[]);
 int pode_remover_artista(RB_artista *no);
 
 void mostrar_no_artista(RB_artista * artista);
