@@ -93,16 +93,35 @@ int main(void)
             scanf("%[^\n]", titulo);
 
             no_artista = buscar_no_artista(arvore_artista, titulo);
+            
 
             if (no_artista != NULL)
+            {
+                ponteiro_artista = buscar_artista(no_artista,titulo);
                 if (pode_remover_artista(ponteiro_artista))
                 {
                     arvore_artista = remover_artista_arv23(no_artista, titulo);
                     printf("\nREMOVIDO COM SUCESSO");
                 }
                 else
+                {
                     printf("\nPRIMEIRO DEVE REMOVER OS ALBUNS PARA DEPOIS REMOVER O ARTISTA");
+                    printf("\n\nDESEJA REMOVER A FORÇA PERDENDO TODOS OS ALBUNS E MUSICAS??\n[1] - SIM\n[2] - NAO\nRESPOSTA: ");
+                    setbuf(stdin,NULL);
+                    scanf("%d", &retorno);
 
+                    if (retorno == 1)
+                    {
+                        remover_todos_albuns(&ponteiro_artista->albuns);
+                        arvore_artista = remover_artista_arv23(no_artista, titulo);
+                        printf("\nREMOVIDO COM SUCESSO");
+
+                    }
+                    else
+                        printf("\nOPERACAO CANCELADA, OS DADOS NAO FORAM ALTERADOS");
+                }
+                    
+            }
             else
                 printf("\nARTISTA NAO ENCONTRADO");
             break;
@@ -189,8 +208,22 @@ int main(void)
                         printf("\nALBUM REMOVIDO COM SUCESSO");
                     }
                     else
+                    {
                         printf("\nPARA REMOVER O ALBUM, PRIMEIRO REMOVA AS MUSICAS");
-                }
+                        printf("\n\nDESEJA REMOVER A FORÇA PERDENDO TODOS AS MUSICAS??\n[1] - SIM\n[2] - NAO\nRESPOSTA: ");
+                        setbuf(stdin,NULL);
+                        scanf("%d", &retorno);
+
+                        if (retorno == 1)
+                        {
+                            remover_todas_musicas(&ponteiro_album->musicas);
+                            remover_album_artista(ponteiro_artista,titulo);
+                            printf("\nREMOVIDO COM SUCESSO");
+
+                        }
+                        else
+                            printf("\nOPERACAO CANCELADA, OS DADOS NAO FORAM ALTERADOS");
+                }   }
                 else
                     printf("\nALBUM NAO ENCONTRADO!");
             }
