@@ -378,7 +378,7 @@ Arv_23_album *inserir_album_arv23(Arv_23_album *raiz, Album album)
     return aux;
 }
 
-// Visualiza o nó album
+// Visualiza o nó album (Usada para testes)
 void mostrar_no_album(Arv_23_album *no)
 {
     if (no != NULL)
@@ -390,7 +390,7 @@ void mostrar_no_album(Arv_23_album *no)
 }
 
 /*
-Função usada para visualizar a estrutura da arvore album e checar se a mesma segue os padrões da arvore 2-3
+Função usada para visualizar a estrutura da arvore album e checar se a mesma segue os padrões da arvore 2-3 (Usada para testes)
 */
 void mostrar_arv_albums(Arv_23_album *raiz)
 {
@@ -1051,6 +1051,15 @@ void mostrar_album(Album *album)
     }
 }
 
+/*
+Mosta todos os albuns de uma arvore 2-3 de albuns
+
+Args:
+    raiz::Arv_23_album*: Referência do nó raiz que será percorrida para visualizar todos os albuns
+
+Return:
+    None
+*/
 void mostrar_tudo_album(Arv_23_album *raiz)
 {
     if(raiz !=NULL)

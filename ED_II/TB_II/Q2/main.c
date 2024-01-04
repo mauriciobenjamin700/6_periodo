@@ -6,25 +6,25 @@ int main(void)
     int opc = 1;
 
     int retorno;
-    char titulo[TAM_TITULO];
+    char titulo[50];
     int ano;
     float duracao;
 
-    char nome_artista[NOME];
-    char tipo_artista[TIPO];
-    char estilo_artista[ESTILO];
+    char nome_artista[50];
+    char tipo_artista[20];
+    char estilo_artista[20];
 
     Artista artista;
-    Artista *ponteiro_artista;
+    Artista *ponteiro_artista=NULL;
 
-    Arv_23_artista *arvore_artista;
-    Arv_23_artista *no_artista;
+    Arv_23_artista *arvore_artista=NULL;
+    Arv_23_artista *no_artista=NULL;
 
     Album album;
-    Album *ponteiro_album;
+    Album *ponteiro_album=NULL;
 
     Musica musica;
-    Musica *ponteiro_musica;
+    Musica *ponteiro_musica=NULL;
 
     while (opc != 0)
     {
@@ -41,7 +41,10 @@ int main(void)
             break;
 
         case 4:
-            //mostrar_todos_nos_artista_ordenado(arvore_artista);
+            if(arvore_artista != NULL)
+                mostrar_arv_artistas(arvore_artista);
+            else
+                printf("\nARVORE NULA AINDA");
             break;
 
         case 11:
@@ -322,5 +325,6 @@ int main(void)
             break;
         }
     }
+
     return 0;
 }

@@ -1035,6 +1035,15 @@ Arv_23_artista *remover_artista_arv23(Arv_23_artista *vai_sumir, char nome_artis
     return raiz;
 }
 
+/*
+Mostra os dados de um artista acessado via referência
+
+Args:
+    artista::Artista*: Referência de um artista
+
+Return:
+    None
+*/
 void mostrar_artista(Artista *artista)
 {
     printf("\n--------DADOS DO ARTISTA-------\n");

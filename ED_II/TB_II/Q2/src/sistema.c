@@ -1,5 +1,17 @@
 #include "artista.c"
+/*
+Insere uma musica em um album e retorna o resultado da operação
+    1 - Sucesso ao adicionar;
+    0 - Falha ao adicionar;
+   -1 - Musica já estava cadastrada.
 
+Args:
+    album::Album*: Referência da estrutura album que irá receber a musica
+    musica::Musica: Estrutura Musica que será adicionada ao album
+
+Return:
+    inseri::int: Resultado da operação
+*/
 int inserir_musica_album(Album *album,Musica musica)
 {
     int inseri = 0;
@@ -12,8 +24,7 @@ int inserir_musica_album(Album *album,Musica musica)
         {
             inseri = adicionar_musica_ordenada(&(album->musicas),&musica);
             album->qtd_musicas+=1;
-        }
-            
+        }      
     }
 
     return inseri;
@@ -44,6 +55,18 @@ int inserir_album_artista(Artista *artista, Album album)
     return inseri;
 }
 
+/*
+Busca a referência de uma estrutura Musica em um album e retorna o resultado da busca
+    NULL - Caso não encontre
+    Musica* - Caso encontre
+
+Args:
+    album::Album*: Referência de um album que terá uma de suas musicas buscadas
+    titulo_musica::char: TItulo da música que estamos buscando
+
+Return:
+    musica_buscada::Musica*: Resultado da busca 
+*/
 Musica * buscar_musica_album(Album *album, char titulo_musica[])
 {
     return buscar_musica(album->musicas,titulo_musica);
@@ -69,12 +92,12 @@ Album * buscar_album_artista(Artista *artista, char titulo_album[])
 }
 
 /*
-Retorna a confirmação sobre o ato de remover um nó
+Retorna a confirmação sobre o ato de remover um album
     1 - Pode
     0 - Não
 
 Args:
-    no::RB_album*: Referencia do nó album que estamos checando a possibilidade de removelo
+    no::Album*: Referencia de uma estrutura album que estamos checando a possibilidade de removelo
 
 Return:
     confirmacao::int: Sinalização de confirmação sobre o ato de remover
@@ -90,12 +113,12 @@ int pode_remover_album(Album *no)
 }
 
 /*
-Retorna a confirmação sobre o ato de remover um nó
+Retorna a confirmação sobre o ato de remover uma estrutura Artista
     1 - Pode
     0 - Não
 
 Args:
-    no::RB_artista*: Referencia do nó artista que estamos checando a possibilidade de removelo
+    no::Artista*: Referencia de uma estrutura Artista que estamos checando a possibilidade de removelo
 
 Return:
     confirmacao::int: Sinalização de confirmação sobre o ato de remover
@@ -130,6 +153,18 @@ int remover_musica_album(Album *album, char titulo_musica[])
     return sinal;
 }
 
+/*
+Remove um album de um artista e retorna o resultado do processo
+    0 - Fracasso
+    1 - Sucesso
+
+Args:
+    artista::Artista*: Referência de uma estrutura Artista
+    titulo_musica::char: Titulo do album que estamos querendo remover
+
+Return:
+    sinal::int: Sinalização referente ao resultado da operação 
+*/
 int remover_album_artista(Artista *artista,char titulo_album[])
 {
     int sinal = 0;
@@ -143,4 +178,52 @@ int remover_album_artista(Artista *artista,char titulo_album[])
     }
 
     return sinal;
+}
+
+
+/*
+Remove todos os albuns de uma arvore e suas musicas
+*/
+void remover_todos_albuns(Arv_23_album **raiz)
+{
+    if(*raiz != NULL)
+    {
+        remover_todos_albuns(&(*raiz)->esquerda);
+        remover_todos_albuns(&(*raiz)->centro);
+        remover_todos_albuns(&(*raiz)->direita);
+        
+        if((*raiz)->qtd_infos == 2)
+        {
+            remover_todas_musicas(&(*raiz)->info1.musicas);
+            remover_todas_musicas(&(*raiz)->info2.musicas);
+        }
+        else
+            remover_todas_musicas(&(*raiz)->info1.musicas);
+        
+        free(*raiz);
+        
+    }
+}
+
+/*
+Remove todos os artistas de uma arvore 2-3
+*/
+void remover_todos_artistas(Arv_23_artista **raiz)
+{
+    if(*raiz != NULL)
+    {
+        remover_todos_artistas(&(*raiz)->esquerda);
+        remover_todos_artistas(&(*raiz)->centro);
+        remover_todos_artistas(&(*raiz)->direita);
+
+        if((*raiz)->qtd_infos == 2)
+        {
+            remover_todos_albuns(&(*raiz)->info1.albuns);
+            remover_todos_albuns(&(*raiz)->info2.albuns);
+        }
+        else
+            remover_todos_albuns(&(*raiz)->info1.albuns);
+        
+        free(*raiz);
+    }
 }

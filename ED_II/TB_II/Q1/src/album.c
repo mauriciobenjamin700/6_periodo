@@ -36,7 +36,7 @@ Args:
 Return:
     None
 */
-void preencher_album(Album *album, char titulo[TAM_TITULO], int ano)
+void preencher_album(Album *album, char titulo[], int ano)
 {
     strcpy(album->titulo, titulo);
     album->ano = ano;
@@ -79,7 +79,7 @@ Return:
     aux::Lista_musicas*: Apontamento para o nó da musica buscada em casa de sucesso na busca ou NULL caso a musica não seja encontrada
 
 */
-Lista_musicas * buscar_musica_no_album(RB_album *album,char titulo[TAM_TITULO])
+Lista_musicas * buscar_musica_no_album(RB_album *album,char titulo[])
 {
 
     return buscar_no_musica(album->album.musicas,titulo);
@@ -99,7 +99,7 @@ Args:
 Return:
     sinal::int: Sinalização referente ao resultado da operação 
 */
-int remover_musica_album(Album *album, char titulo[TAM_TITULO])
+int remover_musica_album(Album *album, char titulo[])
 {
     int removi = remover_musica(&(album->musicas), titulo);
     if (removi)
@@ -346,7 +346,7 @@ Args:
 Return:
     no::RB_album*: No criado pela função ou NULL em caso de falha
 */
-RB_album *cria_no_album(char titulo[TAM_TITULO], int ano)
+RB_album *cria_no_album(char titulo[], int ano)
 {
     RB_album *no;
     no = (RB_album *)malloc(sizeof(RB_album));
@@ -456,7 +456,7 @@ Return:
     raiz::RB_album*: Ponteiro para o nó buscado caso encontre, caso falhe retorna NULL
 
 */
-RB_album *buscar_no_RB_album(RB_album *raiz,char titulo_buscado[TAM_TITULO])
+RB_album *buscar_no_RB_album(RB_album *raiz,char titulo_buscado[])
 {
     RB_album *no_buscado = NULL;
 
@@ -486,7 +486,7 @@ Return:
     raiz::RB_album: Ponteiro para a nova raiz da arvore após a remoção
 
 */
-RB_album *remove_no_album(RB_album *raiz, char titulo_album[TAM_TITULO])
+RB_album *remove_no_album(RB_album *raiz, char titulo_album[])
 {
     if(compara_string(titulo_album,raiz->album.titulo) < 0)
     {
@@ -559,7 +559,7 @@ Args:
 Return:
     removi::int: Sinalização baseada no resultado da operação de remoção
 */
-int remove_no_album_ARVRB(RB_album **raiz, char titulo_album[TAM_TITULO])
+int remove_no_album_ARVRB(RB_album **raiz, char titulo_album[])
 {
     int removi = 0;
 
