@@ -37,7 +37,16 @@ typedef struct Quebra
     Info *sobe;
 }Quebra;
 
+/*
+    A função cria um informação com os dados recebidos.
 
+    Args: 
+        int inicio, fim, status
+
+    return:
+        Info info 
+
+*/
 Info *criaInfo(int inicio, int fim, int status)
 {
     Info *info = (Info *)malloc(sizeof(Info)); // Correção na alocação de memória
@@ -49,6 +58,19 @@ Info *criaInfo(int inicio, int fim, int status)
     }
     return info;
 }
+
+
+/*
+    A função cria um nó da arvore.
+
+    Args: 
+        Info info
+        Memoria NoEsq, noCentroEsq
+
+    return:
+        Memoria no 
+
+*/
 Memoria *criaNo(Info *info, Memoria *NoEsq, Memoria *noCentroEsq)
 {
     Memoria *no = (Memoria *)malloc(sizeof(Memoria));
@@ -62,6 +84,17 @@ Memoria *criaNo(Info *info, Memoria *NoEsq, Memoria *noCentroEsq)
     return no;
 }
 
+/*
+    A função verifica se o no recebido é folha
+    Caso seja folha retorna 1 caso contrario retorna 0.
+
+    Args: 
+        Memoria no
+
+    return:
+        int status 
+
+*/
 int ehFolha(Memoria *no)
 {
     int status;
@@ -72,7 +105,20 @@ int ehFolha(Memoria *no)
     return status;
 }
 
-void adicionaNo(Memoria **No, Info *info, Memoria *filho)
+/*
+    A função adicionaInfo insere a uma informação na arvore
+    Em caso da informação ser do mesmo status que sua anterior as informações se unem
+    e o fim da informação anterior vai receber o fim da nova informação.
+
+    Args: 
+        Memoria No, filho
+        Info info
+
+    return:
+        none 
+
+*/
+void adicionaInfo(Memoria **No, Info *info, Memoria *filho)
 {
     if ((*No)->numKeys == 1)
     {
@@ -171,6 +217,20 @@ void adicionaNo(Memoria **No, Info *info, Memoria *filho)
     }
 }
 
+
+/*
+    A função é chamada quando todas as informações do nó foram preenchidas
+    ela verifica quais as maiores informações e as unem em um novo nó
+    e pega os dados da informação mediana retornando uma estrutura 
+    que armazena esses dois dados
+    Args: 
+        Memoria raiz, filho
+        Info info
+
+    return:
+        Quebra quebrou 
+
+*/
 Quebra quebraNo(Memoria **raiz, Info *info, Memoria *filho)
 {
     Memoria *maiorNo;
@@ -237,7 +297,20 @@ Quebra quebraNo(Memoria **raiz, Info *info, Memoria *filho)
     return quebrou;
 }
 
-void inserir45(Memoria **raiz, Memoria *pai, Info **sobe, int inicio, int fim, int status, int *flag, Memoria **maiorNO)
+/*
+    A função inserir45 é responsável por inserir novos elementos 
+    na árvore e realizar o balanceamento da árvore conforme necessário.
+
+    Args: 
+        Memoria raiz, pai
+        Info info
+        int inicio, fim, status, flag
+        
+    return:
+        none
+
+*/
+void inserir45(Memoria **raiz, Memoria *pai, Info **sobe, int inicio, int fim, int status, int *flag)
 {
     if (*raiz == NULL)
     {
@@ -253,7 +326,7 @@ void inserir45(Memoria **raiz, Memoria *pai, Info **sobe, int inicio, int fim, i
             if ((*raiz)->numKeys < 4)
             {
                 Info *nova_info = criaInfo(inicio, fim, status);
-                adicionaNo(raiz, nova_info, NULL);
+                adicionaInfo(raiz, nova_info, NULL);
             }
             else
             {
@@ -263,48 +336,69 @@ void inserir45(Memoria **raiz, Memoria *pai, Info **sobe, int inicio, int fim, i
                 if (!pai)
                 {
                     *raiz = criaNo(resultado.sobe, *raiz, resultado.maior_no);
-                    *maiorNO = NULL;
                 }
                 else
-                {
-                    printf("Estoy loco\n");
+                {   
+                    if(pai->numKeys < 4){
+                        adicionaInfo(&pai, resultado.sobe, resultado.maior_no);
+                    }
+                    else{
+                        resultado = quebraNo(&pai, resultado.sobe, resultado.maior_no);
+                        pai = criaNo(resultado.sobe, pai, resultado.maior_no);
+                    }
                 }
             }
         }
         else
         {
             if (inicio < (*raiz)->info1->inicio)
-                inserir45(&(*raiz)->esquerda, *raiz, sobe, inicio, fim, status, flag, maiorNO);
+                inserir45(&(*raiz)->esquerda, *raiz, sobe, inicio, fim, status, flag);
 
             else if ((*raiz)->numKeys == 1 || ((*raiz)->numKeys <= 2 && inicio < (*raiz)->info2->inicio))
-                inserir45(&((*raiz)->esquerda_centro), *raiz, sobe, inicio, fim, status, flag, maiorNO);
+                inserir45(&((*raiz)->esquerda_centro), *raiz, sobe, inicio, fim, status, flag);
 
             else if (((*raiz)->numKeys == 2) || ((*raiz)->numKeys <= 2 && inicio < (*raiz)->info3->inicio))
-                inserir45(&((*raiz)->centro), *raiz, sobe, inicio, fim, status, flag, maiorNO);
+                inserir45(&((*raiz)->centro), *raiz, sobe, inicio, fim, status, flag);
 
             else
-                inserir45(&((*raiz)->direita), *raiz, sobe, inicio, fim, status, flag, maiorNO);
+                inserir45(&((*raiz)->direita), *raiz, sobe, inicio, fim, status, flag);
 
-            if (*maiorNO)
-            {
-                if ((*raiz)->numKeys < 2)
-                {
-                    adicionaNo(raiz, *sobe, *maiorNO);
-                    *maiorNO = NULL;
-                }
-                
-                else
-                {
-                    Quebra resultado = quebraNo(raiz, , *maiorNO);//ajustar depois
-
-                    if (pai == NULL)
-                    {
-                        *raiz = criaNo(resultado.sobe, *raiz, resultado.maior_no);
-                        *maiorNO = NULL;
-                    }
-                }
                 
             }
         }
     }
- }
+
+
+    Memoria *encontrarEspacoRecursivo(Memoria *raiz, int espacoNecessario) {
+    Memoria *encontrado = NULL;
+    if (raiz != NULL) {
+        if (ehFolha(raiz)) {
+            // Verifica espaço disponível e se o status é LIVRE apenas em folhas
+            int espacoDisponivel1 = raiz->info1->fim - raiz->info1->inicio;
+            int espacoDisponivel2 = (raiz->numKeys >= 2) ? raiz->info2->fim - raiz->info2->inicio : 0;
+            int espacoDisponivel3 = (raiz->numKeys >= 3) ? raiz->info3->fim - raiz->info3->inicio : 0;
+            int espacoDisponivel4 = (raiz->numKeys == 4) ? raiz->info4->fim - raiz->info4->inicio : 0;
+
+            if (raiz->info1->status == LIVRE && espacoDisponivel1 >= espacoNecessario) {
+                encontrado = raiz;
+            } else if (raiz->numKeys >= 2 && raiz->info2->status == LIVRE && espacoDisponivel2 >= espacoNecessario) {
+                encontrado = raiz;
+            } else if (raiz->numKeys >= 3 && raiz->info3->status == LIVRE && espacoDisponivel3 >= espacoNecessario) {
+                encontrado = raiz;
+            } else if (raiz->numKeys == 4 && raiz->info4->status == LIVRE && espacoDisponivel4 >= espacoNecessario) {
+                encontrado = raiz;
+            }
+        }
+        else{
+            encontrado = encontrarEspacoRecursivo(raiz->esquerda);
+            if(raiz->esquerda != NULL){
+                encontrarEspacoRecursivo(raiz->esquerda);
+            }
+        }
+    }
+    
+}
+
+Memoria *encontrarEspaco(Memoria *raiz, int espacoNecessario) {
+    return encontrarEspacoRecursivo(raiz, espacoNecessario);
+}
