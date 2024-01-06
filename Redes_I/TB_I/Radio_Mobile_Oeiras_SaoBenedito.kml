@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document id="1bmBAO-xmxOxXmJUxHIfYwUnfj31kL_TX">
+	<name>Radio_Mobile_Oeiras_SaoBenedito</name>
+	<description>Dois pontos definidos para projetar um sistema de comunicação wifi de dados</description>
+	<gx:CascadingStyle kml:id="__managed_style_299F127C3D2E15D19F20">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_1375E6B7B82E15D19F20">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_0C55ADABC72E15D19F20">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_1375E6B7B82E15D19F20</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_299F127C3D2E15D19F20</styleUrl>
+		</Pair>
+	</StyleMap>
+	<gx:CascadingStyle kml:id="__managed_style_20D66F836B2E15D19F11">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=fbc02d&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<gx:displayMode>card</gx:displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_11386651122E15D19F11">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=fbc02d&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<gx:displayMode>card</gx:displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_0B691A2BBD2E15D19F11">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_11386651122E15D19F11</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_20D66F836B2E15D19F11</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark id="0950CB03162E15C99904">
+		<name>Oeiras</name>
+		<gx:mid>/g/11bxfwskl1</gx:mid>
+		<gx:fid>0x79c9111c6dd6d53:0x31df58ff66a38088</gx:fid>
+		<LookAt>
+			<longitude>-42.12650259999999</longitude>
+			<latitude>-7.013898149999999</latitude>
+			<altitude>0</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>11536.5229483842</range>
+			<altitudeMode>relativeToGround</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0B691A2BBD2E15D19F11</styleUrl>
+		<Point>
+			<altitudeMode>relativeToGround</altitudeMode>
+			<coordinates>-42.1264762,-7.0150666,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0AEA6D956E2E15CBD876">
+		<name>São Benedito</name>
+		<gx:mid>/g/1ymvmh06l</gx:mid>
+		<gx:fid>0x79c90728df726ab:0x580e2cf70f639fe5</gx:fid>
+		<LookAt>
+			<longitude>-42.10247620000001</longitude>
+			<latitude>-6.97713365</latitude>
+			<altitude>0</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>5688.662840462404</range>
+			<altitudeMode>relativeToGround</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0B691A2BBD2E15D19F11</styleUrl>
+		<Point>
+			<altitudeMode>relativeToGround</altitudeMode>
+			<coordinates>-42.1024762,-6.9771338,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0F221EA53B2E15CFFF0F">
+		<name>Distancia_KM</name>
+		<LookAt>
+			<longitude>-42.10997616741218</longitude>
+			<latitude>-6.996835210637253</latitude>
+			<altitude>172.8976141565169</altitude>
+			<heading>359.9997493124483</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>11534.64939094847</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0C55ADABC72E15D19F20</styleUrl>
+		<LineString>
+			<coordinates>
+				-42.12660426699058,-7.013849910216941,0 -42.10282460523817,-6.975758516817932,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+</Document>
+</kml>

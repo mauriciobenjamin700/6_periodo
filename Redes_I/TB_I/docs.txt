@@ -1,0 +1,38 @@
+Pontos
+    Oerias -> São Benedito
+    Distancia de 4.96 KM
+    Fonte: Google Earth
+
+DBM: 
+    https://www.youtube.com/watch?v=BXyJC-MpaDg
+    https://www.youtube.com/watch?v=fP75NWox_kc
+
+    Forruma para calcular percentual -> Valor de saida/Valor de entrada
+    Formula para calcular decibel -> 10 * log (Valor de saida/Valor de entrada)
+
+    Tabela dos dB
+
+    Perca:
+        -3  dB = -50% (Chega apenas metade do sinal)
+        -10 dB = -90% (chega 1/10 do sinal)
+        -20 dB = 99% (chega 1/100 do sinal)
+        -30 dB = 99.9% (chega 1/1000 do sinal)
+
+    Ganho:
+        +3 dB = +100% (chega o dobro do sinal)
+        +10 dB =  +900% (chega 10 vezes o sinal)
+        +20 dB =  +9900% (chega 100 vezes o sinal)
+
+    Tabela dos dBm
+        0 dBm = 1mW
+        10 dBm = 10mW (10 dB acima do 0 dBm)
+        3 dBm = 2mW (3 dB acima do 0 dBm)
+        -3 dBm = 0.5 mW (3 dB a baixo do 0 dBm)
+        -10 dBm = 0.1 mW (10 dB a baixo 0 dBm)
+        -13 dBm = 0.05 mW (13 db a baixo do 0 dBm)
+        -20 dBm = 0.01 mW (20 db a baixo do 0 dBm)
+
+    Regras
+        dBm +/- dB = dBm
+        dBm - dBm = dB
+        db +/- dB = dB
