@@ -42,6 +42,7 @@ void insereTrie(struct TrieNode **root, const char *word, int i, int tam)
     }
 }
 void buscarVarios(struct TrieNode *root, const char **word, int quantWords, int *words);
+
 int buscar(struct TrieNode *root, const char *word)
 {
     struct TrieNode *currentNode = root;
@@ -64,25 +65,78 @@ int buscar(struct TrieNode *root, const char *word)
     return achou;
 }
 
+int insere_retorna(struct TrieNode **root, const char *word, int i, int tam)
+{
+    int index;
+    index = word[i] - 'a';
+    int inseri = 0;
+
+    if (i < tam - 1)
+    {
+        if ((*root)->children[index] == NULL)
+            (*root)->children[index] = createNode();
+
+        inseri = insere_retorna(&((*root)->children[index]), word, ++i, tam);
+    }
+    else
+    {
+        if ((*root)->children[index] == NULL)
+        {
+            (*root)->children[index] = createNode();
+            ((*root)->children[index])->isEndOfWord = 1;
+            inseri = 1;
+        }
+        else
+        {
+            if(((*root)->children[index])->isEndOfWord == 0)
+            {
+                ((*root)->children[index])->isEndOfWord = 1;
+                inseri = 1;
+            }  
+                
+            else
+                inseri = 0;
+        }
+    }
+
+    return inseri;
+}
+
 int main()
 {
     TrieNode * root;
     int i;
+    
 
     root = createNode();
     // Inserindo algumas palavras na Trie
-    insereTrie(&root, "apple",0,strlen("apple"));
-    insereTrie(&root, "banana",0,strlen("banana"));
-    insereTrie(&root, "app",0, strlen("app"));
-    
-    printf("Insercoes concluidas.\n");
+    if( insere_retorna(&root, "apple",0,strlen("apple")))
+        printf("\nInseri com sucesso");
+    else
+        printf("\nJa estava inserido");
+
+    if (insere_retorna(&root, "banana",0,strlen("banana")))
+        printf("\nInseri com sucesso");
+    else
+        printf("\nJa estava inserido");
+
+    if (insere_retorna(&root, "app",0, strlen("app")))
+        printf("\nInseri com sucesso");
+    else
+        printf("\nJa estava inserido");
+
+    if (insere_retorna(&root, "app",0, strlen("app")))
+        printf("\nInseri com sucesso");
+    else
+        printf("\nJa estava inserido");
+
     int words[] = {0,0};
     const char* palavras[] = {"apple", "banana"};
     buscarVarios(root,palavras,2,words);
     
     for(i = 0; i < 2;i++){
         if(words[i] == 1){
-            printf("Palavra %d está cadastrada",i);
+            printf("\nPalavra %s está cadastrada\n",palavras[i]);
         }
     }
 
