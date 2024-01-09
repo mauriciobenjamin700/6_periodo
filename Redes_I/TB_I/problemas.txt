@@ -1,0 +1,32 @@
+link buget (Margem de Segurança no dimensionamento do projeto) (Não leva em conta interferências)
+    Geralmente a taxa recomenda gira em torno de 7.5 dB a 10 Db
+
+Free Space Loss (Perca de sinal através do ar depende da Frequência e da Distância)
+
+
+pensar em usar hardware na torre1 e torre2
+    Cabo coxial
+    Antena
+    Amplificador
+
+Levar em conta no projeto as percas em
+Torre 1
+    Conector no cabo coxial
+    Cabo coxial
+    Conector de entrada Amplificador
+    Conector de saida do Amplificador
+    cabo coxial novamente
+    conextor da Antena
+    Na transmissão pelo ar
+
+Torre 2
+    conextor da Antena
+    cabo coxial novamente
+    Conector de saida do Amplificador
+    Conector de entrada Amplificador
+    Cabo coxial
+    Conector no cabo coxial
+
+
+Fonte:
+https://www.youtube.com/watch?v=vSWPvzYQPI0
