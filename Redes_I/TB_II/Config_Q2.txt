@@ -1,0 +1,4 @@
+Roteador 0:
+	enable
+	conf t
+	int g/0/0/0
