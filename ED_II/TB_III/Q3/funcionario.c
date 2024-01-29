@@ -43,3 +43,6 @@ int hash_a(char matricuta[], int tam_vetor)
 
     return valorInteiro % tam_vetor;
 }
+
+//Etapa 4
+int colisao_a(int hash);
