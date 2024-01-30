@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "funcionario.c"
 
+#define TAMANHO_LINHA 7 // 6 caracteres + 1 para o caractere nulo '\0'
 #define TAM_VETOR 101
 
 typedef struct Tabela_Hash
@@ -126,6 +127,7 @@ Funcionario *buscar(Tabela_Hash *t, char matricula[])
     return alvo;
 }
 
+/*
 int menu()
 {
     int opc;
@@ -198,6 +200,49 @@ int main(void)
             break;
         }
     }
+
+    return 0;
+}
+*/
+
+int main()
+{
+    FILE *arquivo;
+    char linha[TAMANHO_LINHA];
+    char matriculas[1000][TAMANHO_LINHA];
+    int i;
+
+    // Abra o arquivo para leitura
+    arquivo = fopen("matriculas.txt", "r");
+
+    // Leia cada linha do arquivo e armazene no vetor de strings
+    for (int i = 0; i < 1000; ++i)
+    {
+        if (fgets(linha, sizeof(linha), arquivo) != NULL)
+        {
+            // Remova o caractere de nova linha, se presente
+            linha[strcspn(linha, "\n")] = '\0';
+            strcpy(matriculas[i], linha);
+        }
+        else
+        {
+            // Se chegarmos ao final do arquivo antes de 1000 linhas, pare o loop
+            break;
+        }
+    }
+    fclose(arquivo);
+
+    /* Imprima o vetor de strings (apenas para verificar)
+    for (int i = 0; i < 1000; ++i)
+    {
+        printf("%s\n", matriculas[i]);
+    }
+    */
+
+   for (i=0;i<1000;i++)
+   {
+        printf("\nCriar o método pra salvar os funcionarios");
+   }
 
     return 0;
 }

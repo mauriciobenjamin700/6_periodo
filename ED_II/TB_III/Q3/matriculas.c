@@ -5,19 +5,58 @@
 #define NUM_MATRICULAS 1000
 #define TAM_MATRICULA 6
 
-void gerar(int matriculas[][TAM_MATRICULA])
+int valida_matricula(int matriculas[][TAM_MATRICULA], int novaMatricula[], int indice)
 {
-    srand(time(NULL));
-    for (int i = 0; i < NUM_MATRICULAS; i++)
+    int igual = 0;
+
+    for (int i = 0; i < indice; i++)
     {
+        int cont = 0;
         for (int j = 0; j < TAM_MATRICULA; j++)
         {
-            matriculas[i][j] = rand() % 10; // Gera um dígito aleatório de 0 a 9
+            if (matriculas[i][j] == novaMatricula[j])
+            {
+                cont++;
+            }
+        }
+        if (cont == TAM_MATRICULA)
+        {
+            // Encontrou uma matrícula igual, retorna true
+            igual = 1;
+        }
+    }
+    // Não encontrou matrícula igual, retorna false
+    return igual;
+}
+
+
+
+void gerar_matriculas(int matriculas[][TAM_MATRICULA])
+{
+    srand(time(NULL));
+
+    for (int i = 0; i < NUM_MATRICULAS; i++)
+    {
+        int novaMatricula[TAM_MATRICULA];
+
+        do
+        {
+            // Gera uma nova matrícula até encontrar uma única
+            for (int j = 0; j < TAM_MATRICULA; j++)
+            {
+                novaMatricula[j] = rand() % 10;
+            }
+        } while (valida_matricula(matriculas, novaMatricula, i));
+
+        // Adiciona a nova matrícula ao vetor
+        for (int j = 0; j < TAM_MATRICULA; j++)
+        {
+            matriculas[i][j] = novaMatricula[j];
         }
     }
 }
 
-void salvarMatriculasEmArquivo(int matriculas[][TAM_MATRICULA])
+void salva_matricula_arquivo(int matriculas[][TAM_MATRICULA])
 {
     FILE *arquivo;
     arquivo = fopen("matriculas.txt", "w");
@@ -44,8 +83,8 @@ int main()
 {
     int matriculas[NUM_MATRICULAS][TAM_MATRICULA];
 
-    gerar(matriculas);
-    salvarMatriculasEmArquivo(matriculas);
+    gerar_matriculas(matriculas);
+    salva_matricula_arquivo(matriculas);
 
     printf("Matrículas geradas e salvas no arquivo matriculas.txt.\n");
 
