@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include "funcionario.c"
 
 #define TAMANHO_LINHA 7 // 6 caracteres + 1 para o caractere nulo '\0'
@@ -205,12 +206,35 @@ int main(void)
 }
 */
 
-int main()
+char *int2str(int valorInteiro)
 {
-    FILE *arquivo;
+    // Defina o tamanho da string conforme necessário
+    char *string;
+    string = (char*) malloc (sizeof(char) * 4); // Alocando memória para a string
+
+    if (string != NULL)
+    {
+        // Usando snprintf para converter o inteiro em uma string
+        snprintf(string, 20, "%d", valorInteiro);
+        // O segundo argumento (20) é o tamanho máximo da string que pode ser armazenado, ajuste conforme necessário
+    }
+
+    return string;
+}
+
+int avaliar_modelo(void)
+{
+FILE *arquivo;
     char linha[TAMANHO_LINHA];
     char matriculas[1000][TAMANHO_LINHA];
     int i;
+
+    Tabela_Hash t = criar_tabela();
+    Funcionario f;
+    Chave_hash *c;
+
+
+    int colisoes = 0;
 
     // Abra o arquivo para leitura
     arquivo = fopen("matriculas.txt", "r");
@@ -239,10 +263,25 @@ int main()
     }
     */
 
-   for (i=0;i<1000;i++)
-   {
-        printf("\nCriar o método pra salvar os funcionarios");
-   }
+    for (i = 0; i < 1000; i++)
+    {
+        preencher_funcionario(&f, int2str(i),matriculas[i],int2str(i),i);
+        c = cria_chave(f);
+        colisoes += insere(&t, c);
+    }
 
+    return colisoes;
+
+}
+
+int main()
+{
+    clock_t inicio = clock();
+    int colisoes = avaliar_modelo();
+    clock_t fim = clock();
+
+    double tempoGasto = (double)(fim - inicio) / CLOCKS_PER_SEC * 1000.0;
+    printf("\nNumero de colisões: %d\n", colisoes);
+    printf("Tempo gasto: %f milissegundos\n", tempoGasto);
     return 0;
 }
