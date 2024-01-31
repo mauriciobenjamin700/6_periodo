@@ -4,7 +4,6 @@
 #include "tad.c"
 #define BLOCO 100
 
-void alocaEspaco();
 int main()
 {
 	Memoria *arvore = NULL;	// Inicialize arvore como NULL
@@ -57,10 +56,10 @@ int main()
 
 		if (fim >= inicio && fim <= BLOCO)
 		{
-			//status = rand() % 2;
-			printf("\nStatus: ");
-			setbuf(stdin,NULL);
-			scanf("%d",&status);
+			status = rand() % 2;
+			//printf("\nStatus: ");
+			//setbuf(stdin,NULL);
+			//scanf("%d",&status);
 
 			flag = 0;
 			inserir45(&arvore, NULL, NULL, inicio, fim, status, &flag);
@@ -71,11 +70,4 @@ int main()
 	}
 
 	return 0;
-}
-
-void alocaEspaco(Memoria **raiz){
-    int espaço = 0;
-    printf("Quanto de espaço voce precisa?");
-    scanf("%d", &espaço);
-    
 }
