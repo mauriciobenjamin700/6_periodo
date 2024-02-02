@@ -1,419 +1,252 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
-#include "funcionario.c"
+#include <string.h>
 
-#define TAMANHO_LINHA 7 // 6 caracteres + 1 para o caractere nulo '\0'
+#define MATRICULA 6
+#define TAMANHO_LINHA 7
 #define TAM_VETOR 101
+
+typedef struct Funcionario
+{
+    char matricula[MATRICULA];
+    char nome[20];
+    char funcao[50];
+    float salario;
+} Funcionario;
+
+typedef struct Chave_hash
+{
+    int hash;
+    struct Funcionario funcionario;
+} Chave_hash;
 
 typedef struct Tabela_Hash
 {
-    Chave_hash *itens[TAM_VETOR];
+    Chave_hash itens[TAM_VETOR];
 } Tabela_Hash;
 
-struct Tabela_Hash criar_tabela()
+char int2digit(int num)
 {
-    struct Tabela_Hash tabela;
-
-    for (int i = 0; i < TAM_VETOR; i++)
-    {
-        tabela.itens[i] = (Chave_hash *)malloc(sizeof(Chave_hash));
-
-        tabela.itens[i] = NULL;
-    }
-
-    return tabela;
+    char result = num + '0';
+    return result;
 }
 
-/*
-Etapa 1 - rotação de 2 dígitos para a esquerda
-Etapa 2 - depois extrai o 2, 4 e 6 dígitos e
-Etapa 3 - obtenha o resto da divisão pelo tamanho do vetor destino.
-Etapa 4 - As colisões devem ser tratadas somando ao resto da divisão o primeiro dígito da matrícula.
+int digit2int(char digit)
+{
+    int result = digit - '0';
+    return result;
+}
 
-123456
-561234
-624 % 101
-*/
-int hash_a(char matricuta[])
+void preencher_funcionario(Funcionario *f, char nome[], char matricula[], char funcao[], float salario)
+{
+    strcpy(f->nome, nome);
+    strcpy(f->matricula, matricula);
+    strcpy(f->funcao, funcao);
+    f->salario = salario;
+}
+
+Tabela_Hash criar_tabela()
+{
+    Tabela_Hash t;
+    int i;
+    for (i = 0; i < TAM_VETOR; i++)
+        t.itens[i].hash = -1;
+
+    return t;
+}
+
+int hash_a(char matricula[])
 {
     char aux[MATRICULA];
     int i, j = 2;
 
-    // Etapa 1
-    aux[0] = matricuta[MATRICULA - 2];
-    aux[1] = matricuta[MATRICULA - 1];
+    aux[0] = matricula[MATRICULA - 2];
+    aux[1] = matricula[MATRICULA - 1];
     for (i = 0; i < MATRICULA - 2; i++)
     {
-        aux[j] = matricuta[i];
+        aux[j] = matricula[i];
         j++;
     }
 
-    // Etapa 2
-
     char digitos[4] = {aux[1], aux[3], aux[5], '\0'};
-
-    // Converte a string para um valor inteiro
     int valorInteiro = atoi(digitos);
-
-    // Etapa 3
 
     return valorInteiro % TAM_VETOR;
 }
 
-// Etapa 4
 int colisao_a(int hash, char primeiro_digito)
 {
-    return (hash + atoi(&primeiro_digito));
+    return (hash + digit2int(primeiro_digito));
 }
 
-Chave_hash *cria_chave_a(Funcionario f)
+Chave_hash cria_chave_a(Funcionario f)
 {
-
-    Chave_hash *novo_item = (Chave_hash *)malloc(sizeof(Chave_hash));
-
-    novo_item->hash = hash_a(f.matricula);
-    novo_item->funcionario = f;
-    novo_item->next = NULL;
+    Chave_hash novo_item;
+    novo_item.hash = hash_a(f.matricula);
+    novo_item.funcionario = f;
 
     return novo_item;
 }
 
-int insere_a(Tabela_Hash *t, Chave_hash *item)
+int insere_a(Tabela_Hash *t, Chave_hash item)
 {
     int colisao = 0;
+    int inseri = 0;
 
-    // Verifica se a posição na tabela está vazia
-    if (t->itens[item->hash] == NULL)
+    int hash_inicial = item.hash;
+    while (item.hash < TAM_VETOR && inseri == 0)
     {
-        t->itens[item->hash] = (Chave_hash *)malloc(sizeof(Chave_hash));
-        (t->itens[item->hash]) = item;
-        (t->itens[item->hash])->next = NULL;
-    }
-    // caso não esteja vamos seguir como uma lista encadeada para inserir no final, cada salto na lista é uma colisão
-    else
-    {
-        Chave_hash *aux = t->itens[item->hash];
-
-        while (aux->next != NULL)
+        if (t->itens[item.hash].hash == -1)
         {
-            aux = aux->next;
-            item->hash = colisao_a(item->hash, item->funcionario.matricula[0]);
-            colisao += 1;
+            (t->itens[item.hash]) = item;
+            inseri = 1;
         }
-        item->hash = colisao_a(item->hash, item->funcionario.matricula[0]);
-        colisao += 1;
+        else
+        {
+            item.hash = colisao_a(item.hash, item.funcionario.matricula[0]);
+            colisao++;
+        }
+    }
 
-        aux->next = (Chave_hash *)malloc(sizeof(Chave_hash));
-        aux->next = item;
+    if (inseri == 0)
+    {
+        t->itens[hash_inicial] = item;
     }
 
     return colisao;
 }
 
-Funcionario *buscar_a(Tabela_Hash *t, char matricula[])
-{
-    int hash = hash_a(matricula);
-    Funcionario *alvo = NULL;
-
-    Chave_hash *aux = t->itens[hash];
-
-    while (aux != NULL && strcmp(matricula, aux->funcionario.matricula) != 0)
-    {
-        aux = aux->next;
-    }
-    // caso tenhamos encontrado nosso alvo, vamos pegar o endereço do funcionario
-    if (aux != NULL)
-        alvo = &(aux->funcionario);
-
-    return alvo;
-}
-
-/*
-1 - fole shift com 3 dígitos da seguinte forma: o 1o, 3 e   6o; 2o, 4o e 5o
-2 - depois obtenha o resto da divisão do resultado pelo tamanho do vetor destino.
-3 - As colisões devem ser realizadas somando 7 ao valor obtido.
-*/
-int hash_b(char matricuta[])
+int hash_b(char matricula[])
 {
     char aux[MATRICULA];
 
-    // Etapa 1
-    aux[0] = matricuta[1 - 1];
-    aux[1] = matricuta[3 - 1];
-    aux[2] = matricuta[6 - 1];
-    aux[3] = matricuta[2 - 1];
-    aux[4] = matricuta[4 - 1];
-    aux[5] = matricuta[5 - 1];
+    aux[0] = matricula[1 - 1];
+    aux[1] = matricula[3 - 1];
+    aux[2] = matricula[6 - 1];
+    aux[3] = matricula[2 - 1];
+    aux[4] = matricula[4 - 1];
+    aux[5] = matricula[5 - 1];
 
-    // Etapa 2
-
-    // Converte a string para um valor inteiro
     int valorInteiro = atoi(aux);
 
     return valorInteiro % TAM_VETOR;
 }
+
 int colisao_b(int hash)
 {
     return (hash + 7);
 }
 
-Chave_hash *cria_chave_b(Funcionario f)
+Chave_hash cria_chave_b(Funcionario f)
 {
-
-    Chave_hash *novo_item = (Chave_hash *)malloc(sizeof(Chave_hash));
-
-    novo_item->hash = hash_b(f.matricula);
-    novo_item->funcionario = f;
-    novo_item->next = NULL;
+    Chave_hash novo_item;
+    novo_item.hash = hash_b(f.matricula);
+    novo_item.funcionario = f;
 
     return novo_item;
 }
 
-int insere_b(Tabela_Hash *t, Chave_hash *item)
+int insere_b(Tabela_Hash *t, Chave_hash item)
 {
     int colisao = 0;
+    int inseri = 0;
+    int hash_inicial = item.hash;
 
-    // Verifica se a posição na tabela está vazia
-    if (t->itens[item->hash] == NULL)
+    while (item.hash < TAM_VETOR && inseri == 0)
     {
-        t->itens[item->hash] = (Chave_hash *)malloc(sizeof(Chave_hash));
-        (t->itens[item->hash]) = item;
-        (t->itens[item->hash])->next = NULL;
+        if (t->itens[item.hash].hash == -1)
+        {
+            (t->itens[item.hash]) = item;
+            inseri = 1;
+        }
+        else
+        {
+            item.hash = colisao_b(item.hash);
+            colisao++;
+        }
     }
 
-    else
+    if (inseri == 0)
     {
-        Chave_hash *aux = t->itens[item->hash];
-
-        while (aux->next != NULL)
-        {
-            aux = aux->next;
-            item->hash = colisao_b(item->hash);
-            colisao += 1;
-        }
-        item->hash = colisao_b(item->hash);
-        colisao += 1;
-
-        aux->next = (Chave_hash *)malloc(sizeof(Chave_hash));
-        aux->next = item;
+        t->itens[hash_inicial] = item;
     }
 
     return colisao;
 }
 
-Funcionario *buscar_b(Tabela_Hash *t, char matricula[])
-{
-    int hash = hash_b(matricula);
-    Funcionario *alvo = NULL;
-
-    Chave_hash *aux = t->itens[hash];
-
-    while (aux != NULL && strcmp(matricula, aux->funcionario.matricula) != 0)
-    {
-        aux = aux->next;
-    }
-    // caso tenhamos encontrado nosso alvo, vamos pegar o endereço do funcionario
-    if (aux != NULL)
-        alvo = &(aux->funcionario);
-
-    return alvo;
-}
-
-/*
-int menu()
-{
-    int opc;
-
-    printf("\n\n[1] - Cadatrar Funcionario\n[2] - Buscar Funcionario\n[0] - Sair\n\nResposta: ");
-    setbuf(stdin, NULL);
-    scanf("%d", &opc);
-
-    return opc;
-}
-
-int main(void)
-{
-    Tabela_Hash t = criar_tabela();
-    Funcionario f;
-    Chave_hash *c;
-
-    char matricula[MATRICULA];
-    char nome[20];
-    char funcao[50];
-    float salario;
-
-    int colisoes = 0;
-
-    int opc = 1;
-
-    while (opc != 0)
-    {
-
-        opc = menu();
-
-        switch (opc)
-        {
-        case 1:
-            printf("\n\nNome: ");
-            setbuf(stdin, NULL);
-            scanf("%s", nome);
-
-            printf("\n\nMatricula: ");
-            setbuf(stdin, NULL);
-            scanf("%s", matricula);
-
-            printf("\n\nFuncao: ");
-            setbuf(stdin, NULL);
-            scanf("%s", funcao);
-
-            printf("\n\nSalario: ");
-            setbuf(stdin, NULL);
-            scanf("%f", &salario);
-
-            preencher_funcionario(&f, nome, matricula, funcao, salario);
-
-            c = cria_chave_a(f);
-            colisoes = insere_a(&t, c);
-
-            printf("\n\nInserido com sucesso ao custo de %d colisoes ", colisoes);
-
-            break;
-
-        case 2:
-            printf("\n\nMatricula: ");
-            setbuf(stdin, NULL);
-            scanf("%s", matricula);
-
-            f = *(buscar_a(&t, matricula));
-
-            mostrar_funcionario(&f);
-
-        default:
-            break;
-        }
-    }
-
-    return 0;
-}
-*/
-
 char *int2str(int valorInteiro)
 {
-    // Defina o tamanho da string conforme necessário
     char *string;
-    string = (char *)malloc(sizeof(char) * 4); // Alocando memória para a string
+    string = (char *)malloc(sizeof(char) * 6);
 
     if (string != NULL)
     {
-        // Usando snprintf para converter o inteiro em uma string
-        snprintf(string, 20, "%d", valorInteiro);
-        // O segundo argumento (20) é o tamanho máximo da string que pode ser armazenado, ajuste conforme necessário
+        snprintf(string, 6, "%d", valorInteiro);
     }
 
     return string;
 }
 
-void carregar_matriculas(char matriculas[1000][MATRICULA])
+
+void gerar_matricula(char matricula[6])
 {
-    FILE *arquivo;
-    char linha[TAMANHO_LINHA];
+    int i, num;
 
-    // Abra o arquivo para leitura
-    arquivo = fopen("matriculas.txt", "r");
-
-    // Leia cada linha do arquivo e armazene no vetor de strings
-    for (int i = 0; i < 1000; ++i)
+    for (i = 0; i < 6; i++)
     {
-        if (fgets(linha, sizeof(linha), arquivo) != NULL)
-        {
-            // Remova o caractere de nova linha, se presente
-            linha[strcspn(linha, "\n")] = '\0';
-            strcpy(matriculas[i], linha);
-        }
-        else
-        {
-            // Se chegarmos ao final do arquivo antes de 1000 linhas, pare o loop
-            break;
-        }
+        num = rand() % 10;
+        if(num == 0)
+            num+=1;
+        
+        matricula[i] = int2digit(num);
     }
-    fclose(arquivo);
-}
-
-int avaliar_modelo_a(char matriculas[1000][MATRICULA])
-{
-
-    int i;
-
-    Tabela_Hash t = criar_tabela();
-    Funcionario f;
-    Chave_hash *c;
-
-    int colisoes = 0;
-
-    /* Imprima o vetor de strings (apenas para verificar)
-    for (int i = 0; i < 1000; ++i)
-    {
-        printf("%s\n", matriculas[i]);
-    }
-    */
-
-    for (i = 0; i < 1000; i++)
-    {
-        preencher_funcionario(&f, int2str(i), matriculas[i], int2str(i), i);
-        c = cria_chave_a(f);
-        colisoes += insere_a(&t, c);
-    }
-
-    return colisoes;
-}
-
-int avaliar_modelo_b(char matriculas[1000][MATRICULA])
-{
-
-    int i;
-
-    Tabela_Hash t = criar_tabela();
-    Funcionario f;
-    Chave_hash *c;
-
-    int colisoes = 0;
-
-    /* Imprima o vetor de strings (apenas para verificar)
-    for (int i = 0; i < 1000; ++i)
-    {
-        printf("%s\n", matriculas[i]);
-    }
-    */
-
-    for (i = 0; i < 1000; i++)
-    {
-        preencher_funcionario(&f, int2str(i), matriculas[i], int2str(i), i);
-        c = cria_chave_b(f);
-        colisoes += insere_b(&t, c);
-    }
-
-    return colisoes;
 }
 
 int main()
 {
-    char matriculas[1000][MATRICULA];
-    carregar_matriculas(matriculas);
+    Tabela_Hash ta = criar_tabela();
+    Tabela_Hash tb = criar_tabela();
+    Funcionario f;
+    Chave_hash c;
+
+    int colisoes = 0, i;
+
+    printf("\noi");
+    char matricula[6];
+
     clock_t inicio = clock();
-    int colisoes = avaliar_modelo_a(matriculas);
+
+    for (i = 0; i < 1000; i++)
+    {
+        gerar_matricula(matricula);
+        preencher_funcionario(&f, "teste", matricula, "teste", 0);
+        c = cria_chave_a(f);
+        colisoes += insere_a(&ta, c);
+    }
+
     clock_t fim = clock();
 
     double tempoGasto = (double)(fim - inicio) / CLOCKS_PER_SEC * 1000.0;
     printf("\nNumero de colisões usando letra A: %d\n", colisoes);
-    printf("\nTempo gasto: %f milissegundos\n usando letra A\n", tempoGasto);
+    printf("\nTempo gasto: %lf milissegundos usando letra A\n", tempoGasto);
 
+    colisoes = 0;
     inicio = clock();
-    colisoes = avaliar_modelo_b(matriculas);
+
+    for (i = 0; i < 1000; i++)
+    {
+        gerar_matricula(matricula);
+        preencher_funcionario(&f, "teste", matricula, "teste", 0);
+        c = cria_chave_b(f);
+        colisoes += insere_b(&tb, c);
+    }
+
     fim = clock();
     tempoGasto = (double)(fim - inicio) / CLOCKS_PER_SEC * 1000.0;
 
     printf("\nNumero de colisões usando letra B: %d\n", colisoes);
-    printf("\nTempo gasto: %f milissegundos\n usando letra B\n", tempoGasto);
-    
+    printf("\nTempo gasto: %lf milissegundos usando letra B\n", tempoGasto);
+
     return 0;
 }

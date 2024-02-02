@@ -1,0 +1,18 @@
+101
+    Numero de colisões usando letra A: 18766
+
+    Tempo gasto: 0.245000 milissegundos usando letra A
+
+    Numero de colisões usando letra B: 6741
+
+    Tempo gasto: 0.178000 milissegundos usando letra B
+
+150
+
+    Numero de colisões usando letra A: 24390
+
+    Tempo gasto: 0.457000 milissegundos usando letra A
+
+    Numero de colisões usando letra B: 9329
+
+    Tempo gasto: 0.312000 milissegundos usando letra B
