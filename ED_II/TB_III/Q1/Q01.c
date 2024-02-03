@@ -35,9 +35,8 @@ int main()
     FillVerticies(VerticiesList);
     FillMatrizAdj(VerticiesList, MatrizAdj);
     EncontraCaminhoCurto(MatrizAdj);
-    //PrintMatriz(MatrizAdj);
-    //PrintVector(VerticiesList);
-
+    // PrintMatriz(MatrizAdj);
+    // PrintVector(VerticiesList);
     return 0;
 }
 
@@ -53,60 +52,60 @@ void FillVerticies(VerticiesInfo VerticiesList[])
     if (file == NULL)
     {
         printf("Erro ao abrir o arquivo config_hanoi.csv\n");
-        return;
     }
-
-    // Inicializa um contador i para percorrer a lista de vértices
-    int i = 0;
-
-    // Declara uma string chamada line para armazenar cada linha do arquivo
-    char line[100];
-
-    // Loop enquanto houver linhas para ler no arquivo
-    while (fgets(line, sizeof(line), file))
+    else
     {
-        // Declara variáveis para armazenar informações de cada linha
-        int NumVerticies, Pinos;
-        char arestas_str[10];
+        // Inicializa um contador i para percorrer a lista de vértices
+        int i = 0;
 
-        // Usa sscanf para extrair valores da linha formatada como CSV
-        sscanf(line, "%d,%d,\"%9[^\"]\"\n", &NumVerticies, &Pinos, arestas_str);
+        // Declara uma string chamada line para armazenar cada linha do arquivo
+        char line[100];
 
-        // Preenche a estrutura VerticiesInfo com as informações extraídas
-        VerticiesList[i].NumVerticies = NumVerticies;
-        VerticiesList[i].Pinos = Pinos;
-
-        // Usa strtok para dividir a string de arestas em tokens usando ","
-        char *token = strtok(arestas_str, ",");
-        int j = 0;
-
-        // Preenche o array de arestas na estrutura VerticiesInfo
-        while (token != NULL && j < 3)
+        // Loop enquanto houver linhas para ler no arquivo
+        while (fgets(line, sizeof(line), file))
         {
-            VerticiesList[i].Arestas[j] = atoi(token);
-            token = strtok(NULL, ",");
-            j++;
+            // Declara variáveis para armazenar informações de cada linha
+            int NumVerticies, Pinos;
+            char arestas_str[10];
+
+            // Usa sscanf para extrair valores da linha formatada como CSV
+            sscanf(line, "%d,%d,\"%9[^\"]\"\n", &NumVerticies, &Pinos, arestas_str);
+
+            // Preenche a estrutura VerticiesInfo com as informações extraídas
+            VerticiesList[i].NumVerticies = NumVerticies;
+            VerticiesList[i].Pinos = Pinos;
+
+            // Usa strtok para dividir a string de arestas em tokens usando ","
+            char *token = strtok(arestas_str, ",");
+            int j = 0;
+
+            // Preenche o array de arestas na estrutura VerticiesInfo
+            while (token != NULL && j < 3)
+            {
+                VerticiesList[i].Arestas[j] = atoi(token);
+                token = strtok(NULL, ",");
+                j++;
+            }
+
+            // Preenche o restante do array de arestas com -1 se necessário
+            while (j < 3)
+            {
+                VerticiesList[i].Arestas[j] = -1;
+                j++;
+            }
+
+            // Incrementa o contador i para avançar para a próxima estrutura na lista
+            i++;
         }
 
-        // Preenche o restante do array de arestas com -1 se necessário
-        while (j < 3)
-        {
-            VerticiesList[i].Arestas[j] = -1;
-            j++;
-        }
-
-        // Incrementa o contador i para avançar para a próxima estrutura na lista
-        i++;
+        // Fecha o arquivo após a leitura
+        fclose(file);
     }
-
-    // Fecha o arquivo após a leitura
-    fclose(file);
 }
-
 
 void PrintVector(VerticiesInfo VerticiesList[])
 {
-    // Declaração de variável de controle do loop
+
     int i;
 
     // Loop através de cada elemento na lista de vértices
@@ -118,7 +117,6 @@ void PrintVector(VerticiesInfo VerticiesList[])
         // Imprime informações sobre as arestas
         printf("Arestas: ");
 
-        // Declaração de variável de controle do loop interno
         int j;
 
         // Inicializa a variável de controle do loop interno
@@ -135,7 +133,6 @@ void PrintVector(VerticiesInfo VerticiesList[])
         printf("\n\n");
     }
 }
-
 
 void FillMatrizAdj(VerticiesInfo VerticiesList[], int matriz[][NUM_VERTICIES])
 {
@@ -172,24 +169,17 @@ void FillMatrizAdj(VerticiesInfo VerticiesList[], int matriz[][NUM_VERTICIES])
     }
 }
 
-
+// percorre cada linha e cada coluna da matriz para imprimir seu conteúdo formatadamente
 void PrintMatriz(int matriz[][NUM_VERTICIES])
 {
-    // Declaração de variáveis de controle do loop
     int i, j;
 
-    // Loop para percorrer cada linha da matriz
     for (i = 0; i < NUM_VERTICIES; i++)
     {
-        // Loop para percorrer cada coluna da matriz
         for (j = 0; j < NUM_VERTICIES; j++)
-        {
-            // Imprime o valor da célula da matriz seguido de um espaço
             printf("%d ", matriz[i][j]);
-        }
 
-        // Imprime uma quebra de linha para separar as linhas da matriz
-        printf("\n");
+                printf("\n");
     }
 }
 
@@ -202,44 +192,30 @@ void EncontraCaminhoCurto(int matriz[][NUM_VERTICIES])
     int startVerticies = 0;
     int endVerticies = NUM_VERTICIES - 1;
 
-    // Variáveis para medir o tempo de execução
     clock_t startVerticies_time, end_time;
     double time;
 
-    // Inicia a contagem do tempo para o algoritmo de Dijkstra
     startVerticies_time = clock();
-
-    // Chama o algoritmo de Dijkstra
     Dijkstra(matriz, startVerticies, endVerticies);
-
-    // Encerra a contagem do tempo
     end_time = clock();
 
-    // Calcula o tempo gasto pelo algoritmo de Dijkstra
     time = (double)(end_time - startVerticies_time) / CLOCKS_PER_SEC;
 
-    // Imprime o tempo gasto pelo algoritmo de Dijkstra
     printf("Tempo gasto - Dijkstra: %lf ms\n", time * 1000);
     printf("\n");
 
     // Inicia a contagem do tempo para o algoritmo de Bellman-Ford
     startVerticies_time = clock();
-
-    // Chama o algoritmo de Bellman-Ford
     BellmanFord(matriz, startVerticies, endVerticies);
-
-    // Encerra a contagem do tempo
     end_time = clock();
 
-    // Calcula o tempo gasto pelo algoritmo de Bellman-Ford
     time = (double)(end_time - startVerticies_time) / CLOCKS_PER_SEC;
 
-    // Imprime o tempo gasto pelo algoritmo de Bellman-Ford
     printf("Tempo gasto - Bellman: %lf ms\n", time * 1000);
 }
 
 /*
-A função Dijkstra implementa o algoritmo de Dijkstra para encontrar o caminho mais curto entre 
+A função Dijkstra implementa o algoritmo de Dijkstra para encontrar o caminho mais curto entre
 dois vértices em um grafo ponderado representado por uma matriz de adjacência.
 */
 void Dijkstra(int matriz[][NUM_VERTICIES], int startVerticies, int endVerticies)
@@ -291,8 +267,8 @@ void Dijkstra(int matriz[][NUM_VERTICIES], int startVerticies, int endVerticies)
 }
 
 /*
-A função BellmanFord implementa o algoritmo de Bellman-Ford para encontrar o caminho mais curto entre 
-dois vértices em um grafo ponderado representado por uma matriz de adjacência. 
+A função BellmanFord implementa o algoritmo de Bellman-Ford para encontrar o caminho mais curto entre
+dois vértices em um grafo ponderado representado por uma matriz de adjacência.
 */
 void BellmanFord(int matriz[][NUM_VERTICIES], int startVerticies, int endVerticies)
 {
