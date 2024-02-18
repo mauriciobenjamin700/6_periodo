@@ -17,7 +17,9 @@ typedef struct
     int Arestas[3];
 } VerticiesInfo;
 
+//Acessa o CSV com os dados e coloca no grafo de forma correta preenchendo todas as linhas do grafo (matriz)
 void FillVerticies(VerticiesInfo VerticiesList[]);
+
 void PrintVector(VerticiesInfo VerticiesList[]);
 
 void FillMatrizAdj(VerticiesInfo VerticiesList[], int matriz[][NUM_VERTICIES]);
@@ -29,6 +31,7 @@ void BellmanFord(int matriz[][NUM_VERTICIES], int startVerticies, int endVertici
 
 int main()
 {
+    //cada vertice é uma linha do CSV (logo é uma possibilidade do grafo)
     VerticiesInfo VerticiesList[NUM_VERTICIES];
     int MatrizAdj[NUM_VERTICIES][NUM_VERTICIES];
 
@@ -111,7 +114,7 @@ void PrintVector(VerticiesInfo VerticiesList[])
     // Loop através de cada elemento na lista de vértices
     for (i = 0; i < NUM_VERTICIES; i++)
     {
-        // Imprime informações sobre o vértice (Número de vértices e Pinos)
+        // Imprime informações sobre o vértice (Número de vértices e Pinos) (cada linha da matriz)
         printf("Vertice: %d\nPinos: %d\n", VerticiesList[i].NumVerticies, VerticiesList[i].Pinos);
 
         // Imprime informações sobre as arestas
@@ -140,7 +143,7 @@ void FillMatrizAdj(VerticiesInfo VerticiesList[], int matriz[][NUM_VERTICIES])
     int li, col;
     int ContArestas;
 
-    // Loop para percorrer cada linha da matriz (cada vértice)
+    // Loop para percorrer cada linha da matriz (cada aresta)
     for (li = 0; li < NUM_VERTICIES; li++)
     {
         // Loop para percorrer cada coluna da matriz (cada vértice)
