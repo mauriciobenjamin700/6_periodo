@@ -1,4 +1,79 @@
 Roteador 0:
 	enable
 	conf t
-	int g/0/0/0
+	int g0/0/0
+	ip address 10.0.0.254 255.255.255.0
+	no sh
+	exit
+	
+	int g0/0/1
+	ip address 200.1.1.254 255.255.255.0
+	no sh
+	exit
+	end
+	wr
+
+	conf t
+	int g0/0/0/
+	ip nat inside
+	exit
+	
+	int g0/0/1
+	ip nat outside
+	
+	exit
+	
+	ip nat pool NatEx 200.1.1.5 200.1.1.20 netmask 255.255.255.0
+	access-list 1 permit 10.0.0.0 0.0.0.255
+	ip nat inside source list 1 pool NatEx
+	end
+	wr
+
+
+Na interface gráfica do PC 0 
+	no menu settings
+		adicione 200.1.1.254 ao default gateway 
+
+	no menu FastEthernet
+		IPV4 address = 10.0.0.1
+		SubMask = 255.255.255.0
+
+
+Na interface gráfica do PC 2
+	nas configurações de IP 
+		IPV4 address = 10.0.0.2
+		SubMask = 255.255.255.0
+		default 200.1.1.254 
+
+Na interface gráfica do PC 3
+	nas configurações de IP 
+		IPV4 address = 10.0.0.3
+		SubMask = 255.255.255.0
+		default 200.1.1.254
+
+Na interface gráfica do PC Servidor
+	nas configurações de IP 
+		IPV4 address = 200.1.1.2
+		SubMask = 255.255.255.0
+		default 200.1.1.254
+
+
+
+No terminal do roteador 0
+	sh ip nat translation 
+	vai ficar vazia a tabela pois não tem informações da tradução
+	
+	
+va para o pc zero no terminal e para o pc Server no terminal tbm
+pc 0
+	ping 200.1.1.2
+	o primeiro pacote sempre é perdido por causa da inicialização da nat, pois ela demora um pouco para traduzir mas apartir disso todos os pacotes são mantidos
+
+No terminal do roteador 
+	sh ip nat translation 
+	a tabela com as traduções vai estar lá
+
+
+	
+
+	
