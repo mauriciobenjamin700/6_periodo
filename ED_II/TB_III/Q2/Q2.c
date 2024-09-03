@@ -27,13 +27,13 @@ int main()
     Grafo grafo;
     int numVertex, numArestas, i, j;
 
-    // Entrada do número de vértices no grafo
+
     printf("Numero de vertices: ");
     scanf("%d", &numVertex);
 
     grafo.numVertex = numVertex;
 
-    // Inicialização da matriz de arestas com confiabilidade -1 para todos os pares de vértices
+
     for (i = 0; i < numVertex; i++)
     {
         for (j = 0; j < numVertex; j++)
@@ -42,11 +42,10 @@ int main()
         }
     }
 
-    // Entrada do número de arestas no grafo
+
     printf("Numero de arestas: ");
     scanf("%d", &numArestas);
 
-    // Entrada das informações sobre as arestas, incluindo vértices e confiabilidade
     for (i = 0; i < numArestas; i++)
     {
         int u, v;
@@ -60,24 +59,21 @@ int main()
 
     int verticeInicial, verticeFinal;
 
-    // Entrada do vértice inicial
+
     printf("vertice inicial: ");
     scanf("%d", &verticeInicial);
 
-    // Entrada do vértice final
     printf("vertice final: ");
     scanf("%d", &verticeFinal);
 
     float dist[MAX_VERTEX];
     int verticeAnterior[MAX_VERTEX];
 
-    // Chamada do algoritmo de Dijkstra para calcular o caminho mais curto
     dijkstra(&grafo, verticeInicial, dist, verticeAnterior);
 
-    // Saída condicional dependendo da existência de um caminho confiável
     if (dist[verticeFinal] > -1e8)
     {
-        // Impressão do caminho mais confiável e sua confiabilidade associada
+
         printf("Caminho mais confiavel de %d para %d: ", verticeInicial, verticeFinal);
         imprimirCaminho(verticeAnterior, verticeFinal);
         printf("\n");
@@ -85,7 +81,7 @@ int main()
     }
     else
     {
-        // Indicação de que não há um caminho confiável
+
         printf("Nenhum caminho confiavel de %d para %d.\n", verticeInicial, verticeFinal);
     }
 
@@ -97,21 +93,20 @@ distância (ou valor associado) em um conjunto de vértices.
 */
 int verticeComMenorDistancia(float dist[], bool visitados[], int numVertex)
 {
-    float minimo = INF;  // Inicializa uma variável para armazenar o valor mínimo, inicializado com um valor infinito
-    int v, indiceMinimo = -1;  // Variáveis para iterar pelos vértices e armazenar o índice do vértice com a menor distância
+    float minimo = INF;  
+    int v, indiceMinimo = -1;  
 
-    // Itera sobre todos os vértices no grafo
+    
     for (v = 0; v < numVertex; v++)
     {
-        // Verifica se o vértice não foi visitado e se a distância associada a ele é menor que o mínimo atual
+
         if (!visitados[v] && dist[v] >= minimo)
         {
-            minimo = dist[v];  // Atualiza o valor mínimo
-            indiceMinimo = v;  // Atualiza o índice do vértice com a menor distância
+            minimo = dist[v]; 
+            indiceMinimo = v; 
         }
     }
-
-    return indiceMinimo;  // Retorna o índice do vértice com a menor distância
+    return indiceMinimo; 
 }
 
 /*
@@ -123,35 +118,33 @@ void dijkstra(Grafo *grafo, int verticeInicial, float dist[], int verticeAnterio
     bool visitados[MAX_VERTEX] = {false};
     int i, count, v;
 
-    // Inicialização das distâncias e vértices anteriores
+    
     for (i = 0; i < grafo->numVertex; i++)
     {
-        dist[i] = -1e9;  // Inicializa as distâncias com um valor muito pequeno (representando -∞)
-        verticeAnterior[i] = -1;  // Inicializa os vértices anteriores como -1
+        dist[i] = -1e9;  
+        verticeAnterior[i] = -1;  
     }
 
-    dist[verticeInicial] = 0;  // A distância do vértice inicial para ele mesmo é 0
+    dist[verticeInicial] = 0;  
 
-    // Iteração principal
     for (count = 0; count < grafo->numVertex - 1; count++)
     {
-        // Encontra o vértice com a menor distância não visitado
+   
         int u = verticeComMenorDistancia(dist, visitados, grafo->numVertex);
 
-        visitados[u] = true;  // Marca o vértice como visitado
+        visitados[u] = true;  
 
-        // Atualiza as distâncias para todos os vértices adjacentes ao vértice atual
+
         for (v = 0; v < grafo->numVertex; v++)
         {
             float confiabilidade = grafo->arestas[u][v].confiabilidade;
 
-            // Verifica se o vértice não foi visitado, a confiabilidade é válida e
-            // a distância até o vértice atual somada ao logaritmo da confiabilidade
-            // é maior que a distância atual do vértice destino
+
             if (!visitados[v] && confiabilidade >= 0 && dist[u] + log(confiabilidade) > dist[v])
             {
-                // Atualiza a distância e o vértice anterior
+
                 dist[v] = dist[u] + log(confiabilidade);
+                printf("%f\n",log(confiabilidade));
                 verticeAnterior[v] = u;
             }
         }
@@ -164,16 +157,16 @@ até o vértice inicial em um grafo, com base nas informações armazenadas no a
 */
 void imprimirCaminho(int verticeAnterior[], int vertice)
 {
-    // Verifica se o vértice tem um vértice anterior associado
+ 
     if (verticeAnterior[vertice] != -1)
     {
-        // Chama recursivamente a função para o vértice anterior
+
         imprimirCaminho(verticeAnterior, verticeAnterior[vertice]);
         
-        // Imprime a seta indicando a direção do caminho
+
         printf(" -> ");
     }
 
-    // Imprime o número do vértice atual
+
     printf("%d", vertice);
 }
